@@ -1,5 +1,201 @@
 define({ "api": [
   {
+    "type": "get",
+    "url": "/api/user/admin/products",
+    "title": "Fetch added products",
+    "name": "getProducts",
+    "group": "Admin_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>Fetch all products added</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>product name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>product description</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>product id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_Product_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NameConflictError",
+            "description": "<p>An entity already exists with the passed in name</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/api/user/admin/product",
+    "title": "Product Addition from admin dashboard",
+    "name": "postProduct",
+    "group": "Admin_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>Create new Product. It is with this endpoint that the respective products (DPK, AGO, PMS, ...etc) will be added to the System by the admin.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>product name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>product description</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>product id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_Product_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NameConflictError",
+            "description": "<p>An entity already exists with the passed in name</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/product/:productId",
+    "title": "Product Update from admin dashboard",
+    "name": "putProduct",
+    "group": "Admin_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>Update Product</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>product name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>product description</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "productId",
+            "description": "<p>id of the product that is about to be updated</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>product id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_Product_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NameConflictError",
+            "description": "<p>An entity already exists with the passed in name</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/api/auth/admin/signin",
     "title": "Admin Sign In",
@@ -426,7 +622,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "ID",
             "optional": false,
             "field": "peddlerId",
             "description": "<p>Peddler's id.</p>"
