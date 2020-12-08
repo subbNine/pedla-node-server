@@ -34,7 +34,7 @@ router.put("/product", catchAsync(productController.updateProduct));
  * @apiSuccess {ID} id user id
  */
 router.put(
-	"/peddler-verification/:peddlerId",
+	"/verify-peddler/:peddlerId",
 	catchAsync(userController.verifyRegisteredPeddler)
 );
 
