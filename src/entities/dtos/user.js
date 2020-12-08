@@ -10,4 +10,9 @@ module.exports = class User {
 	pooImage;
 	avatarImage;
 	presence;
+	userName;
+	permission;
+	latlon;
+	peddlerCode;
+	isActivePeddler;
 };

@@ -1,11 +1,13 @@
 const UserDto = require("./user");
-const OtpDto = require("./otp");
+const SecretDto = require("./secret");
 const ProductDto = require("./product");
 const PeddlerProductDto = require("./peddler-product");
+const GeoDto = require("./geo-location");
 
 module.exports = {
 	UserDto,
-	OtpDto,
+	SecretDto,
 	ProductDto,
 	PeddlerProductDto,
+	GeoDto,
 };

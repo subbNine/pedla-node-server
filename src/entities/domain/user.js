@@ -17,6 +17,9 @@ module.exports = class User {
 	avatarImage;
 	presence;
 	userName;
+	latlon;
+	peddlerCode;
+	isActivePeddler;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -84,6 +87,14 @@ module.exports = class User {
 		if (this.userName) {
 			objectRepr.userName = this.userName;
 		}
+		if (this.latlon) {
+			objectRepr.latlon = this.latlon;
+		}
+		if (this.peddlerCode) {
+			objectRepr.peddlerCode = this.peddlerCode;
+		}
+
+		objectRepr.isActivePeddler = this.isActivePeddler;
 
 		return objectRepr;
 	}
@@ -121,6 +132,10 @@ module.exports = class User {
 		}
 	}
 
+	isVerifiedPeddler() {
+		return this.peddlerCode && this.permission > permissions.PERM001;
+	}
+
 	comparePassword(candidatePassword, done) {
 		return new Promise((resolve, reject) => {
 			bcrypt.compare(candidatePassword, this.password, (err, matched) => {
@@ -130,7 +145,10 @@ module.exports = class User {
 						return done(err);
 					}
 				}
-
+				console.log({
+					candidatePassword,
+					inputPassword: this.password,
+				});
 				resolve(matched);
 				if (done) {
 					return done(null, matched);

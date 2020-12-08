@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 const seeders = require("./src/db/mongo/seeders");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const env = process.env.NODE_ENV;
 let mongoURL;
-if (env === "staging") {
+if (env === "staging" || env === "production") {
 	// Atlas connection setup
-	const username = env.MONGO_USER;
-	const password = env.MONGO_PW;
-	const dbName = "peddler";
+	const username = process.env.MONGO_USER;
+	const password = process.env.MONGO_PW;
+	const dbName = process.env.DB_NAME;
 
 	mongoURL = `mongodb+srv://${username}:${password}@cluster0-u6dzg.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 } else {

@@ -1,11 +1,13 @@
 const UserEnt = require("./user");
-const OtpEnt = require("./otp");
+const SecretEnt = require("./secret");
 const ProductEnt = require("./product");
 const PeddlerProductEnt = require("./peddler-product");
+const GeoEnt = require("./geo-location");
 
 module.exports = {
 	UserEnt,
-	OtpEnt,
+	SecretEnt,
 	ProductEnt,
-	PeddlerProductEnt
+	PeddlerProductEnt,
+	GeoEnt,
 };

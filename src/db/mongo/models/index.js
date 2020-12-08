@@ -1,7 +1,7 @@
 const Country = require("./country");
 const Lga = require("./lga");
 const State = require("./state");
-const Otp = require("./otp");
+const Secret = require("./secret");
 const User = require("./user");
 const Product = require("./product");
 const Order = require("./order");
@@ -12,7 +12,7 @@ module.exports = {
 	Country,
 	Lga,
 	State,
-	Otp,
+	Secret,
 	User,
 	Product,
 	Order,

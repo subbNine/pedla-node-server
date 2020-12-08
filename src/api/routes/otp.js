@@ -7,6 +7,6 @@ const router = Router();
 
 router.post("/verify", catchAsync(otpController.verifyOtp));
 
-router.post("/resend", catchAsync(otpController.resendOtp));
+router.post("/send", catchAsync(otpController.resendOtp));
 
 module.exports = router;

@@ -1,24 +1,24 @@
 const BaseMapper = require("./base");
-const { OtpEnt, UserEnt } = require("../entities/domain");
+const { SecretEnt, UserEnt } = require("../entities/domain");
 
-module.exports = class OtpMapper extends BaseMapper {
+module.exports = class SecretMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;
 	}
 
-	async findOtp(otpFilter, populateFn) {
-		const { Otp } = this.models;
+	async findSecret(otpFilter, populateFn) {
+		const { Secret } = this.models;
 
-		const doc = Otp.findOne(otpFilter);
+		const doc = Secret.findOne(otpFilter);
 		if (populateFn) {
 			populateFn(doc);
 		}
 
 		const result = await doc;
 		if (result) {
-			const otpEnt = this.toEntityObj(result);
-			return otpEnt;
+			const secretEnt = this.toEntityObj(result);
+			return secretEnt;
 		}
 	}
 
@@ -37,32 +37,32 @@ module.exports = class OtpMapper extends BaseMapper {
 			userEnt = this._toEntity({ id }, UserEnt);
 		}
 
-		const otpEnt = this._toEntity(
+		const secretEnt = this._toEntity(
 			{
 				id: resultObj._id,
 				otpSecret: resultObj.secret,
 				user: userEnt,
 			},
-			OtpEnt
+			SecretEnt
 		);
 
-		return otpEnt;
+		return secretEnt;
 	}
 
-	async createOtp(otpEnt) {
-		const { Otp } = this.models;
+	async createSecret(secretEnt) {
+		const { Secret } = this.models;
 
-		const newOtp = {
-			secret: otpEnt.otpSecret,
-			userId: otpEnt.user.id,
+		const newSecret = {
+			secret: secretEnt.otpSecret,
+			userId: secretEnt.user.id,
 		};
 
-		const doc = await Otp.create(newOtp);
+		const doc = await Secret.create(newSecret);
 		if (doc) {
-			otpEnt.id = doc._id;
-			otpEnt.createdAt = doc.createdAt;
+			secretEnt.id = doc._id;
+			secretEnt.createdAt = doc.createdAt;
 
-			return otpEnt;
+			return secretEnt;
 		}
 	}
 };

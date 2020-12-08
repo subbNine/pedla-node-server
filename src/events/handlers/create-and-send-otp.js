@@ -1,12 +1,12 @@
 const SmsService = require("../../services/sms");
 const EmailService = require("../../services/email");
 
-function sendOtp(userEnt) {
+function createAndSendOtp(userEnt) {
 	const services = require("../../services");
 
-	console.log({userEnt})
+	console.log({ userEnt });
 	services.otp
-		.createOtp(userEnt.id)
+		.initTokensStore(userEnt.id)
 		.then(getOtpFromResult)
 		.then(send.bind(null, userEnt));
 }
@@ -28,4 +28,4 @@ function send(userEnt, otpToken) {
 	emailService.send(otpToken);
 }
 
-module.exports = sendOtp;
+module.exports = createAndSendOtp;

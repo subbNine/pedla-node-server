@@ -6,6 +6,7 @@ module.exports = {
 	emailIsRequired: "Email is required",
 	incorrectPassword: "Password is incorrect",
 	incorrectEmail: "Email is incorrect",
+	incorrectUsername: "Username is incorrect",
 	incorrectCred: "Email or password is incorrect",
 	incorrectPasscode: "The passcode you entered is incorrect",
 	emailConflict: "A user already exists with this email",
@@ -13,6 +14,9 @@ module.exports = {
 	otpNotIssued: "otp not issued",
 	expiredOtp: "Expired or Invalid Otp",
 	nameConflict: "An entity already exist with this name",
+	userNameConflict: "The username has already been taken",
+	invalidCode: "You have entered a wrong code",
+	unverifiedProfile: "Profile not yet verified",
 	messageHelpers: {
 		replacement,
 	},

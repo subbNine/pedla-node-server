@@ -1,7 +1,7 @@
 const BaseController = require("./base");
 
-const { otp: otpService } = require("../../services");
-const { OtpDto } = require("../../entities/dtos");
+const { secret: secretService } = require("../../services");
+const { SecretDto } = require("../../entities/dtos");
 
 module.exports = class Otp extends BaseController {
 	constructor() {
@@ -13,19 +13,19 @@ module.exports = class Otp extends BaseController {
 		const { otpToken } = req.body;
 		const user = req._App.user;
 
-		const otpDto = new OtpDto();
+		const otpDto = new SecretDto();
 		otpDto.otpToken = otpToken;
 		otpDto.user = user;
 
-		const result = await otpService.verifyOtp(otpDto);
+		const result = await secretService.verifyOtp(otpDto);
 
 		this.response(result, res);
 	}
 
-	async resendOtp(req, res, next) {
+	async sendOtp(req, res, next) {
 		const user = req._App.user;
 
-		const result = otpService.resendOtp(user);
+		const result = secretService.createAndSendOtp(user);
 
 		this.response(result, res);
 	}

@@ -1,7 +1,7 @@
 const BaseController = require("./base");
 const { UserDto } = require("../../entities/dtos");
 const { user: userService } = require("../../services");
-const { types: userTypes } = require("../../db/mongo/enums").user;
+const { types: userTypes, presence } = require("../../db/mongo/enums").user;
 
 module.exports = class Otp extends BaseController {
 	constructor() {
@@ -36,57 +36,59 @@ module.exports = class Otp extends BaseController {
 		return this.response(result, res);
 	}
 
-	async createPeddlerProfile(req, res, next) {
+	async verifyRegisteredPeddler(req, res, next) {
 		const userDto = new UserDto();
-		const {
-			firstName,
-			lastName,
-			password,
-			email,
-			address,
-			phoneNumber,
-			nTrucks,
-		} = req.body;
 
-		const { user } = req._App;
+		const { peddlerId } = req.params;
 
-		let pooImages;
+		userDto.id = peddlerId;
 
-		if (req.files) {
-			pooImages = req.files.map((file) => {
-				const { public_id, secure_url } = file;
-				return {
-					imgId: public_id,
-					uri: secure_url,
-				};
-			});
-		}
-
-		userDto.address = address;
-		userDto.firstName = firstName;
-		userDto.lastName = lastName;
-		userDto.password = password;
-		userDto.email = email;
-		userDto.phoneNumber = phoneNumber;
-		userDto.type = userTypes.PEDDLER;
-		userDto.pooImages = pooImages;
-		userDto.nTrucks = nTrucks;
-		userDto.id = user.id;
-
-		const result = await userService.updateUser(userDto);
+		const result = await userService.verifyRegisteredPeddler(userDto);
 
 		return this.response(result, res);
 	}
 
-	async verifyRegisteredUser(req, res, next) {}
+	async updateProfile(req, res, next) {
+		const userDto = new UserDto();
 
-	async getProfile(req, res, next) {}
+		const { user } = req._App;
+		const { firstName, lastName, address, phoneNumber } = req.body;
 
-	async updateProfile(req, res, next) {}
+		userDto.address = address;
+		userDto.firstName = firstName;
+		userDto.lastName = lastName;
+		userDto.phoneNumber = phoneNumber;
+		userDto.id = user.id;
 
-	async toggleOnline(req, res, next) {}
+		const result = await userService.updateProfile(userDto);
 
-	async toggleOffline(req, res, next) {}
+		return this.response(result, res);
+	}
+
+	async setOnline(req, res, next) {
+		const userDto = new UserDto();
+
+		const { user } = req._App;
+
+		userDto.id = user.id;
+		userDto.presence = presence.ONLINE;
+
+		const result = await userService.togglePresence(userDto);
+
+		return this.response(result, res);
+	}
+
+	async setOffline(req, res, next) {
+		const userDto = new UserDto();
+
+		const { user } = req._App;
+
+		userDto.id = user.id;
+		userDto.presence = presence.OFFLINE;
+
+		const result = await userService.togglePresence(userDto);
+		return this.response(result, res);
+	}
 
 	async getOnlinePeddlers(req, res, next) {}
 };

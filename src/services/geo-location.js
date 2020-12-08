@@ -1,18 +1,23 @@
-const { UserEnt } = require("../entities/domain");
-const { utils, error } = require("../lib");
-const { eventEmitter, eventTypes } = require("../events");
+const { GeoEnt } = require("../entities/domain");
+const { utils } = require("../lib");
 
-const AppError = error.AppError;
-const errorCodes = error.errorCodes;
-const errMessages = error.messages;
-const { Result, generateJwtToken } = utils;
+const { Result } = utils;
 
-module.exports = class GeoLocation {
+module.exports = class User {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}
 
 	getNearestPeddlers() {}
 
-	updateGeoLocation() {}
+	async updateGeoLocation(geoDto) {
+		const { geoMapper } = this.mappers;
+		const geoEnt = new GeoEnt(geoDto);
+
+		let updatedLoc = await geoMapper.updateGeoLocation(geoEnt.id, geoEnt);
+
+		if (updatedLoc) {
+			return Result.ok({ success: true });
+		}
+	}
 };

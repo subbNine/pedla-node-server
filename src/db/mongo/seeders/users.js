@@ -10,18 +10,22 @@ const data = [];
 class UsersSeeder extends Seeder {
 	async shouldRun() {
 		for (let i = 0; i < 20; i++) {
-			const [userType] = select(userTypes);
+			const [userType] = select(userTypes),
+				firstName = faker.name.firstName(),
+				lastName = faker.name.lastName();
+
 			const user = {
-				firstName: faker.name.firstName(),
-				lastName: faker.name.lastName(),
+				firstName,
+				lastName,
 				email: faker.internet.email(),
 				phoneNumber: faker.phone.phoneNumber(),
-				permission: Math.round(Math.random() * 2),
+				permission: Math.round(Math.random() * 2 + 1),
 				password: 123456,
 				streetAddress: faker.address.streetAddress(),
 				createdAt: Date.now(),
 				type: userType,
 				nTrucks: faker.random.number(10),
+				userName: faker.internet.userName(firstName, lastName),
 			};
 
 			data.push(user);
@@ -31,7 +35,12 @@ class UsersSeeder extends Seeder {
 	}
 
 	async run() {
-		return User.insertMany(data);
+		let count = 1
+		for(const user of data){
+			await User.create(user)
+			count+=1
+		}
+		return count
 	}
 }
 

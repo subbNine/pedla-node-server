@@ -1,4 +1,5 @@
 const multer = require("multer");
+// const path = require("path");
 
 const cloudinaryStorage = require("./cloudinary-storage");
 const {
@@ -23,6 +24,15 @@ const storage = cloudinaryStorage({
 	},
 	destination: "peddler_app",
 });
+
+// const fileStorage = multer.diskStorage({
+// 	filename: (req, file, cb) => {
+// 		cb(null, Date.now() + "" + file.originalname);
+// 	},
+// 	destination: (req, file, cb) => {
+// 		cb(null, path.join(req._App.rootDir, "uploads"));
+// 	},
+// });
 
 const fileUpload = multer({ storage });
 

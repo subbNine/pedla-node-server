@@ -30,6 +30,10 @@ module.exports = {
 		statusCode: 400,
 		name: "IncorrectEmailError",
 	},
+	IncorrectUsernameError: {
+		statusCode: 400,
+		name: "IncorrectUsernameError",
+	},
 	IncorrectPasswordError: {
 		statusCode: 400,
 		name: "IncorrectPasswordError",
@@ -46,4 +50,6 @@ module.exports = {
 	ExpiredOtp: { statusCode: 400, name: "ExpiredOtp" },
 	IncorrectOtp: { statusCode: 400, name: "IncorrectOtp" },
 	OtpNotIssued: { statusCode: 400, name: "OtpNotIssued" },
+	InvalidCodeError: { statusCode: 400, name: "InvalidCodeError" },
+	UnverifiedProfileError: { statusCode: 400, name: "UnverifiedProfileError" },
 };

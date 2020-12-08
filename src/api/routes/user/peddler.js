@@ -3,24 +3,23 @@ const { Router } = require("express");
 const shield = require("../../middlewares/shield");
 const { bounceNonPeddlers } = require("../../middlewares/access-control");
 const { catchAsync } = require("../../../errors");
+const { permissions: perms } = require("../../../db/mongo/enums").user;
 const {
 	product: productController,
 	user: userController,
 } = require("../../controllers");
-const { permissions: perms } = require("../../../db/mongo/enums").user;
-const fileUpload = require("../../middlewares/file-upload");
 
 const router = Router();
 
 router.use(bounceNonPeddlers);
 
-router.use(shield());
+router.use(shield(perms.PERM000));
 
-router.post(
-	"/",
-	fileUpload.any(),
-	catchAsync(userController.createPeddlerProfile)
-);
+router.put("/", catchAsync(userController.updateProfile));
+
+router.put("/online", catchAsync(userController.setOnline));
+
+router.put("/offline", catchAsync(userController.setOffline));
 
 router.get("/products", catchAsync(productController.getProducts));
 

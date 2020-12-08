@@ -8,4 +8,4 @@ let schema = new Schema({
 	userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
-module.exports = mongoose.model("Otp", schema);
+module.exports = mongoose.model("Secret", schema);

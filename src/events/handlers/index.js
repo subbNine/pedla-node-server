@@ -1,4 +1,5 @@
-const sendOtp = require("./send-otp");
+const createAndSendOtp = require("./create-and-send-otp");
 const alertOpsTeam = require("./alert-ops-team");
+const sendPeddlerCode = require("./send-peddler-code");
 
-module.exports = { sendOtp, alertOpsTeam };
+module.exports = { createAndSendOtp, alertOpsTeam, sendPeddlerCode };
