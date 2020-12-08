@@ -118,7 +118,7 @@ router.post(
 router.put("/peddler", shield(), catchAsync(authController.peddlerSignUp));
 
 /**
- * @api {post} /api/auth/peddler/code Create Peddler Profile
+ * @api {post} /api/auth/peddler/code Peddler's code verification
  * @apiName postPeddlerCode
  * @apiGroup Authentication
  *

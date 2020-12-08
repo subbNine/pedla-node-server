@@ -279,7 +279,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/auth/peddler/code",
-    "title": "Create Peddler Profile",
+    "title": "Peddler's code verification",
     "name": "postPeddlerCode",
     "group": "Authentication",
     "version": "1.0.0",
@@ -416,7 +416,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/user/admin/verify-peddler/:peddlerId",
-    "title": "Create Peddler Profile",
+    "title": "Admin verification of peddler's code",
     "name": "postPeddlerVerification",
     "group": "Authentication",
     "version": "1.0.0",

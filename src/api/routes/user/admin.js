@@ -21,7 +21,7 @@ router.post("/product", catchAsync(productController.createProduct));
 router.put("/product", catchAsync(productController.updateProduct));
 
 /**
- * @api {post} /api/user/admin/verify-peddler/:peddlerId Create Peddler Profile
+ * @api {post} /api/user/admin/verify-peddler/:peddlerId Admin verification of peddler's code
  * @apiName postPeddlerVerification
  * @apiGroup Authentication
  *
