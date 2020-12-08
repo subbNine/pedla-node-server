@@ -23,19 +23,16 @@ router.put("/offline", catchAsync(userController.setOffline));
 
 router.get("/products", catchAsync(productController.getProducts));
 
-router.get(
-	"/peddler-products",
-	catchAsync(productController.getPeddlerProducts)
-);
+router.get("/own-products", catchAsync(productController.getPeddlerProducts));
 
 router.post(
-	"/product",
+	"/own-product",
 	shield(perms.PERM002),
 	catchAsync(productController.createPeddlerProduct)
 );
 
 router.put(
-	"/product/:productId",
+	"/own-product/:productId",
 	shield(perms.PERM002),
 	catchAsync(productController.updatePeddlerProduct)
 );
