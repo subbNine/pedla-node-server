@@ -15,7 +15,7 @@ router.use(bounceNonBuyers);
 
 router.use(shield(permissions.PERM000));
 
-router.post("/", catchAsync(userController.createBuyerProfile));
+// router.post("/", catchAsync(userController.createBuyerProfile));
 
 router.put("/", catchAsync(userController.updateProfile));
 
