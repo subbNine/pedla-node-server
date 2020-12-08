@@ -11,6 +11,12 @@
     "seed-dev": "NODE_ENV=development ./node_modules/.bin/md-seed",
     "seed-stage": "NODE_ENV=staging ./node_modules/.bin/md-seed"
   },
+  "apidoc": {
+    "title": "Pedla Api Docs",
+    "description": "Pedla server api docs",
+    "url": "https://pedla-app.herokuapp.com",
+    "version": "1.0.0"
+  },
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.0.0",
