@@ -68,7 +68,7 @@ router.post("/product", catchAsync(productController.createProduct));
 router.put("/product/:productId", catchAsync(productController.updateProduct));
 
 /**
- * @api {post} /api/user/admin/verify-peddler/:peddlerId Admin verification of peddler's code
+ * @api {post} /api/user/admin/verify-peddler/:peddlerId Admin verification of peddler profile
  * @apiName postPeddlerVerification
  * @apiGroup Authentication
  *

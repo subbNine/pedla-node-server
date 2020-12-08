@@ -612,7 +612,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/user/admin/verify-peddler/:peddlerId",
-    "title": "Admin verification of peddler's code",
+    "title": "Admin verification of peddler profile",
     "name": "postPeddlerVerification",
     "group": "Authentication",
     "version": "1.0.0",
