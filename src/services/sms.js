@@ -3,7 +3,7 @@ module.exports = class SmsService {
 		this.smsGateway = smsGateway;
 	}
 
-	send(token) {
-		console.log("sending sms", token)
+	send({ to, message }) {
+		this.smsGateway.send({ to, message });
 	}
 };

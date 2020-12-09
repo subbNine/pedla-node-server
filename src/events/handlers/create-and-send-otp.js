@@ -1,9 +1,7 @@
-const PNF = require("google-libphonenumber").PhoneNumberFormat;
-const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
-
 const SmsService = require("../../services/sms");
 const EmailService = require("../../services/email");
 const emailGateway = require("../../gateways").email;
+const smsGateway = require("../../gateways").sms;
 
 function createAndSendOtp(userEnt) {
 	const services = require("../../services");
@@ -25,10 +23,18 @@ function getOtpFromResult(result) {
 }
 
 function send(userEnt, otpToken) {
-	// const smsService = new SmsService();
+	const smsService = new SmsService(smsGateway);
 	const emailService = new EmailService(emailGateway);
 
-	// smsService.send(peddlerCode);
+	smsService.send({
+		to: userEnt.phonNumber,
+		message:
+			"Hello Here is your otp token:" +
+			" " +
+			otpToken +
+			" " +
+			"This token is valid for 6 mins",
+	});
 
 	emailService.send({
 		from: '"Adekunle From Peddler" <info@peddler.com>',
@@ -41,11 +47,6 @@ function send(userEnt, otpToken) {
 			" " +
 			"This token is valid for 6 mins",
 	});
-}
-
-function normalizePhoneNumber(phoneNumber) {
-	const number = phoneUtil.parseAndKeepRawInput(phoneNumber, "NG");
-	return phoneUtil.format(number, PNF.E164);
 }
 
 module.exports = createAndSendOtp;
