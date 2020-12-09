@@ -48,6 +48,14 @@ module.exports = class Otp extends BaseController {
 		return this.response(result, res);
 	}
 
+	async getPeddlers(req, res, next) {
+		const { vstatus: status } = req.query;
+
+		const result = await userService.getPeddlers(status);
+
+		return this.response(result, res);
+	}
+
 	async updateProfile(req, res, next) {
 		const userDto = new UserDto();
 

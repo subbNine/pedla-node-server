@@ -30,6 +30,7 @@ module.exports = class User {
 		const userEnt = new UserEnt(userDto);
 
 		userEnt.permission = permissions.PERM001;
+		userEnt.isActivePeddler = true;
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
 
 		if (updatedUser) {
@@ -37,6 +38,18 @@ module.exports = class User {
 
 			const objRepr = updatedUser.repr();
 			return Result.ok({ ...objRepr });
+		}
+	}
+
+	async getPeddlers(status) {
+		const { userMapper } = this.mappers;
+
+		const peddlers = await userMapper.findPeddlersByVStatus(status);
+
+		if (peddlers) {
+			return Result.ok(peddlers.map((eachUser) => eachUser.repr()));
+		} else {
+			return Result.ok([]);
 		}
 	}
 

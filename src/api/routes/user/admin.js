@@ -85,4 +85,20 @@ router.put(
 	catchAsync(userController.verifyRegisteredPeddler)
 );
 
+/**
+ * @api {get} /api/user/admin/peddlers?vstatus=uncategorized get peddlers
+ * @apiName getPeddlers
+ * @apiGroup Peddler Verification
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Get peddlers by verification status
+ *
+ * @apiSuccess {String} vStatus Verification status verified|unverified|uncategorized
+ */
+router.get(
+	"/peddlers?vstatus=uncategorized",
+	catchAsync(userController.getPeddlers)
+);
+
 module.exports = router;
