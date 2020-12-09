@@ -27,7 +27,7 @@ function send(userEnt, otpToken) {
 	const emailService = new EmailService(emailGateway);
 
 	smsService.send({
-		to: userEnt.phonNumber,
+		to: userEnt.phoneNumber,
 		message:
 			"Hello Here is your otp token:" +
 			" " +
