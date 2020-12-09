@@ -5,8 +5,8 @@ function createAndSendOtp(userEnt) {
 	const services = require("../../services");
 
 	console.log({ userEnt });
-	services.otp
-		.initTokensStore(userEnt.id)
+	services.secret
+		.initSecretsStore(userEnt.id)
 		.then(getOtpFromResult)
 		.then(send.bind(null, userEnt));
 }
