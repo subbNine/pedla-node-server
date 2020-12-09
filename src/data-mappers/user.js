@@ -38,7 +38,7 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
-	findPeddlersByVStatus(status) {
+	async findPeddlersByVStatus(status) {
 		const { User } = this.models;
 
 		const PEDDLER_STATUS = {
