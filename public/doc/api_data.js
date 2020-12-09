@@ -793,5 +793,29 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/peddlers?vstatus=uncategorized",
+    "title": "get peddlers",
+    "name": "getPeddlers",
+    "group": "Peddler_Verification",
+    "version": "1.0.0",
+    "description": "<p>Get peddlers by verification status</p>",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "vStatus",
+            "description": "<p>Verification status verified|unverified|uncategorized</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Peddler_Verification"
   }
 ] });
