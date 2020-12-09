@@ -43,5 +43,3 @@ function normalizePhoneNumber(phoneNumber) {
 }
 
 module.exports = createAndSendOtp;
-
-
