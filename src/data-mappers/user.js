@@ -1,5 +1,6 @@
 const BaseMapper = require("./base");
 const { UserEnt } = require("../entities/domain");
+const { types } = require("../db/mongo/enums").user;
 
 module.exports = class UserMapper extends BaseMapper {
 	_toEntityTransform = {
@@ -47,7 +48,7 @@ module.exports = class UserMapper extends BaseMapper {
 			unverified: "unverified",
 		};
 
-		const search = {};
+		const search = { type: types.PEDDLER };
 
 		if (status === PEDDLER_STATUS.uncategorized) {
 			search.isActivePeddler = { $exists: false };
@@ -66,7 +67,11 @@ module.exports = class UserMapper extends BaseMapper {
 		if (docs) {
 			for (const doc of docs) {
 				results.push(
-					this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform)
+					this._toEntity(
+						doc.toObject(),
+						UserEnt,
+						this._toEntityTransform
+					)
 				);
 			}
 
