@@ -1,5 +1,7 @@
 const SmsService = require("../../services/sms");
 const EmailService = require("../../services/email");
+const PNF = require("google-libphonenumber").PhoneNumberFormat;
+const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
 
 function createAndSendOtp(userEnt) {
 	const services = require("../../services");
@@ -21,11 +23,24 @@ function getOtpFromResult(result) {
 }
 
 function send(userEnt, otpToken) {
+	const options = {
+		from: "PEDLA",
+		to: normalizePhoneNumber(phoneNumber),
+		message: `welcome to pedla`,
+	};
+
 	const smsService = new SmsService();
 	const emailService = new EmailService();
 
-	smsService.send(otpToken);
-	emailService.send(otpToken);
+	smsService.send(options);
+	emailService.send(options);
+}
+
+function normalizePhoneNumber(phoneNumber) {
+	const number = phoneUtil.parseAndKeepRawInput(phoneNumber, "NG");
+	return phoneUtil.format(number, PNF.E164);
 }
 
 module.exports = createAndSendOtp;
+
+
