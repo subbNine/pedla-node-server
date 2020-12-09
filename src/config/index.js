@@ -13,7 +13,7 @@ const {
 	CLOUDINARY_CLOUD_NAME,
 } = process.env;
 
-console.log({env: process.env})
+console.log({ env: process.env });
 
 const dbConf = {
 	mongo: {
@@ -21,22 +21,25 @@ const dbConf = {
 			DB_USER: MONGO_USER,
 			DB_PW: MONGO_PW,
 			DB_NAME: DB_NAME,
-			generateConnStr: () =>
-				`mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`,
+			generateConnStr() {
+				return `mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`;
+			},
 		},
 		staging: {
 			DB_USER: MONGO_USER,
 			DB_PW: MONGO_PW,
 			DB_NAME: DB_NAME,
-			generateConnStr: () =>
-				`mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`,
+			generateConnStr() {
+				return `mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`;
+			},
 		},
 		testing: {
 			DB_USER: MONGO_USER,
 			DB_PW: MONGO_PW,
 			DB_NAME: DB_NAME,
-			generateConnStr: () =>
-				`mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`,
+			generateConnStr() {
+				return `mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`;
+			},
 		},
 		development: {
 			generateConnStr() {
