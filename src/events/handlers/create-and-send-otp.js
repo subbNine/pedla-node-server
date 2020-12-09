@@ -3,6 +3,7 @@ const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance()
 
 const SmsService = require("../../services/sms");
 const EmailService = require("../../services/email");
+const emailGateway = require("../../gateways").email;
 
 function createAndSendOtp(userEnt) {
 	const services = require("../../services");
@@ -24,17 +25,22 @@ function getOtpFromResult(result) {
 }
 
 function send(userEnt, otpToken) {
-	const options = {
-		from: "PEDLA",
-		to: normalizePhoneNumber(phoneNumber),
-		message: `welcome to pedla`,
-	};
+	// const smsService = new SmsService();
+	const emailService = new EmailService(emailGateway);
 
-	const smsService = new SmsService();
-	const emailService = new EmailService();
+	// smsService.send(peddlerCode);
 
-	smsService.send(options);
-	emailService.send(options);
+	emailService.send({
+		from: '"Adekunle From Peddler" <info@peddler.com>',
+		to: userEnt.email,
+		subject: "Otp Verification",
+		text:
+			"Hello Here is your otp token:" +
+			" " +
+			otpToken +
+			" " +
+			"This token is valid for 6 mins",
+	});
 }
 
 function normalizePhoneNumber(phoneNumber) {

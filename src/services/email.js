@@ -3,7 +3,7 @@ module.exports = class EmailService {
 		this.emailGateway = emailGateway;
 	}
 
-	send(token) {
-		console.log("sending mail", token)
+	send({ from, to, subject, text, html }) {
+		this.emailGateway.send({ from, to, subject, text, html });
 	}
 };

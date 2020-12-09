@@ -11,6 +11,10 @@ const {
 	CLOUDINARY_SECRET,
 	CLOUDINARY_API_KEY,
 	CLOUDINARY_CLOUD_NAME,
+	SMS_API_KEY,
+	SMS_SENDER,
+	EMAIL_SENDER,
+	EMAIL_API_KEY,
 } = process.env;
 
 console.log({ env: process.env });
@@ -59,3 +63,7 @@ module.exports.PORT = PORT || 4700;
 module.exports.CLOUDINARY_CLOUD_NAME = CLOUDINARY_CLOUD_NAME;
 module.exports.CLOUDINARY_API_KEY = CLOUDINARY_API_KEY;
 module.exports.CLOUDINARY_SECRET = CLOUDINARY_SECRET;
+module.exports.SMS_API_KEY = SMS_API_KEY;
+module.exports.SMS_SENDER = SMS_SENDER;
+module.exports.EMAIL_SENDER = EMAIL_SENDER;
+module.exports.EMAIL_API_KEY = EMAIL_API_KEY;

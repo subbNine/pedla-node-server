@@ -1,5 +1,6 @@
 const SmsService = require("../../services/sms");
 const EmailService = require("../../services/email");
+const emailGateway = require("../../gateways").email;
 
 module.exports = function (userEnt) {
 	const services = require("../../services");
@@ -11,7 +12,7 @@ module.exports = function (userEnt) {
 		.then(updatePeddlerProfileWithGeneratedCode.bind(this, userEnt))
 		.then((res) => {
 			const peddlerCode = res.getValue().peddlerCode;
-			sendPeddlerCode(peddlerCode);
+			sendPeddlerCode(peddlerCode, userEnt);
 		});
 };
 
@@ -31,10 +32,21 @@ function updatePeddlerProfileWithGeneratedCode(userEnt, token) {
 	return services.user.updateProfile(userEnt);
 }
 
-function sendPeddlerCode(peddlerCode) {
-	const smsService = new SmsService();
-	const emailService = new EmailService();
+function sendPeddlerCode(peddlerCode, userEnt) {
+	// const smsService = new SmsService();
+	const emailService = new EmailService(emailGateway);
 
-	smsService.send(peddlerCode);
-	emailService.send(peddlerCode);
+	// smsService.send(peddlerCode);
+
+	emailService.send({
+		from: '"Adekunle From Peddler" <info@peddler.com>',
+		to: userEnt.email,
+		subject: "Profile Approved",
+		text:
+			"Your Profile has been approved and your Peddler code is" +
+			" " +
+			peddlerCode +
+			" " +
+			"Signup using this code on your peddler app",
+	});
 }
