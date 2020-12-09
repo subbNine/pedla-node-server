@@ -13,6 +13,8 @@ const {
 	CLOUDINARY_CLOUD_NAME,
 } = process.env;
 
+console.log({env: process.env})
+
 const dbConf = {
 	mongo: {
 		production: {
