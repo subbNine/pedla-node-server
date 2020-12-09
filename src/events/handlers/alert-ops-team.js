@@ -20,7 +20,7 @@ function sendMessage(userEnt) {
 			" " +
 			userEnt.name +
 			" " +
-			"has registered, check your Admin dashboard",
+			"has registered, check your dashboard",
 	});
 }
 
