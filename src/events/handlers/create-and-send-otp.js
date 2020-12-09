@@ -1,7 +1,8 @@
-const SmsService = require("../../services/sms");
-const EmailService = require("../../services/email");
 const PNF = require("google-libphonenumber").PhoneNumberFormat;
 const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
+
+const SmsService = require("../../services/sms");
+const EmailService = require("../../services/email");
 
 function createAndSendOtp(userEnt) {
 	const services = require("../../services");
