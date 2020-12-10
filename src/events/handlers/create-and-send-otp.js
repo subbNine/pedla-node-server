@@ -6,7 +6,6 @@ const smsGateway = require("../../gateways").sms;
 function createAndSendOtp(userEnt) {
 	const services = require("../../services");
 
-	console.log({ userEnt });
 	services.secret
 		.initSecretsStore(userEnt.id)
 		.then(getOtpFromResult)
@@ -26,8 +25,6 @@ function send(userEnt, otpToken) {
 	const smsService = new SmsService(smsGateway);
 	const emailService = new EmailService(emailGateway);
 
-	console.log({userEnt, otpToken})
-
 	// smsService.send({
 	// 	to: userEnt.phoneNumber,
 	// 	message:
@@ -39,7 +36,7 @@ function send(userEnt, otpToken) {
 	// });
 
 	emailService.send({
-		from: 'Adekunle From Peddler <pedlaapp20@gmail.com>',
+		from: "Adekunle From Peddler <pedlaapp20@gmail.com>",
 		to: userEnt.email,
 		subject: "Otp Verification",
 		text:
