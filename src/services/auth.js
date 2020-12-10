@@ -180,7 +180,7 @@ module.exports = class Auth {
 				);
 			} else {
 				const userEnt = new UserEnt(userDto);
-				const updatedUser = await userMapper.updateUserById(
+				const updatedUser = await userMapper.signup(
 					foundUser.id,
 					userEnt
 				);

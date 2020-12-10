@@ -119,6 +119,31 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
+	async signup(userId, userEntUpdate) {
+		const { User } = this.models;
+
+		const updates = this._toPersistence(
+			userEntUpdate,
+			this._toPersistenceTransform
+		);
+
+		const doc = await User.findByIdAndUpdate(userId, updates, {
+			new: true,
+		});
+
+		doc.password = userEntUpdate.password;
+
+		await doc.save();
+
+		if (doc) {
+			return this._toEntity(
+				doc.toObject(),
+				UserEnt,
+				this._toEntityTransform
+			);
+		}
+	}
+
 	async searchFor(userEnt) {
 		const { User } = this.models;
 
