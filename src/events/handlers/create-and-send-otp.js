@@ -26,15 +26,15 @@ function send(userEnt, otpToken) {
 	const smsService = new SmsService(smsGateway);
 	const emailService = new EmailService(emailGateway);
 
-	smsService.send({
-		to: userEnt.phoneNumber,
-		message:
-			"Hello Here is your otp token:" +
-			" " +
-			otpToken +
-			" " +
-			"This token is valid for 6 mins",
-	});
+	// smsService.send({
+	// 	to: userEnt.phoneNumber,
+	// 	message:
+	// 		"Hello Here is your otp token:" +
+	// 		" " +
+	// 		otpToken +
+	// 		" " +
+	// 		"This token is valid for 6 mins",
+	// });
 
 	emailService.send({
 		from: 'Adekunle From Peddler <pedlaapp20@gmail.com>',
