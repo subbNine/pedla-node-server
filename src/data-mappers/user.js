@@ -129,7 +129,7 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const foundUser = await User.findById(userId);
 
-		const doc = Object.assign(foundUser, userEntUpdate.repr());
+		const doc = Object.assign(foundUser, userEntUpdate);
 
 		const savedDoc = await doc.save();
 
