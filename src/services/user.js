@@ -68,6 +68,16 @@ module.exports = class User {
 		}
 	}
 
+	async getProfile(userId) {
+		const { userMapper } = this.mappers;
+
+		const user = await userMapper.findUser({ _id: userId });
+
+		if (user) {
+			return Result.ok(user.repr());
+		}
+	}
+
 	async updateProfile(userDto) {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
