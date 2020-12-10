@@ -9,13 +9,13 @@ const { user: userController } = require("../controllers");
 
 const router = Router();
 
+router.get("/user", userController.checkUserExistence);
+
 router.use(initExpressVars);
 
 router.use("/auth", authRoutes);
 
 router.use("/otp", shield(), otpRoutes);
-
-router.get("/user", userController.checkUserExistence);
 
 router.use("/user", userRoutes);
 

@@ -15,8 +15,6 @@ router.use(bounceNonBuyers);
 
 router.use(shield(permissions.PERM000));
 
-// router.post("/", catchAsync(userController.createBuyerProfile));
-
 router.put("/", catchAsync(userController.updateProfile));
 
 router.put("/online", catchAsync(userController.setOnline));
@@ -34,5 +32,7 @@ router.get(
 	shield(permissions.PERM001),
 	catchAsync(productController.getPeddlerProducts)
 );
+
+router.get("/profile", catchAsync(userController.getProfile));
 
 module.exports = router;

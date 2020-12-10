@@ -19,8 +19,8 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			userName: { $exists: true },
-			userName: userDto.userName,
+			email: { $exists: true },
+			email: userDto.email,
 		});
 
 		if (foundUser) {
@@ -60,8 +60,10 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			userName: { $exists: true },
-			userName: userDto.userName,
+			$and: [
+				{ userName: { $exists: true } },
+				{ userName: userDto.userName },
+			],
 		});
 
 		if (foundUser) {

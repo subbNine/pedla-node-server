@@ -5,7 +5,6 @@ const peddlerRoutes = require("./peddler");
 const adminRoutes = require("./admin");
 const { user: userController } = require("../../controllers");
 
-
 const router = Router();
 
 router.use("/buyer", buyerRoutes);
@@ -13,7 +12,5 @@ router.use("/buyer", buyerRoutes);
 router.use("/peddler", peddlerRoutes);
 
 router.use("/admin", adminRoutes);
-
-router.get("/:userId", userController.getProfile)
 
 module.exports = router;

@@ -69,9 +69,9 @@ module.exports = class Otp extends BaseController {
 	}
 
 	async getProfile(req, res, next) {
-		const { userId } = req.params;
+		const { user } = req._App;
 
-		const result = await userService.getProfile(userId);
+		const result = await userService.getProfile(user.id);
 
 		return this.response(result, res);
 	}
