@@ -20,6 +20,7 @@ module.exports = class User {
 	latlon;
 	peddlerCode;
 	isActivePeddler;
+	nTrucks;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -92,6 +93,9 @@ module.exports = class User {
 		}
 		if (this.peddlerCode) {
 			objectRepr.peddlerCode = this.peddlerCode;
+		}
+		if (this.nTrucks) {
+			objectRepr.nTrucks = this.nTrucks;
 		}
 
 		objectRepr.isActivePeddler = this.isActivePeddler;
