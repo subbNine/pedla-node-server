@@ -65,6 +65,7 @@ module.exports = class Auth {
 		});
 
 		if (foundUser) {
+			// console.log.log({foundUser})
 			const isPasswordMatch = await foundUser.comparePassword(
 				userDto.password
 			);
@@ -77,6 +78,7 @@ module.exports = class Auth {
 				);
 
 				objRepr.token = token;
+
 				eventEmitter.emit(eventTypes.loggedIn, foundUser);
 
 				return Result.ok(objRepr);

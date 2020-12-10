@@ -17,8 +17,6 @@ const {
 	EMAIL_API_KEY,
 } = process.env;
 
-console.log({ env: process.env });
-
 const dbConf = {
 	mongo: {
 		production: {

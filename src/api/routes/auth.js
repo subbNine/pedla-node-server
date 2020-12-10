@@ -48,7 +48,7 @@ router.post("/signin", catchAsync(authController.signIn));
  * @apiUse IncorrectUsernameError
  * @apiUse IncorrectPasswordError
  */
-router.post("/peddler/signin", catchAsync(authController.signIn));
+router.post("/peddler/signin", catchAsync(authController.peddlerSignIn));
 
 /**
  * @api {post} /api/auth/admin/signin Admin Sign In

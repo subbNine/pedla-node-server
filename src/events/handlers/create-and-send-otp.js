@@ -26,6 +26,8 @@ function send(userEnt, otpToken) {
 	const smsService = new SmsService(smsGateway);
 	const emailService = new EmailService(emailGateway);
 
+	console.log({userEnt, otpToken})
+
 	// smsService.send({
 	// 	to: userEnt.phoneNumber,
 	// 	message:
