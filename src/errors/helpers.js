@@ -8,6 +8,7 @@ function _sendDevError(err, res) {
 }
 
 function _sendProdError(err, res) {
+	console.log(err)
 	if (err.isOperational) {
 		const { stack, ...rest } = err;
 

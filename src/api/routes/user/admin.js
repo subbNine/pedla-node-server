@@ -68,7 +68,7 @@ router.post("/product", catchAsync(productController.createProduct));
 router.put("/product/:productId", catchAsync(productController.updateProduct));
 
 /**
- * @api {post} /api/user/admin/verify-peddler/:peddlerId Admin verification of peddler profile
+ * @api {put} /api/user/admin/verify-peddler/:peddlerId Admin verification of peddler profile
  * @apiName postPeddlerVerification
  * @apiGroup Authentication
  *
@@ -82,6 +82,24 @@ router.put("/product/:productId", catchAsync(productController.updateProduct));
  */
 router.put(
 	"/verify-peddler/:peddlerId",
+	catchAsync(userController.verifyRegisteredPeddler)
+);
+
+/**
+ * @api {put} /api/user/admin/reject-peddler/:peddlerId Admin verification of peddler profile
+ * @apiName postPeddlerVerification
+ * @apiGroup Authentication
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription reject peddler profile
+ *
+ * @apiParam {ID} peddlerId Peddler's id.
+ *
+ * @apiSuccess {ID} id user id
+ */
+router.put(
+	"/reject-peddler/:peddlerId",
 	catchAsync(userController.verifyRegisteredPeddler)
 );
 

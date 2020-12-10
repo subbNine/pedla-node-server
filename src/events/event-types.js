@@ -5,5 +5,6 @@ module.exports = {
 	loggedIn: "logged-in",
 	alertOpsTeam: "alert-ops-team",
 	peddlerVerified: "peddler-verified",
+	peddlerRejected: "peddler-rejected",
 	buyerCreated: "buyer-created",
 };

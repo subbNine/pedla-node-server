@@ -5,6 +5,7 @@ const {
 	createAndSendOtp,
 	alertOpsTeam,
 	sendPeddlerCode,
+	notifyPeddlerRejection,
 } = require("./handlers");
 
 const eventEmitter = new EventEmitter();
@@ -18,6 +19,8 @@ eventEmitter.on(eventTypes.loggedIn, createAndSendOtp);
 eventEmitter.on(eventTypes.alertOpsTeam, alertOpsTeam);
 
 eventEmitter.on(eventTypes.peddlerVerified, sendPeddlerCode);
+
+eventEmitter.on(eventTypes.peddlerRejected, notifyPeddlerRejection);
 
 eventEmitter.on(eventTypes.buyerCreated, createAndSendOtp);
 

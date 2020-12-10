@@ -41,6 +41,21 @@ module.exports = class User {
 		}
 	}
 
+	async rejectRegisteredPeddler(userDto) {
+		const { userMapper } = this.mappers;
+		const userEnt = new UserEnt(userDto);
+
+		userEnt.isActivePeddler = false;
+		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+
+		if (updatedUser) {
+			eventEmitter.emit(eventTypes.peddlerRejected, updatedUser);
+
+			const objRepr = updatedUser.repr();
+			return Result.ok({ ...objRepr });
+		}
+	}
+
 	async getPeddlers(status) {
 		const { userMapper } = this.mappers;
 

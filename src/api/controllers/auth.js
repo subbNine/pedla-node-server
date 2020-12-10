@@ -1,6 +1,6 @@
 const BaseController = require("./base");
 const { UserDto } = require("../../entities/dtos");
-const { auth: authService, user: userService } = require("../../services");
+const { auth: authService } = require("../../services");
 const { types: userTypes } = require("../../db/mongo/enums").user;
 
 module.exports = class Auth extends BaseController {
