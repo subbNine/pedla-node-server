@@ -26,9 +26,9 @@ router.get("/products", catchAsync(productController.getProducts));
 router.get("/own-products", catchAsync(productController.getPeddlerProducts));
 
 router.post(
-	"/own-product",
+	"/own-products",
 	shield(perms.PERM002),
-	catchAsync(productController.createPeddlerProduct)
+	catchAsync(productController.createPeddlerProducts)
 );
 
 router.put(

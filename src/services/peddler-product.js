@@ -1,9 +1,6 @@
-const { utils, error } = require("../lib");
+const { utils } = require("../lib");
 const { PeddlerProductEnt } = require("../entities/domain");
 
-const AppError = error.AppError;
-const errorCodes = error.errorCodes;
-const errMessages = error.messages;
 const { Result } = utils;
 
 module.exports = class Auth {
@@ -11,28 +8,33 @@ module.exports = class Auth {
 		this.mappers = mappers;
 	}
 
-	async createProduct(peddlerProductDto) {
+	async createProducts(productDtoList) {
 		const { peddlerProductMapper } = this.mappers;
 
-		const foundProduct = await peddlerProductMapper.findProduct({
-			peddler: peddlerProductDto.peddler,
-			product: peddlerProductDto.product,
-		});
+		let resultList;
+		const arrOfPromises = [];
+		for (const peddlerProductDto of productDtoList) {
+			const foundProduct = await peddlerProductMapper.findProduct({
+				peddler: peddlerProductDto.peddler,
+				product: peddlerProductDto.product,
+			});
 
-		if (foundProduct) {
-			return Result.fail(
-				new AppError({
-					name: errorCodes.NameConflictError.name,
-					message: errMessages.nameConflict,
-					statusCode: errorCodes.NameConflictError.statusCode,
-				})
-			);
-		} else {
-			const newProduct = await peddlerProductMapper.createProduct(
-				new PeddlerProductEnt(peddlerProductDto)
-			);
-			return Result.ok(newProduct.repr());
+			if (foundProduct) {
+				const updatedProductPromise = peddlerProductMapper.updateProductById(
+					foundProduct.id,
+					new PeddlerProductEnt(peddlerProductDto)
+				);
+				arrOfPromises.push(updatedProductPromise);
+			} else {
+				const newProductPromise = peddlerProductMapper.createProduct(
+					new PeddlerProductEnt(peddlerProductDto)
+				);
+				arrOfPromises.push(newProductPromise);
+			}
 		}
+		resultList = await Promise.all(arrOfPromises);
+
+		return Result.ok(resultList.map((eachProduct) => eachProduct.repr()));
 	}
 
 	async findProducts(peddlerProductFilterDto) {
