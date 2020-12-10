@@ -17,7 +17,7 @@ router.use("/otp", shield(), otpRoutes);
 
 router.get("/user", userController.checkUserExistence);
 
-router.use("/user", shield(), userRoutes);
+router.use("/user", userRoutes);
 
 module.exports = router;
 

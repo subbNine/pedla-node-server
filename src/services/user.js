@@ -109,9 +109,9 @@ module.exports = class User {
 		let user = await userMapper.searchFor(userEnt);
 
 		if (user) {
-			return Result.ok({ success: true });
+			return Result.ok(true);
 		} else {
-			return Result.ok({});
+			return Result.ok(false);
 		}
 	}
 };
