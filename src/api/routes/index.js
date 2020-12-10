@@ -5,6 +5,7 @@ const otpRoutes = require("./otp");
 const userRoutes = require("./user");
 const shield = require("../middlewares/shield");
 const initExpressVars = require("../middlewares/init-express-global-vars");
+const { user: userController } = require("../controllers");
 
 const router = Router();
 
@@ -13,6 +14,8 @@ router.use(initExpressVars);
 router.use("/auth", authRoutes);
 
 router.use("/otp", shield(), otpRoutes);
+
+router.get("/user", userController.checkUserExistence);
 
 router.use("/user", shield(), userRoutes);
 

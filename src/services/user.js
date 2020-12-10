@@ -76,4 +76,17 @@ module.exports = class User {
 			return Result.ok({ id: objRepr.id, presence: objRepr.presence });
 		}
 	}
+
+	async checkUserExistence(userDto) {
+		const { userMapper } = this.mappers;
+		const userEnt = new UserEnt(userDto);
+
+		let user = await userMapper.searchFor(userEnt);
+
+		if (user) {
+			return Result.ok({ success: true });
+		} else {
+			return Result.ok({});
+		}
+	}
 };

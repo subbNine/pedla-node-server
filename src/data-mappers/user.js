@@ -1,5 +1,6 @@
 const BaseMapper = require("./base");
 const { UserEnt } = require("../entities/domain");
+const isObjectEmpty = require("../lib/utils/is-object-empty");
 const { types } = require("../db/mongo/enums").user;
 
 module.exports = class UserMapper extends BaseMapper {
@@ -121,25 +122,29 @@ module.exports = class UserMapper extends BaseMapper {
 	async searchFor(userEnt) {
 		const { User } = this.models;
 
-		let matchEmailOrUserName = { $or: [] };
+		let matchEmailOrUserName = {};
 
 		if (userEnt.email) {
+			matchEmailOrUserName.$or = [];
 			const matchEmail = { email: new RegExp(userEnt.email, "i") };
 			matchEmailOrUserName.$or.push(matchEmail);
 		}
 
 		if (userEnt.userName) {
+			if (!matchEmailOrUserName.$or) {
+				matchEmailOrUserName.$or = [];
+			}
 			const matchUserName = {
 				userName: new RegExp(userEnt.userName, "i"),
 			};
 			matchEmailOrUserName.$or.push(matchUserName);
 		}
 
-		const doc = await User.findOne(matchEmailOrUserName, {
-			new: true,
-		});
+		const doc = await User.findOne(matchEmailOrUserName);
 
-		if (doc) {
+		console.log({ doc, matchEmailOrUserName });
+
+		if (doc && !isObjectEmpty(matchEmailOrUserName)) {
 			return this._toEntity(
 				doc.toObject(),
 				UserEnt,
