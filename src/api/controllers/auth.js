@@ -10,10 +10,10 @@ module.exports = class Auth extends BaseController {
 	}
 
 	async signIn(req, res, next) {
-		const { userName, password } = req.body;
+		const { email, password } = req.body;
 
 		const userDto = new UserDto();
-		userDto.userName = userName;
+		userDto.email = email;
 		userDto.password = password;
 
 		const result = await authService.signIn(userDto);
