@@ -76,7 +76,7 @@ module.exports = class Auth extends BaseController {
 		return this.response(result, res);
 	}
 
-	async verifyPeddlerCode() {
+	async verifyPeddlerCode(req, res, next) {
 		const { code } = req.body;
 
 		const { user } = req._App;
