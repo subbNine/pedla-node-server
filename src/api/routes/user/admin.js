@@ -96,9 +96,6 @@ router.put(
  *
  * @apiSuccess {String} vStatus Verification status verified|unverified|uncategorized
  */
-router.get(
-	"/peddlers?vstatus=uncategorized",
-	catchAsync(userController.getPeddlers)
-);
+router.get("/peddlers", catchAsync(userController.getPeddlers));
 
 module.exports = router;
