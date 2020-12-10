@@ -684,13 +684,50 @@
     }
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/api/user/admin/verify-peddler/:peddlerId",
     "title": "Admin verification of peddler profile",
     "name": "postPeddlerVerification",
     "group": "Authentication",
     "version": "1.0.0",
     "description": "<p>verify peddler profile</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "peddlerId",
+            "description": "<p>Peddler's id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>user id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Authentication"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/reject-peddler/:peddlerId",
+    "title": "Admin verification of peddler profile",
+    "name": "postPeddlerVerification",
+    "group": "Authentication",
+    "version": "1.0.0",
+    "description": "<p>reject peddler profile</p>",
     "parameter": {
       "fields": {
         "Parameter": [
