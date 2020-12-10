@@ -37,7 +37,7 @@ function send(userEnt, otpToken) {
 	});
 
 	emailService.send({
-		from: '"Adekunle From Peddler" <pedlaapp20@gmail.com>',
+		from: 'Adekunle From Peddler <pedlaapp20@gmail.com>',
 		to: userEnt.email,
 		subject: "Otp Verification",
 		text:

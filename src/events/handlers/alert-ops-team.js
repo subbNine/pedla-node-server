@@ -12,7 +12,7 @@ function sendMessage(userEnt) {
 	// smsService.send(peddlerCode);
 
 	emailService.send({
-		from: '"Peddler" <pedlaapp20@gmail.com>',
+		from: 'Peddler <pedlaapp20@gmail.com>',
 		to: "pedlaapp20@gmail.com",
 		subject: "New Peddler Registered",
 		text:

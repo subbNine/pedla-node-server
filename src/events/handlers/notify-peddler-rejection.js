@@ -12,7 +12,7 @@ function sendRejectionMsg(userEnt) {
 	// smsService.send(peddlerCode);
 
 	emailService.send({
-		from: '"Adekunle From Peddler" <pedlaapp20@gmail.com>',
+		from: 'Adekunle From Peddler <pedlaapp20@gmail.com>',
 		to: userEnt.email,
 		subject: "Profile Approved",
 		text: "Hello, " + userEnt.name + " " + "You Profile was not approved",
