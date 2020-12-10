@@ -17,12 +17,12 @@ module.exports = class UserMapper extends BaseMapper {
 		const doc = await PeddlerProduct.findOne(
 			this.toPeddlerProductPersistence(filter)
 		)
-			.populate("peddlerId")
+			// .populate("peddlerId")
 			.populate("productId");
 
 		if (doc) {
 			const docObj = doc.toObject();
-			const peddler = this.toPeddlerEntity(docObj.peddlerId);
+			const peddler = docObj.peddlerId;
 			const product = this.toProductEntity(docObj.productId);
 			const result = this.toPeddlerProductEntity(
 				Object.assign(docObj, { peddler, product })
@@ -38,14 +38,14 @@ module.exports = class UserMapper extends BaseMapper {
 		const docs = await PeddlerProduct.find(
 			this.toPeddlerProductPersistence(filterEnt)
 		)
-			.populate("peddlerId")
+			// .populate("peddlerId")
 			.populate("productId");
 
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
 				const docObj = doc.toObject();
-				const peddler = this.toPeddlerEntity(docObj.peddlerId);
+				const peddler = docObj.peddlerId;
 				const product = this.toProductEntity(docObj.productId);
 				results.push(
 					this.toPeddlerProductEntity(
@@ -80,13 +80,12 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await PeddlerProduct.findByIdAndUpdate(id, update, {
 			new: true,
-		})
-			.populate("productId")
-			.populate("peddlerId");
+		}).populate("productId");
+		// .populate("peddlerId");
 
 		if (doc) {
 			const docObj = doc.toObject();
-			const peddler = this.toPeddlerEntity(docObj.peddlerId);
+			const peddler = docObj.peddlerId;
 			const product = this.toProductEntity(docObj.productId);
 
 			return this.toPeddlerProductEntity(

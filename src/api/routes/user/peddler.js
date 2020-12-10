@@ -21,10 +21,49 @@ router.put("/online", catchAsync(userController.setOnline));
 
 router.put("/offline", catchAsync(userController.setOffline));
 
+/**
+ * @api {get} /api/user/peddler/products Retrieve products addded by the admin to the system
+ * @apiName getProducts
+ * @apiGroup Admin Product Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint enables peddler's retreive products in the system that has been added by the admin
+ */
 router.get("/products", catchAsync(productController.getProducts));
 
+/**
+ * @api {get} /api/user/peddler/own-products Retrieve products owned by peddler
+ * @apiName getOwnProducts
+ * @apiGroup Admin Product Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint enables peddler's retreive products owned by them (i.e products added by them). The end point
+ * requires that you pass in no parameters
+ */
 router.get("/own-products", catchAsync(productController.getPeddlerProducts));
 
+router.get("/profile", catchAsync(userController.getProfile));
+
+/**
+ * @api {post} /api/user/peddler/own-products Peddler's Product creation
+ * @apiName postPeddlerProduct
+ * @apiGroup Admin Product Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint enables peddler's to create products
+ *
+ * @apiParam {Object[]} products list of Products
+ * @apiParam {ID} productId id of the product.
+ * @apiParam {Number} residentialAmt Residential Amount of the product
+ * @apiParam {Number} commercialAmt Commercial Amount of the the product
+ * @apiParam {Number} commercialOnCrAmt Commercial On Credit Amount of the Product
+ * @apiParam {Number} quantity Quantity in litres of the Product
+ *
+ * @apiUse NameConflictError
+ */
 router.post(
 	"/own-products",
 	shield(perms.PERM002),
