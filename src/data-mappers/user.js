@@ -127,17 +127,15 @@ module.exports = class UserMapper extends BaseMapper {
 			this._toPersistenceTransform
 		);
 
-		const doc = await User.findByIdAndUpdate(userId, updates, {
-			new: true,
-		});
+		const foundUser = await User.findById(userId);
 
-		doc.password = userEntUpdate.password;
+		const doc = Object.assign(foundUser, userEntUpdate.repr());
 
-		await doc.save();
+		const savedDoc = await doc.save();
 
-		if (doc) {
+		if (savedDoc) {
 			return this._toEntity(
-				doc.toObject(),
+				savedDoc.toObject(),
 				UserEnt,
 				this._toEntityTransform
 			);
