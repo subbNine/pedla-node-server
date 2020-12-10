@@ -50,7 +50,7 @@ module.exports = class User {
 
 		userEnt.isActivePeddler = false;
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedUser = await userMapper.rejectPeddler(userEnt.id);
 
 		if (updatedUser) {
 			eventEmitter.emit(eventTypes.peddlerRejected, updatedUser);

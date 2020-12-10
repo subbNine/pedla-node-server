@@ -119,12 +119,32 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
+	async rejectPeddler(userId) {
+		const { User } = this.models;
+
+		const doc = await User.findByIdAndUpdate(
+			userId,
+			{ isActivePeddler: false },
+			{
+				new: true,
+			}
+		);
+
+		if (doc) {
+			return this._toEntity(
+				doc.toObject(),
+				UserEnt,
+				this._toEntityTransform
+			);
+		}
+	}
+
 	async signup(userId, userEntUpdate) {
 		const { User } = this.models;
 
 		const foundUser = await User.findById(userId);
 
-		console.log({foundUser: foundUser.toObject()})
+		console.log({ foundUser: foundUser.toObject() });
 
 		foundUser.password = userEntUpdate.password;
 		foundUser.userName = userEntUpdate.userName;
