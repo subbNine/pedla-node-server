@@ -9,7 +9,7 @@ module.exports = class PeddlerProduct {
 
 	constructor(fields = {}) {
 		for (let key in fields) {
-			if (fields[key]) {
+			if (fields[key] || fields[key] === 0) {
 				this[key] = fields[key];
 			}
 		}
