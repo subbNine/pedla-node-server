@@ -117,4 +117,34 @@ module.exports = class UserMapper extends BaseMapper {
 			);
 		}
 	}
+
+	async searchFor(userEnt) {
+		const { User } = this.models;
+
+		let matchEmailOrUserName = { $or: [] };
+
+		if (userEnt.email) {
+			const matchEmail = { email: new RegExp(userEnt.email, "i") };
+			matchEmailOrUserName.$or.push(matchEmail);
+		}
+
+		if (userEnt.userName) {
+			const matchUserName = {
+				userName: new RegExp(userEnt.userName, "i"),
+			};
+			matchEmailOrUserName.$or.push(matchUserName);
+		}
+
+		const doc = await User.findOne(matchEmailOrUserName, {
+			new: true,
+		});
+
+		if (doc) {
+			return this._toEntity(
+				doc.toObject(),
+				UserEnt,
+				this._toEntityTransform
+			);
+		}
+	}
 };
