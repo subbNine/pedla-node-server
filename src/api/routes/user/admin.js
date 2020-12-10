@@ -100,7 +100,7 @@ router.put(
  */
 router.put(
 	"/reject-peddler/:peddlerId",
-	catchAsync(userController.verifyRegisteredPeddler)
+	catchAsync(userController.rejectRegisteredPeddler)
 );
 
 /**
