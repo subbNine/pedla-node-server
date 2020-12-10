@@ -99,8 +99,8 @@ router.post(
 );
 
 /**
- * @api {put} /api/auth/peddler Peddler's signup endpoint
- * @apiName putPeddler
+ * @api {post} /api/auth/peddler-signup Peddler's signup endpoint
+ * @apiName postPeddler
  * @apiGroup Authentication
  *
  * @apiVersion 1.0.0
@@ -108,17 +108,18 @@ router.post(
  * @apiDescription Peddler's signup route. This route is protected as it needs to be called
  * with the token gotten from calling the route that creates peddlers profile
  *
- * @apiParam {String} code Peddler's registration code.
+ * @apiParam {String} userName Peddler's username.
+ * @apiParam {String} password Peddler's Password
  *
  * @apiSuccess {ID} id user id
  *
  * @apiUse NameConflictError
  * @apiUse UnverifiedProfileError
  */
-router.put("/peddler", shield(), catchAsync(authController.peddlerSignUp));
+router.post("/peddler-signup", shield(), catchAsync(authController.peddlerSignUp));
 
 /**
- * @api {post} /api/auth/peddler/code Peddler's code verification
+ * @api {post} /api/auth/peddler-code Peddler's code Activation
  * @apiName postPeddlerCode
  * @apiGroup Authentication
  *
@@ -134,7 +135,7 @@ router.put("/peddler", shield(), catchAsync(authController.peddlerSignUp));
  * @apiUse InvalidCodeError
  */
 router.post(
-	"/peddler/code",
+	"/peddler-code",
 	shield(),
 	catchAsync(authController.verifyPeddlerCode)
 );
