@@ -49,27 +49,33 @@ module.exports = class User extends BaseController {
 		this.response(result, res);
 	}
 
-	async createPeddlerProduct(req, res, next) {
-		const {
-			productId,
-			residentialAmt,
-			commercialAmt,
-			commercialOnCrAmt,
-			quantity,
-		} = req.body;
-
+	async createPeddlerProducts(req, res, next) {
+		const { products } = req.body;
 		const { user } = req._App;
 
-		const peddlerProductDto = new PeddlerProductDto();
-		peddlerProductDto.peddler = user.id;
-		peddlerProductDto.product = productId;
-		peddlerProductDto.residentialAmt = +residentialAmt;
-		peddlerProductDto.commercialAmt = +commercialAmt;
-		peddlerProductDto.commercialOnCrAmt = +commercialOnCrAmt;
-		peddlerProductDto.quantity = +quantity;
+		const productDtoList = [];
+		for (const product of products) {
+			const {
+				productId,
+				residentialAmt,
+				commercialAmt,
+				commercialOnCrAmt,
+				quantity,
+			} = product;
 
-		const result = await peddlerProductService.createProduct(
-			peddlerProductDto
+			const peddlerProductDto = new PeddlerProductDto();
+			peddlerProductDto.peddler = user.id;
+			peddlerProductDto.product = productId;
+			peddlerProductDto.residentialAmt = +residentialAmt;
+			peddlerProductDto.commercialAmt = +commercialAmt;
+			peddlerProductDto.commercialOnCrAmt = +commercialOnCrAmt;
+			peddlerProductDto.quantity = +quantity;
+
+			productDtoList.push(peddlerProductDto);
+		}
+
+		const result = await peddlerProductService.createProducts(
+			productDtoList
 		);
 
 		this.response(result, res);
