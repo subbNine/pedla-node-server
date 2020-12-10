@@ -474,8 +474,82 @@
   },
   {
     "type": "post",
-    "url": "/api/auth/peddler/code",
-    "title": "Peddler's code verification",
+    "url": "/api/auth/peddler-signup",
+    "title": "Peddler's signup endpoint",
+    "name": "postPeddler",
+    "group": "Authentication",
+    "version": "1.0.0",
+    "description": "<p>Peddler's signup route. This route is protected as it needs to be called with the token gotten from calling the route that creates peddlers profile</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "userName",
+            "description": "<p>Peddler's username.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Peddler's Password</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>user id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NameConflictError",
+            "description": "<p>An entity already exists with the passed in name</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "UnverifiedProfileError",
+            "description": "<p>Error thrown if pedddler tries to signup before verification</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"UnverifiedProfileError\",\n\t\"message\": \"Profile not yet verified\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/api/auth/peddler-code",
+    "title": "Peddler's code Activation",
     "name": "postPeddlerCode",
     "group": "Authentication",
     "version": "1.0.0",
@@ -722,73 +796,6 @@
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"IncorrectPasswordError\",\n\t\"message\": \"The password you entered is incorrect\",\n\t\"isOperational\": true\n}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "put",
-    "url": "/api/auth/peddler",
-    "title": "Peddler's signup endpoint",
-    "name": "putPeddler",
-    "group": "Authentication",
-    "version": "1.0.0",
-    "description": "<p>Peddler's signup route. This route is protected as it needs to be called with the token gotten from calling the route that creates peddlers profile</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "code",
-            "description": "<p>Peddler's registration code.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "ID",
-            "optional": false,
-            "field": "id",
-            "description": "<p>user id</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/auth.js",
-    "groupTitle": "Authentication",
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "NameConflictError",
-            "description": "<p>An entity already exists with the passed in name</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "UnverifiedProfileError",
-            "description": "<p>Error thrown if pedddler tries to signup before verification</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"UnverifiedProfileError\",\n\t\"message\": \"Profile not yet verified\",\n\t\"isOperational\": true\n}",
           "type": "json"
         }
       ]
