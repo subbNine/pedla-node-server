@@ -179,9 +179,10 @@ module.exports = class Auth {
 					})
 				);
 			} else {
+				const userEnt = new UserEnt(userDto);
 				const updatedUser = await userMapper.signup(
 					foundUser.id,
-					userDto
+					userEnt
 				);
 
 				const objRepr = updatedUser.repr();

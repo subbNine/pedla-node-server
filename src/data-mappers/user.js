@@ -122,16 +122,12 @@ module.exports = class UserMapper extends BaseMapper {
 	async signup(userId, userEntUpdate) {
 		const { User } = this.models;
 
-		const updates = this._toPersistence(
-			userEntUpdate,
-			this._toPersistenceTransform
-		);
-
 		const foundUser = await User.findById(userId);
 
-		const doc = Object.assign(foundUser, userEntUpdate);
+		foundUser.password = userEntUpdate.password;
+		foundUser.userName = userEntUpdate.userName;
 
-		const savedDoc = await doc.save();
+		const savedDoc = await foundUser.save();
 
 		if (savedDoc) {
 			return this._toEntity(
