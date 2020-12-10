@@ -124,6 +124,8 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const foundUser = await User.findById(userId);
 
+		console.log({foundUser: foundUser.toObject()})
+
 		foundUser.password = userEntUpdate.password;
 		foundUser.userName = userEntUpdate.userName;
 
