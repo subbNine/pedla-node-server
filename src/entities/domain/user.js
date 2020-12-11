@@ -62,7 +62,6 @@ module.exports = class User {
 		objectRepr.type = this.type;
 		objectRepr.avatarImage = this.avatarImage;
 		objectRepr.presence = this.presence;
-		objectRepr.latlon = this.latlon;
 		objectRepr.peddlerCode = this.peddlerCode;
 		objectRepr.nTrucks = this.nTrucks;
 
@@ -70,6 +69,15 @@ module.exports = class User {
 			objectRepr.pooImage = this.pooImage;
 			objectRepr.userName = this.userName;
 			objectRepr.isActivePeddler = this.isActivePeddler;
+		}
+
+		if (this.latlon) {
+			objectRepr.latlon = {
+				lon: this.latlon.coordinates[0],
+				lat: this.latlon.coordinates[1],
+			};
+		} else {
+			objectRepr.latlon = this.latlon;
 		}
 
 		// if (this.id) {
