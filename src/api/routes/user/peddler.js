@@ -24,7 +24,7 @@ router.put("/offline", catchAsync(userController.setOffline));
 /**
  * @api {get} /api/user/peddler/products Retrieve products addded by the admin to the system
  * @apiName getProducts
- * @apiGroup Admin Product Management
+ * @apiGroup Peddler Product Management
  *
  * @apiVersion 1.0.0
  *
@@ -35,7 +35,7 @@ router.get("/products", catchAsync(productController.getProducts));
 /**
  * @api {get} /api/user/peddler/own-products Retrieve products owned by peddler
  * @apiName getOwnProducts
- * @apiGroup Admin Product Management
+ * @apiGroup Peddler Product Management
  *
  * @apiVersion 1.0.0
  *
@@ -46,10 +46,12 @@ router.get("/own-products", catchAsync(productController.getPeddlerProducts));
 
 router.get("/profile", catchAsync(userController.getProfile));
 
+router.get("/profile/:userId", catchAsync(userController.getProfile));
+
 /**
  * @api {post} /api/user/peddler/own-products Peddler's Product creation
  * @apiName postPeddlerProduct
- * @apiGroup Admin Product Management
+ * @apiGroup Peddler Product Management
  *
  * @apiVersion 1.0.0
  *

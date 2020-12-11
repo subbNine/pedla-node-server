@@ -35,4 +35,6 @@ router.get(
 
 router.get("/profile", catchAsync(userController.getProfile));
 
+router.get("/profile/:userId", catchAsync(userController.getProfile));
+
 module.exports = router;
