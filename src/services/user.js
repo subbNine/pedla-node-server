@@ -79,6 +79,8 @@ module.exports = class User {
 
 		if (user) {
 			return Result.ok(user.repr());
+		} else {
+			return Result.ok(null);
 		}
 	}
 
@@ -91,6 +93,8 @@ module.exports = class User {
 		if (updatedUser) {
 			const objRepr = updatedUser.repr();
 			return Result.ok({ ...objRepr });
+		} else {
+			return Result.ok(null);
 		}
 	}
 
@@ -103,6 +107,8 @@ module.exports = class User {
 		if (updatedUser) {
 			const objRepr = updatedUser.repr();
 			return Result.ok({ id: objRepr.id, presence: objRepr.presence });
+		} else {
+			return Result.ok(null);
 		}
 	}
 

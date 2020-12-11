@@ -17,19 +17,19 @@ module.exports = class PeddlerProduct {
 
 	repr() {
 		return {
-			id: this.id,
+			id: this.id || null,
 			peddler:
 				this.peddler && this.peddler.repr
 					? this.peddler.repr()
-					: this.peddler,
+					: this.peddler || null,
 			product:
 				this.product && this.product.repr
 					? this.product.repr()
-					: this.product,
-			residentialAmt: this.residentialAmt,
-			commercialAmt: this.commercialAmt,
-			commercialOnCrAmt: this.commercialOnCrAmt,
-			quantity: this.quantity,
+					: this.product || null,
+			residentialAmt: this.residentialAmt || null,
+			commercialAmt: this.commercialAmt || null,
+			commercialOnCrAmt: this.commercialOnCrAmt || null,
+			quantity: this.quantity || null,
 		};
 	}
 };

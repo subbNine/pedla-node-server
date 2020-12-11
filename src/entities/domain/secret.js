@@ -19,9 +19,9 @@ module.exports = class Otp {
 
 	repr() {
 		return {
-			id: this.id,
-			user: this.user.repr ? this.user.repr() : this.user,
-			createdAt: this.createdAt,
+			id: this.id || null,
+			user: this.user.repr ? this.user.repr() : this.user || null,
+			createdAt: this.createdAt || null,
 		};
 	}
 

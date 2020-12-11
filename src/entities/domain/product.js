@@ -13,9 +13,9 @@ module.exports = class Product {
 
 	repr() {
 		return {
-			id: this.id,
-			name: this.name,
-			description: this.description,
+			id: this.id || null,
+			name: this.name || null,
+			description: this.description || null,
 		};
 	}
 };

@@ -24,9 +24,7 @@ module.exports = class User {
 
 	constructor(fields = {}) {
 		for (let key in fields) {
-			if (fields[key]) {
-				this[key] = fields[key];
-			}
+			this[key] = fields[key];
 		}
 	}
 
@@ -52,23 +50,23 @@ module.exports = class User {
 	repr() {
 		const objectRepr = {};
 
-		objectRepr.id = this.id;
-		objectRepr.firstName = this.firstName;
-		objectRepr.lastName = this.lastName;
-		objectRepr.email = this.email;
-		objectRepr.phoneNumber = this.phoneNumber;
-		objectRepr.address = this.address;
-		objectRepr.permission = this.permission;
-		objectRepr.type = this.type;
-		objectRepr.avatarImage = this.avatarImage;
-		objectRepr.presence = this.presence;
-		objectRepr.peddlerCode = this.peddlerCode;
-		objectRepr.nTrucks = this.nTrucks;
+		objectRepr.id = this.id || null;
+		objectRepr.firstName = this.firstName || null;
+		objectRepr.lastName = this.lastName || null;
+		objectRepr.email = this.email || null;
+		objectRepr.phoneNumber = this.phoneNumber || null;
+		objectRepr.address = this.address || null;
+		objectRepr.permission = this.permission || null;
+		objectRepr.type = this.type || null;
+		objectRepr.avatarImage = this.avatarImage || null;
+		objectRepr.presence = this.presence || null;
+		objectRepr.peddlerCode = this.peddlerCode || null;
+		objectRepr.nTrucks = this.nTrucks || null;
 
 		if (this.isPeddler()) {
-			objectRepr.pooImage = this.pooImage;
-			objectRepr.userName = this.userName;
-			objectRepr.isActivePeddler = this.isActivePeddler;
+			objectRepr.pooImage = this.pooImage || null;
+			objectRepr.userName = this.userName || null;
+			objectRepr.isActivePeddler = this.isActivePeddler || null;
 		}
 
 		if (this.latlon) {
@@ -79,52 +77,7 @@ module.exports = class User {
 		} else {
 			objectRepr.latlon = this.latlon;
 		}
-
-		// if (this.id) {
-		// 	objectRepr.id = this.id;
-		// }
-		// if (this.lastName) {
-		// 	objectRepr.lastName = this.lastName;
-		// }
-		// if (this.email) {
-		// 	objectRepr.email = this.email;
-		// }
-		// if (this.phoneNumber) {
-		// 	objectRepr.phoneNumber = this.phoneNumber;
-		// }
-		// if (this.address) {
-		// 	objectRepr.address = this.address;
-		// }
-		// if (this.permission) {
-		// 	objectRepr.permission = this.permission;
-		// }
-		// if (this.firstName) {
-		// 	objectRepr.firstName = this.firstName;
-		// }
-		// if (this.type) {
-		// 	objectRepr.type = this.type;
-		// }
-		// if (this.pooImage) {
-		// 	objectRepr.pooImage = this.pooImage;
-		// }
-		// if (this.avatarImage) {
-		// 	objectRepr.avatarImage = this.avatarImage;
-		// }
-		// if (this.presence) {
-		// 	objectRepr.presence = this.presence;
-		// }
-		// if (this.userName) {
-		// 	objectRepr.userName = this.userName;
-		// }
-		// if (this.latlon) {
-		// 	objectRepr.latlon = this.latlon;
-		// }
-		// if (this.peddlerCode) {
-		// 	objectRepr.peddlerCode = this.peddlerCode;
-		// }
-		// if (this.nTrucks) {
-		// 	objectRepr.nTrucks = this.nTrucks;
-		// }
+		console.log({ objectRepr });
 
 		return objectRepr;
 	}
