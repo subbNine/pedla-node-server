@@ -52,53 +52,71 @@ module.exports = class User {
 	repr() {
 		const objectRepr = {};
 
-		if (this.id) {
-			objectRepr.id = this.id;
-		}
-		if (this.lastName) {
-			objectRepr.lastName = this.lastName;
-		}
-		if (this.email) {
-			objectRepr.email = this.email;
-		}
-		if (this.phoneNumber) {
-			objectRepr.phoneNumber = this.phoneNumber;
-		}
-		if (this.address) {
-			objectRepr.address = this.address;
-		}
-		if (this.permission) {
-			objectRepr.permission = this.permission;
-		}
-		if (this.firstName) {
-			objectRepr.firstName = this.firstName;
-		}
-		if (this.type) {
-			objectRepr.type = this.type;
-		}
-		if (this.pooImage) {
+		objectRepr.id = this.id;
+		objectRepr.firstName = this.firstName;
+		objectRepr.lastName = this.lastName;
+		objectRepr.email = this.email;
+		objectRepr.phoneNumber = this.phoneNumber;
+		objectRepr.address = this.address;
+		objectRepr.permission = this.permission;
+		objectRepr.type = this.type;
+		objectRepr.avatarImage = this.avatarImage;
+		objectRepr.presence = this.presence;
+		objectRepr.latlon = this.latlon;
+		objectRepr.peddlerCode = this.peddlerCode;
+		objectRepr.nTrucks = this.nTrucks;
+
+		if (this.isPeddler()) {
 			objectRepr.pooImage = this.pooImage;
-		}
-		if (this.avatarImage) {
-			objectRepr.avatarImage = this.avatarImage;
-		}
-		if (this.presence) {
-			objectRepr.presence = this.presence;
-		}
-		if (this.userName) {
 			objectRepr.userName = this.userName;
-		}
-		if (this.latlon) {
-			objectRepr.latlon = this.latlon;
-		}
-		if (this.peddlerCode) {
-			objectRepr.peddlerCode = this.peddlerCode;
-		}
-		if (this.nTrucks) {
-			objectRepr.nTrucks = this.nTrucks;
+			objectRepr.isActivePeddler = this.isActivePeddler;
 		}
 
-		objectRepr.isActivePeddler = this.isActivePeddler;
+		// if (this.id) {
+		// 	objectRepr.id = this.id;
+		// }
+		// if (this.lastName) {
+		// 	objectRepr.lastName = this.lastName;
+		// }
+		// if (this.email) {
+		// 	objectRepr.email = this.email;
+		// }
+		// if (this.phoneNumber) {
+		// 	objectRepr.phoneNumber = this.phoneNumber;
+		// }
+		// if (this.address) {
+		// 	objectRepr.address = this.address;
+		// }
+		// if (this.permission) {
+		// 	objectRepr.permission = this.permission;
+		// }
+		// if (this.firstName) {
+		// 	objectRepr.firstName = this.firstName;
+		// }
+		// if (this.type) {
+		// 	objectRepr.type = this.type;
+		// }
+		// if (this.pooImage) {
+		// 	objectRepr.pooImage = this.pooImage;
+		// }
+		// if (this.avatarImage) {
+		// 	objectRepr.avatarImage = this.avatarImage;
+		// }
+		// if (this.presence) {
+		// 	objectRepr.presence = this.presence;
+		// }
+		// if (this.userName) {
+		// 	objectRepr.userName = this.userName;
+		// }
+		// if (this.latlon) {
+		// 	objectRepr.latlon = this.latlon;
+		// }
+		// if (this.peddlerCode) {
+		// 	objectRepr.peddlerCode = this.peddlerCode;
+		// }
+		// if (this.nTrucks) {
+		// 	objectRepr.nTrucks = this.nTrucks;
+		// }
 
 		return objectRepr;
 	}
