@@ -15,7 +15,9 @@ module.exports = class BaseDataMapper {
 
 		for (let key in entity) {
 			const newKey = transforms[key] || key;
-			doc[newKey] = entity[key];
+			if (entity[key]) {
+				doc[newKey] = entity[key];
+			}
 		}
 
 		return doc;

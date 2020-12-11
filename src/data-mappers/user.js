@@ -88,14 +88,18 @@ module.exports = class UserMapper extends BaseMapper {
 			this._toPersistenceTransform
 		);
 
+		console.log({newUser})
+
 		const doc = await User.create(newUser);
 		if (doc) {
+			console.log({doc})
 			return this._toEntity(
 				doc.toObject(),
 				UserEnt,
 				this._toEntityTransform
 			);
 		}
+		
 	}
 
 	async updateUserById(userId, userEntUpdate) {
