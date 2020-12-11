@@ -2,7 +2,7 @@ const { AppError, errorCodes, messages } = require("../../errors");
 
 function bounceNonBuyers(req, res, next) {
 	const { user } = req._App;
-	if (!user && !user.isBuyer()) {
+	if (!user || !user.isBuyer()) {
 		throw new AppError({
 			name: errorCodes.NotAuthorizedError.name,
 			statusCode: errorCodes.NotAuthorizedError.statusCode,
