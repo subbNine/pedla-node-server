@@ -7,6 +7,7 @@ const { permissions: perms } = require("../../../db/mongo/enums").user;
 const {
 	product: productController,
 	user: userController,
+	geoLocation: geoLocationController,
 } = require("../../controllers");
 
 const router = Router();
@@ -76,6 +77,11 @@ router.put(
 	"/own-product/:productId",
 	shield(perms.PERM002),
 	catchAsync(productController.updatePeddlerProduct)
+);
+
+router.post(
+	"/geo-location",
+	catchAsync(geoLocationController.updateGeoLocation)
 );
 
 module.exports = router;

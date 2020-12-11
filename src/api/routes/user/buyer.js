@@ -37,4 +37,9 @@ router.get("/profile", catchAsync(userController.getProfile));
 
 router.get("/profile/:userId", catchAsync(userController.getProfile));
 
+router.post(
+	"/geo-location",
+	catchAsync(geoLocationController.updateGeoLocation)
+);
+
 module.exports = router;
