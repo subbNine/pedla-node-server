@@ -6,6 +6,7 @@ const { catchAsync } = require("../../../errors");
 const {
 	product: productController,
 	user: userController,
+	geoLocation: geoLocationController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
 
