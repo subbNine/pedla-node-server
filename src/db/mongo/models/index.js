@@ -7,6 +7,7 @@ const Product = require("./product");
 const Order = require("./order");
 const Notification = require("./notification");
 const PeddlerProduct = require("./peddler-product");
+const Truck = require("./truck");
 
 module.exports = {
 	Country,
@@ -18,4 +19,5 @@ module.exports = {
 	Order,
 	Notification,
 	PeddlerProduct,
+	Truck,
 };

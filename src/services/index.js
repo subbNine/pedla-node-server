@@ -8,6 +8,7 @@ const PeddlerProduct = require("./peddler-product");
 const Notification = require("./notification");
 const Order = require("./order");
 const GeoLocation = require("./geo-location");
+const Truck = require("./truck");
 
 module.exports = {
 	auth: new Auth({ mappers }),
@@ -18,4 +19,5 @@ module.exports = {
 	notification: new Notification({ mappers }),
 	order: new Order({ mappers }),
 	geoLocation: new GeoLocation({ mappers }),
+	truck: new Truck({ mappers }),
 };

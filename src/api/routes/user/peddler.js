@@ -8,6 +8,7 @@ const {
 	product: productController,
 	user: userController,
 	geoLocation: geoLocationController,
+	truck: truckController,
 } = require("../../controllers");
 
 const router = Router();
@@ -96,5 +97,45 @@ router.post(
 	"/geo-location",
 	catchAsync(geoLocationController.updateGeoLocation)
 );
+
+/**
+ * @api {post} /api/user/peddler/truck Create truck
+ * @apiName postPeddlerTruck
+ * @apiGroup Truck Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers to add their truck which will later be assigned to drivers
+ *
+ * @apiParam {String} name name of the truck
+ * @apiParam {Number} truckNo Designated number given to trucks as a means of identity
+ */
+router.post("/truck", catchAsync(truckController.createTruck));
+
+/**
+ * @api {get} /api/user/peddler/truck Get trucks
+ * @apiName getPeddlerTrucks
+ * @apiGroup Truck Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers fetch all their trucks
+ *
+ */
+router.get("/trucks", catchAsync(truckController.getPeddlerTrucks));
+
+/**
+ * @api {post} /api/user/peddler/truck/:truckId Update truck
+ * @apiName postPeddlerTruckUpdate
+ * @apiGroup Truck Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers to update their Truck
+ *
+ * @apiParam {String} name name of the truck
+ * @apiParam {Number} truckNo Designated number given to trucks as a means of identity
+ */
+router.post("/truck/:truckId", catchAsync(truckController.updateTruck));
 
 module.exports = router;

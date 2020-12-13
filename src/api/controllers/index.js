@@ -4,6 +4,7 @@ const Product = require("./product");
 const GeoLocation = require("./geo-location");
 const Order = require("./order");
 const User = require("./user");
+const Truck = require("./truck");
 
 module.exports = {
 	auth: new Auth(),
@@ -12,4 +13,5 @@ module.exports = {
 	geoLocation: new GeoLocation(),
 	order: new Order(),
 	user: new User(),
+	truck: new Truck(),
 };
