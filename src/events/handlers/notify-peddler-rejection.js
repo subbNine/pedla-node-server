@@ -14,7 +14,7 @@ function sendRejectionMsg(userEnt) {
 	emailService.send({
 		from: 'Adekunle From Peddler <pedlaapp20@gmail.com>',
 		to: userEnt.email,
-		subject: "Profile Approved",
+		subject: "Profile Rejected",
 		text: "Hello, " + userEnt.name + " " + "You Profile was not approved",
 	});
 }

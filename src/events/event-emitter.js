@@ -6,6 +6,7 @@ const {
 	alertOpsTeam,
 	sendPeddlerCode,
 	notifyPeddlerRejection,
+	sendDriverInfo,
 } = require("./handlers");
 
 const eventEmitter = new EventEmitter();
@@ -23,5 +24,7 @@ eventEmitter.on(eventTypes.peddlerVerified, sendPeddlerCode);
 eventEmitter.on(eventTypes.peddlerRejected, notifyPeddlerRejection);
 
 eventEmitter.on(eventTypes.buyerCreated, createAndSendOtp);
+
+eventEmitter.on(eventTypes.driverCreated, sendDriverInfo);
 
 module.exports = eventEmitter;

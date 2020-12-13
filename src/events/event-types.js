@@ -7,4 +7,6 @@ module.exports = {
 	peddlerVerified: "peddler-verified",
 	peddlerRejected: "peddler-rejected",
 	buyerCreated: "buyer-created",
+	driverCreated: "driver-created",
+	driverUpdated: "driver-updated",
 };

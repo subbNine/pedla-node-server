@@ -1,5 +1,6 @@
 const errorCodes = require("./eror_codes");
 const AppError = require("./app_error");
+const logger = require("../loaders/logger");
 const { APP_ENV } = require("../config");
 
 function _sendDevError(err, res) {
@@ -8,7 +9,7 @@ function _sendDevError(err, res) {
 }
 
 function _sendProdError(err, res) {
-	console.log(err)
+	logger.error(err);
 	if (err.isOperational) {
 		const { stack, ...rest } = err;
 
@@ -16,7 +17,7 @@ function _sendProdError(err, res) {
 	} else {
 		const errWithStack = { ...err, stack: err.stack };
 		// CRITICAL: log error to centry / log rocket
-		console.log("log error to centry / log rocket", errWithStack);
+		logger.error("log error to centry / log rocket", errWithStack);
 
 		return res.status(errorCodes.InternalServerError.statusCode).json({
 			name: errorCodes.InternalServerError.name,
