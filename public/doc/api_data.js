@@ -839,6 +839,135 @@ define({ "api": [
     }
   },
   {
+    "type": "get",
+    "url": "/api/user/peddler/drivers",
+    "title": "Get peddler's truck drivers",
+    "name": "gettPeddlerDrivers",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers to fetch all their Drivers</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/driver",
+    "title": "Create truck Driver",
+    "name": "postPeddlerDriver",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers to create their Drivers</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "firstName",
+            "description": "<p>First name of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lastName",
+            "description": "<p>LastName of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>Phone Number of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "userName",
+            "description": "<p>User name of the driver</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/driver/:driverId",
+    "title": "Update truck Driver",
+    "name": "postPeddlerDriverUpdate",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers to update profiles of their Drivers</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "firstName",
+            "description": "<p>First name of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lastName",
+            "description": "<p>LastName of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>Phone Number of the driver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "userName",
+            "description": "<p>User name of the driver</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
     "type": "post",
     "url": "/api/user/peddler/geo-location",
     "title": "Geo-location Update for peddlers",
@@ -992,5 +1121,78 @@ define({ "api": [
     },
     "filename": "src/api/routes/user/admin.js",
     "groupTitle": "Peddler_Verification"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/truck",
+    "title": "Get trucks",
+    "name": "getPeddlerTrucks",
+    "group": "Truck_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers fetch all their trucks</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Truck_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/truck",
+    "title": "Create truck",
+    "name": "postPeddlerTruck",
+    "group": "Truck_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers to add their truck which will later be assigned to drivers</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>name of the truck</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "truckNo",
+            "description": "<p>Designated number given to trucks as a means of identity</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Truck_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/truck/:truckId",
+    "title": "Update truck",
+    "name": "postPeddlerTruckUpdate",
+    "group": "Truck_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers to update their Truck</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>name of the truck</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "truckNo",
+            "description": "<p>Designated number given to trucks as a means of identity</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Truck_Management"
   }
 ] });
