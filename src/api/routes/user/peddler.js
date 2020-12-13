@@ -79,6 +79,19 @@ router.put(
 	catchAsync(productController.updatePeddlerProduct)
 );
 
+/**
+ * @api {post} /api/user/peddler/geo-location Geo-location Update for peddlers
+ * @apiName postPeddlerGeoLocation
+ * @apiGroup Geo-location
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This updates the peddler's Geo-location
+ *
+ * @apiParam {Number} lat latitude of the coordinate
+ * @apiParam {Number} lon longitude of the coordinate
+ *
+ */
 router.post(
 	"/geo-location",
 	catchAsync(geoLocationController.updateGeoLocation)

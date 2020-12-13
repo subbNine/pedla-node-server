@@ -1,17 +1,6 @@
 define({ "api": [
   {
     "type": "get",
-    "url": "/api/user/peddler/own-products",
-    "title": "Retrieve products owned by peddler",
-    "name": "getOwnProducts",
-    "group": "Admin_Product_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint enables peddler's retreive products owned by them (i.e products added by them). The end point requires that you pass in no parameters</p>",
-    "filename": "src/api/routes/user/peddler.js",
-    "groupTitle": "Admin_Product_Management"
-  },
-  {
-    "type": "get",
     "url": "/api/user/admin/products",
     "title": "Fetch added products",
     "name": "getProducts",
@@ -52,95 +41,6 @@ define({ "api": [
       }
     },
     "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Admin_Product_Management",
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "NameConflictError",
-            "description": "<p>An entity already exists with the passed in name</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
-          "type": "json"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
-    "url": "/api/user/peddler/products",
-    "title": "Retrieve products addded by the admin to the system",
-    "name": "getProducts",
-    "group": "Admin_Product_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint enables peddler's retreive products in the system that has been added by the admin</p>",
-    "filename": "src/api/routes/user/peddler.js",
-    "groupTitle": "Admin_Product_Management"
-  },
-  {
-    "type": "post",
-    "url": "/api/user/peddler/own-products",
-    "title": "Peddler's Product creation",
-    "name": "postPeddlerProduct",
-    "group": "Admin_Product_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint enables peddler's to create products</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "products",
-            "description": "<p>list of Products</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "productId",
-            "description": "<p>id of the product.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "residentialAmt",
-            "description": "<p>Residential Amount of the product</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "commercialAmt",
-            "description": "<p>Commercial Amount of the the product</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "commercialOnCrAmt",
-            "description": "<p>Commercial On Credit Amount of the Product</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "quantity",
-            "description": "<p>Quantity in litres of the Product</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Admin_Product_Management",
     "error": {
       "fields": {
@@ -933,6 +833,137 @@ define({ "api": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"IncorrectPasswordError\",\n\t\"message\": \"The password you entered is incorrect\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/geo-location",
+    "title": "Geo-location Update for peddlers",
+    "name": "postPeddlerGeoLocation",
+    "group": "Geo-location",
+    "version": "1.0.0",
+    "description": "<p>This updates the peddler's Geo-location</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>latitude of the coordinate</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "lon",
+            "description": "<p>longitude of the coordinate</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Geo-location"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/own-products",
+    "title": "Retrieve products owned by peddler",
+    "name": "getOwnProducts",
+    "group": "Peddler_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint enables peddler's retreive products owned by them (i.e products added by them). The end point requires that you pass in no parameters</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_Product_Management"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/products",
+    "title": "Retrieve products addded by the admin to the system",
+    "name": "getProducts",
+    "group": "Peddler_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint enables peddler's retreive products in the system that has been added by the admin</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_Product_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/own-products",
+    "title": "Peddler's Product creation",
+    "name": "postPeddlerProduct",
+    "group": "Peddler_Product_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint enables peddler's to create products</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "products",
+            "description": "<p>list of Products</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "productId",
+            "description": "<p>id of the product.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "residentialAmt",
+            "description": "<p>Residential Amount of the product</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "commercialAmt",
+            "description": "<p>Commercial Amount of the the product</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "commercialOnCrAmt",
+            "description": "<p>Commercial On Credit Amount of the Product</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>Quantity in litres of the Product</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_Product_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NameConflictError",
+            "description": "<p>An entity already exists with the passed in name</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Conflict Error\n{\n\t\"name\": \"NameConflictError\",\n\t\"message\": \"name already exists\",\n\t\"isOperational\": true\n}",
           "type": "json"
         }
       ]
