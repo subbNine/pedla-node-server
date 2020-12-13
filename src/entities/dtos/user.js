@@ -15,4 +15,5 @@ module.exports = class User {
 	latlon;
 	peddlerCode;
 	isActivePeddler;
+	peddler;
 };

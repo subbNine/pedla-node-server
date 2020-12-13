@@ -1,9 +1,12 @@
 const { UserEnt } = require("../entities/domain");
-const { utils } = require("../lib");
+const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { permissions } = require("../db/mongo/enums/user");
 
 const { Result, generateJwtToken } = utils;
+const AppError = error.AppError;
+const errorCodes = error.errorCodes;
+const errMessages = error.messages;
 
 module.exports = class User {
 	constructor({ mappers }) {
@@ -122,6 +125,93 @@ module.exports = class User {
 			return Result.ok(true);
 		} else {
 			return Result.ok(false);
+		}
+	}
+
+	async createDriver(userDto, peddler) {
+		const { userMapper } = this.mappers;
+		const userEnt = new UserEnt(userDto);
+
+		const checkIsExistingUserQuery = { $or: [] };
+
+		if (userDto.userName) {
+			checkIsExistingUserQuery.$or.push({ userName: userDto.userName });
+		}
+
+		const isAlreadyExistingUser = await userMapper.findUser(
+			checkIsExistingUserQuery
+		);
+
+		if (isAlreadyExistingUser) {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.NameConflictError.name,
+					message: errMessages.nameConflict,
+					statusCode: errorCodes.NameConflictError.statusCode,
+				})
+			);
+		}
+
+		let newUser = await userMapper.createUser(userEnt);
+
+		if (newUser) {
+			eventEmitter.emit(
+				eventTypes.driverCreated,
+				Object.assign(newUser, {
+					password: userDto.password,
+					peddler: {
+						firstName: peddler.firstName,
+						lastName: peddler.lastName,
+						id: peddler.Id,
+						email: peddler.email,
+						phoneNumber: peddler.phoneNumber,
+					},
+				})
+			);
+
+			const objRepr = newUser.repr();
+			return Result.ok({ ...objRepr });
+		} else {
+			return Result.ok(null);
+		}
+	}
+
+	async updateDriver(userDto, peddler) {
+		const { userMapper } = this.mappers;
+		const userEnt = new UserEnt(userDto);
+
+		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+
+		if (updatedUser) {
+			eventEmitter.emit(
+				eventTypes.driverUpdated,
+				Object.assign(updatedUser, {
+					peddler: {
+						firstName: peddler.firstName,
+						lastName: peddler.lastName,
+						id: peddler.Id,
+						email: peddler.email,
+						phoneNumber: peddler.phoneNumber,
+					},
+				})
+			);
+
+			const objRepr = updatedUser.repr();
+			return Result.ok({ ...objRepr });
+		} else {
+			return Result.ok(null);
+		}
+	}
+
+	async findDrivers(userDto) {
+		const { userMapper } = this.mappers;
+
+		const foundUsers = await userMapper.findUsers(new UserEnt(userDto));
+
+		if (foundUsers) {
+			return Result.ok(foundUsers.map((eachUser) => eachUser.repr()));
+		} else {
+			return Result.ok([]);
 		}
 	}
 };

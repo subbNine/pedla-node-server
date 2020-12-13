@@ -21,6 +21,7 @@ module.exports = class User {
 	peddlerCode;
 	isActivePeddler;
 	nTrucks;
+	peddler;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -62,6 +63,7 @@ module.exports = class User {
 		objectRepr.presence = this.presence || null;
 		objectRepr.peddlerCode = this.peddlerCode || null;
 		objectRepr.nTrucks = this.nTrucks || null;
+		objectRepr.peddler = this.peddler || null;
 
 		if (this.isPeddler()) {
 			objectRepr.pooImage = this.pooImage || null;
@@ -77,7 +79,6 @@ module.exports = class User {
 		} else {
 			objectRepr.latlon = this.latlon;
 		}
-		console.log({ objectRepr });
 
 		return objectRepr;
 	}
@@ -91,6 +92,10 @@ module.exports = class User {
 			}
 		}
 		return false;
+	}
+
+	isDriver() {
+		return this.type === types.DRIVER;
 	}
 
 	isPeddler() {

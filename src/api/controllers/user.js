@@ -1,9 +1,13 @@
 const BaseController = require("./base");
 const { UserDto } = require("../../entities/dtos");
 const { user: userService } = require("../../services");
-const { types: userTypes, presence } = require("../../db/mongo/enums").user;
+const {
+	types: userTypes,
+	presence,
+	permissions,
+} = require("../../db/mongo/enums").user;
 
-module.exports = class Otp extends BaseController {
+module.exports = class User extends BaseController {
 	constructor() {
 		super();
 		this._bindAll(this);
@@ -130,6 +134,78 @@ module.exports = class Otp extends BaseController {
 
 		const result = await userService.togglePresence(userDto);
 		return this.response(result, res);
+	}
+
+	async createDriver(req, res, next) {
+		const userDto = new UserDto();
+
+		const { user } = req._App;
+		const {
+			firstName,
+			lastName,
+			password,
+			email,
+			phoneNumber,
+			userName,
+		} = req.body;
+
+		userDto.firstName = firstName;
+		userDto.lastName = lastName;
+		userDto.phoneNumber = phoneNumber;
+		userDto.userName = userName;
+		userDto.password = password;
+		userDto.email = email;
+		userDto.peddler = user.id;
+		userDto.type = userTypes.DRIVER;
+		userDto.permission = permissions.PERM002;
+
+		console.log({ userDto, user });
+
+		const result = await userService.createDriver(userDto, user);
+
+		return this.response(result, res);
+	}
+
+	async updateDriver(req, res, next) {
+		const userDto = new UserDto();
+
+		const { driverId } = req.params;
+
+		const { user } = req._App;
+		const {
+			firstName,
+			lastName,
+			password,
+			phoneNumber,
+			userName,
+			email,
+		} = req.body;
+
+		userDto.firstName = firstName;
+		userDto.lastName = lastName;
+		userDto.phoneNumber = phoneNumber;
+		userDto.userName = userName;
+		userDto.password = password;
+		userDto.email = email;
+		userDto.id = driverId;
+
+		const result = await userService.updateDriver(userDto, user);
+
+		return this.response(result, res);
+	}
+
+	async getDrivers(req, res, next) {
+		const { peddlerId } = req.params;
+
+		const userDto = new UserDto();
+
+		const { user } = req._App;
+
+		userDto.peddler = peddlerId || user.id;
+
+		const result = await userService.findDrivers(userDto);
+
+		this.response(result, res);
 	}
 
 	async getOnlinePeddlers(req, res, next) {}

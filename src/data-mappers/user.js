@@ -40,6 +40,21 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
+	async findUsers(filter) {
+		const { User } = this.models;
+		const docs = await User.find(this._toPersistence(filter));
+		const results = [];
+		if (docs) {
+			for (const doc of docs) {
+				results.push(
+					this._toEntity(doc.toObject(), UserEnt, { _id: "id" })
+				);
+			}
+
+			return results;
+		}
+	}
+
 	async findPeddlersByVStatus(status) {
 		const { User } = this.models;
 
@@ -88,18 +103,17 @@ module.exports = class UserMapper extends BaseMapper {
 			this._toPersistenceTransform
 		);
 
-		console.log({newUser})
+		console.log({ newUser });
 
 		const doc = await User.create(newUser);
 		if (doc) {
-			console.log({doc})
+			console.log({ doc });
 			return this._toEntity(
 				doc.toObject(),
 				UserEnt,
 				this._toEntityTransform
 			);
 		}
-		
 	}
 
 	async updateUserById(userId, userEntUpdate) {

@@ -22,6 +22,7 @@ let schema = new Schema({
 	createdAt: { type: Date, default: Date.now },
 	type: { type: String, enum: Object.values(types) },
 	nTrucks: Number,
+	peddler: { type: Schema.Types.ObjectId, ref: "User" },
 	pooImage: {
 		imgId: String,
 		uri: String,
@@ -41,6 +42,7 @@ let schema = new Schema({
 	},
 	peddlerCode: String,
 	isActivePeddler: Boolean,
+	isDeleted: { type: Boolean, default: false },
 });
 
 schema.index({ latlon: "2dsphere" });

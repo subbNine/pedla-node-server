@@ -39,8 +39,22 @@ function bounceNonPeddlers(req, res, next) {
 	}
 }
 
+function bounceNonDrivers(req, res, next) {
+	const { user } = req._App;
+	if (!user || !user.isDriver()) {
+		throw new AppError({
+			name: errorCodes.NotAuthorizedError.name,
+			statusCode: errorCodes.NotAuthorizedError.statusCode,
+			message: messages.notAuthorized,
+		});
+	} else {
+		next();
+	}
+}
+
 module.exports = {
 	bounceNonPeddlers,
 	bounceNonAdmins,
 	bounceNonBuyers,
+	bounceNonDrivers,
 };

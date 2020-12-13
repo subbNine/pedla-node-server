@@ -99,6 +99,57 @@ router.post(
 );
 
 /**
+ * @api {post} /api/user/peddler/driver Create truck Driver
+ * @apiName postPeddlerDriver
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers to create their Drivers
+ *
+ * @apiParam {String} firstName First name of the driver
+ * @apiParam {String} lastName LastName of the driver
+ * @apiParam {String} password Password of the driver
+ * @apiParam {String} email Email of the driver
+ * @apiParam {String} phoneNumber Phone Number of the driver
+ * @apiParam {String} userName User name of the driver
+ *
+ */
+
+router.post("/driver", catchAsync(userController.createDriver));
+
+/**
+ * @api {get} /api/user/peddler/drivers Get peddler's truck drivers
+ * @apiName gettPeddlerDrivers
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers to fetch all their Drivers
+ *
+ */
+router.get("/drivers", catchAsync(userController.getDrivers));
+
+/**
+ * @api {post} /api/user/peddler/driver/:driverId Update truck Driver
+ * @apiName postPeddlerDriverUpdate
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers to update profiles of their Drivers
+ *
+ * @apiParam {String} firstName First name of the driver
+ * @apiParam {String} lastName LastName of the driver
+ * @apiParam {String} password Password of the driver
+ * @apiParam {String} email Email of the driver
+ * @apiParam {String} phoneNumber Phone Number of the driver
+ * @apiParam {String} userName User name of the driver
+ *
+ */
+router.post("/driver/:driverId", catchAsync(userController.updateDriver));
+
+/**
  * @api {post} /api/user/peddler/truck Create truck
  * @apiName postPeddlerTruck
  * @apiGroup Truck Management
