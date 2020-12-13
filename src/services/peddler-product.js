@@ -3,7 +3,7 @@ const { PeddlerProductEnt } = require("../entities/domain");
 
 const { Result } = utils;
 
-module.exports = class Auth {
+module.exports = class PeddlerProduct {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}

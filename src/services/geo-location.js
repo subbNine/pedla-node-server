@@ -3,7 +3,7 @@ const { utils } = require("../lib");
 
 const { Result } = utils;
 
-module.exports = class User {
+module.exports = class GeoLoc {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}

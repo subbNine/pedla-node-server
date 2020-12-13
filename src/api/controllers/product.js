@@ -5,7 +5,7 @@ const {
 	peddlerProduct: peddlerProductService,
 } = require("../../services");
 
-module.exports = class User extends BaseController {
+module.exports = class Product extends BaseController {
 	constructor() {
 		super();
 		this._bindAll(this);

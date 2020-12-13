@@ -6,7 +6,7 @@ const errorCodes = error.errorCodes;
 const errMessages = error.messages;
 const { Result } = utils;
 
-module.exports = class Auth {
+module.exports = class Product {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}

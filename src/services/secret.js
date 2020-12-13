@@ -10,7 +10,7 @@ const errorCodes = error.errorCodes;
 const errMessages = error.messages;
 const { Result, generateJwtToken } = utils;
 
-class Otp {
+class Secrets {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}
@@ -98,4 +98,4 @@ class Otp {
 	}
 }
 
-module.exports = Otp;
+module.exports = Secrets;
