@@ -1,4 +1,4 @@
-module.exports = class Otp {
+module.exports = class Product {
 	id;
 	name;
 	description;

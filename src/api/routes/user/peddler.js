@@ -10,6 +10,7 @@ const {
 	geoLocation: geoLocationController,
 	truck: truckController,
 } = require("../../controllers");
+const fileUpload = require("../../middlewares/file-upload");
 
 const router = Router();
 
@@ -181,7 +182,6 @@ router.get("/drivers", catchAsync(userController.getDrivers));
  * @apiParam {String} email Email of the driver
  * @apiParam {String} phoneNumber Phone Number of the driver
  * @apiParam {String} userName User name of the driver
- *
  */
 router.post("/driver/:driverId", catchAsync(userController.updateDriver));
 
@@ -199,11 +199,23 @@ router.post("/driver/:driverId", catchAsync(userController.updateDriver));
  * @apiParam {ID} product type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
  * @apiParam {File} license truck liscence
+ * @apiParam {File} insurance the truck's insurance
+ * @apiParam {File} worthiness the truck's road worthiness
+ * @apiParam {File} ownership the truck's proof of ownership
  */
-router.post("/truck", catchAsync(truckController.createTruck));
+router.post(
+	"/truck",
+	fileUpload.fields([
+		{ name: "license", maxCount: 1 },
+		{ name: "insurance", maxCount: 1 },
+		{ name: "worthiness", maxCount: 1 },
+		{ name: "ownership", maxCount: 1 },
+	]),
+	catchAsync(truckController.createTruck)
+);
 
 /**
- * @api {get} /api/user/peddler/truck Get trucks
+ * @api {get} /api/user/peddler/trucks Get trucks
  * @apiName getPeddlerTrucks
  * @apiGroup Truck Management
  *
@@ -228,7 +240,19 @@ router.get("/trucks", catchAsync(truckController.getPeddlerTrucks));
  * @apiParam {ID} product type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
  * @apiParam {File} license truck liscence
+ * @apiParam {File} insurance the truck's insurance
+ * @apiParam {File} worthiness the truck's road worthiness
+ * @apiParam {File} ownership the truck's proof of ownership
  */
-router.post("/truck/:truckId", catchAsync(truckController.updateTruck));
+router.post(
+	"/truck/:truckId",
+	fileUpload.fields([
+		{ name: "license", maxCount: 1 },
+		{ name: "insurance", maxCount: 1 },
+		{ name: "worthiness", maxCount: 1 },
+		{ name: "ownership", maxCount: 1 },
+	]),
+	catchAsync(truckController.updateTruck)
+);
 
 module.exports = router;

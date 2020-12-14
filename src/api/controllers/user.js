@@ -144,7 +144,6 @@ module.exports = class User extends BaseController {
 			firstName,
 			lastName,
 			password,
-			email,
 			phoneNumber,
 			userName,
 		} = req.body;
@@ -154,12 +153,9 @@ module.exports = class User extends BaseController {
 		userDto.phoneNumber = phoneNumber;
 		userDto.userName = userName;
 		userDto.password = password;
-		userDto.email = email;
 		userDto.peddler = user.id;
 		userDto.type = userTypes.DRIVER;
 		userDto.permission = permissions.PERM002;
-
-		console.log({ userDto, user });
 
 		const result = await userService.createDriver(userDto, user);
 
@@ -178,7 +174,6 @@ module.exports = class User extends BaseController {
 			password,
 			phoneNumber,
 			userName,
-			email,
 		} = req.body;
 
 		userDto.firstName = firstName;
@@ -186,7 +181,6 @@ module.exports = class User extends BaseController {
 		userDto.phoneNumber = phoneNumber;
 		userDto.userName = userName;
 		userDto.password = password;
-		userDto.email = email;
 		userDto.id = driverId;
 
 		const result = await userService.updateDriver(userDto, user);

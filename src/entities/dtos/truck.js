@@ -1,6 +1,15 @@
-module.exports = class Product {
+const ProductDto = require("./product");
+const UserDto = require("./user");
+
+module.exports = class Truck {
 	id;
-	truckNo;
-	name;
-	owner;
+	owner = new UserDto();
+	model;
+	brand;
+	product = new ProductDto();
+	size;
+	license;
+	insurance;
+	worthiness;
+	ownership;
 };

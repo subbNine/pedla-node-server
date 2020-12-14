@@ -1,8 +1,17 @@
-module.exports = class Product {
+const ProductEnt = require("./product");
+const UserEnt = require("./user");
+
+module.exports = class Truck {
 	id;
-	truckNo;
-	name;
-	owner;
+	owner = new UserEnt();
+	model;
+	brand;
+	product = new ProductEnt();
+	size;
+	license;
+	insurance;
+	worthiness;
+	ownership;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -15,9 +24,15 @@ module.exports = class Product {
 	repr() {
 		return {
 			id: this.id || null,
-			truckNo: this.truckNo || null,
-			name: this.name || null,
-			owner: this.owner || null,
+			owner: (this.owner && this.owner.repr()) || null,
+			model: this.model || null,
+			brand: this.brand || null,
+			product: (this.product && this.product.repr()) || null,
+			size: this.size || null,
+			license: this.license || null,
+			insurance: this.insurance || null,
+			worthiness: this.worthiness || null,
+			ownership: this.ownership || null,
 		};
 	}
 };

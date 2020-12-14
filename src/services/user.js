@@ -146,7 +146,7 @@ module.exports = class User {
 			return Result.fail(
 				new AppError({
 					name: errorCodes.NameConflictError.name,
-					message: errMessages.nameConflict,
+					message: errMessages.userNameConflict,
 					statusCode: errorCodes.NameConflictError.statusCode,
 				})
 			);
@@ -179,6 +179,20 @@ module.exports = class User {
 	async updateDriver(userDto, peddler) {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
+
+		const isAlreadyExistingUser = await userMapper.findUser({
+			userName: userEnt.userName,
+		});
+
+		if (isAlreadyExistingUser) {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.NameConflictError.name,
+					message: errMessages.userNameConflict,
+					statusCode: errorCodes.NameConflictError.statusCode,
+				})
+			);
+		}
 
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
 
@@ -214,4 +228,6 @@ module.exports = class User {
 			return Result.ok([]);
 		}
 	}
+
+	async assignTrucksToDriver() {}
 };

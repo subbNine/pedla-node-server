@@ -9,14 +9,47 @@ module.exports = class Truck extends BaseController {
 	}
 
 	async createTruck(req, res, next) {
-		const { name, truckNo } = req.body;
+		const { model, brand, productId, size } = req.body;
 
 		const { user } = req._App;
 
 		const truckDto = new TruckDto();
-		truckDto.owner = user.id;
-		truckDto.name = name;
-		truckDto.truckNo = truckNo;
+		truckDto.owner.id = user.id;
+		truckDto.product.id = productId;
+		truckDto.model = model;
+		truckDto.brand = brand;
+		truckDto.size = size;
+
+		if (req.files) {
+			const licenseImageObj = req.files["license"][0];
+			const insuranceImageObj = req.files["insurance"][0];
+			const worthinessImageObj = req.files["worthiness"][0];
+			const ownershipImageObj = req.files["ownership"][0];
+
+			if (licenseImageObj)
+				truckDto.license = {
+					imgId: licenseImageObj.public_id,
+					uri: licenseImageObj.secure_url,
+				};
+
+			if (insuranceImageObj)
+				truckDto.insurance = {
+					imgId: insuranceImageObj.public_id,
+					uri: insuranceImageObj.secure_url,
+				};
+
+			if (worthinessImageObj)
+				truckDto.worthiness = {
+					imgId: worthinessImageObj.public_id,
+					uri: worthinessImageObj.secure_url,
+				};
+
+			if (ownershipImageObj)
+				truckDto.ownership = {
+					imgId: ownershipImageObj.public_id,
+					uri: ownershipImageObj.secure_url,
+				};
+		}
 
 		const result = await truckService.createTruck(truckDto);
 
@@ -65,7 +98,7 @@ module.exports = class Truck extends BaseController {
 
 		const { user } = req._App;
 
-		truckDto.owner = peddlerId || user.id;
+		truckDto.owner.id = peddlerId || user.id;
 
 		const result = await truckService.findTrucks(truckDto);
 
