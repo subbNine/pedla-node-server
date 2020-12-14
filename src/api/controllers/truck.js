@@ -21,10 +21,14 @@ module.exports = class Truck extends BaseController {
 		truckDto.size = size;
 
 		if (req.files) {
-			const licenseImageObj = req.files["license"][0];
-			const insuranceImageObj = req.files["insurance"][0];
-			const worthinessImageObj = req.files["worthiness"][0];
-			const ownershipImageObj = req.files["ownership"][0];
+			const licenseImageObj =
+				req.files["license"] && req.files["license"][0];
+			const insuranceImageObj =
+				req.files["insurance"] && req.files["insurance"][0];
+			const worthinessImageObj =
+				req.files["worthiness"] && req.files["worthiness"][0];
+			const ownershipImageObj =
+				req.files["ownership"] && req.files["ownership"][0];
 
 			if (licenseImageObj)
 				truckDto.license = {
