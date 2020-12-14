@@ -1184,10 +1184,38 @@ define({ "api": [
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "model",
+            "description": "<p>truck model number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brand",
+            "description": "<p>truck Brand</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fuelType",
+            "description": "<p>type of fuel</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "truckNo",
-            "description": "<p>Designated number given to trucks as a means of identity</p>"
+            "field": "size",
+            "description": "<p>size of truck in litres</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "truckLiscence",
+            "description": "<p>truck liscence</p>"
           }
         ]
       }
