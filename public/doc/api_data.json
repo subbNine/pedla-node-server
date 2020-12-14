@@ -1234,6 +1234,37 @@
   },
   {
     "type": "get",
+    "url": "/api/user/peddler/truck-driver",
+    "title": "Assign Trucks to Driver",
+    "name": "postTruckDriver",
+    "group": "Truck_Driver_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers assign trucks to drivers</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>Id of the driver to assign to a truck</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "tuckId",
+            "description": "<p>Id of the truck to assign to a driver</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Truck_Driver_Management"
+  },
+  {
+    "type": "get",
     "url": "/api/user/peddler/trucks",
     "title": "Get trucks",
     "name": "getPeddlerTrucks",
