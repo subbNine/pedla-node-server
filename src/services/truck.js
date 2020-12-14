@@ -26,7 +26,7 @@ module.exports = class Truck {
 		const { truckMapper } = this.mappers;
 
 		const foundTruck = await truckMapper.findTruck({
-			name: truckDto.name,
+			name: truckDto.product,
 			owner: truckDto.owner,
 		});
 
