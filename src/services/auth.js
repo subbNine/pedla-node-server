@@ -19,8 +19,7 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			email: { $exists: true },
-			email: userDto.email,
+			$and: [{ email: { $exists: true } }, { email: userDto.email }],
 		});
 
 		if (foundUser) {
