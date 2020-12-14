@@ -1214,7 +1214,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "File",
             "optional": false,
-            "field": "truckLiscence",
+            "field": "license",
             "description": "<p>truck liscence</p>"
           }
         ]
