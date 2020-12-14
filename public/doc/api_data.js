@@ -1198,10 +1198,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "ID",
             "optional": false,
-            "field": "fuelType",
-            "description": "<p>type of fuel</p>"
+            "field": "product",
+            "description": "<p>type of product loaded on the truck</p>"
           },
           {
             "group": "Parameter",
