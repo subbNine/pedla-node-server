@@ -16,11 +16,38 @@ router.use(bounceNonBuyers);
 
 router.use(shield(permissions.PERM000));
 
-router.put("/", catchAsync(userController.updateProfile));
+/**
+ * @api {post} /api/user/buyer/profile Update buyer's profile
+ * @apiName postBuyerProfileUpdate
+ * @apiGroup Profile Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription update buyer's profile
+ */
+router.post("/profile", catchAsync(userController.updateProfile));
 
-router.put("/online", catchAsync(userController.setOnline));
+/**
+ * @api {post} /api/user/buyer/online Set Buyer's Presence to online
+ * @apiName postBuyerPresenceOnline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set buyer's presence status to online
+ */
+router.post("/online", catchAsync(userController.setOnline));
 
-router.put("/offline", catchAsync(userController.setOffline));
+/**
+ * @api {post} /api/user/buyer/offline Set Buyer's Presence to offline
+ * @apiName postBuyerPresenceOffline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set buyer's presence status to offline
+ */
+router.post("/offline", catchAsync(userController.setOffline));
 
 router.get(
 	"/products",

@@ -16,11 +16,38 @@ router.use(bounceNonDrivers);
 
 router.use(shield(permissions.PERM000));
 
-router.put("/", catchAsync(userController.updateProfile));
+/**
+ * @api {post} /api/user/driver/profile Update driver's profile
+ * @apiName postDriverProfileUpdate
+ * @apiGroup Profile Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription update driver's profile
+ */
+router.post("/profile", catchAsync(userController.updateProfile));
 
-router.put("/online", catchAsync(userController.setOnline));
+/**
+ * @api {post} /api/user/driver/online Set Driver's Presence to online
+ * @apiName postDriverPresenceOnline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set driver's presence status to online
+ */
+router.post("/online", catchAsync(userController.setOnline));
 
-router.put("/offline", catchAsync(userController.setOffline));
+/**
+ * @api {post} /api/user/driver/offline Set Driver's Presence to offline
+ * @apiName postDriverPresenceOffline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set driver's presence status to offline
+ */
+router.post("/offline", catchAsync(userController.setOffline));
 
 router.get(
 	"/products",

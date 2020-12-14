@@ -17,11 +17,38 @@ router.use(bounceNonPeddlers);
 
 router.use(shield(perms.PERM000));
 
-router.put("/", catchAsync(userController.updateProfile));
+/**
+ * @api {post} /api/user/peddler/profile Update peddler's profile
+ * @apiName postProfileUpdate
+ * @apiGroup Profile Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription update peddler's profile
+ */
+router.post("/profile", catchAsync(userController.updateProfile));
 
-router.put("/online", catchAsync(userController.setOnline));
+/**
+ * @api {post} /api/user/peddler/online Set Peddler's Presence to online
+ * @apiName postPresenceOnline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set peddler's presence status to online
+ */
+router.post("/online", catchAsync(userController.setOnline));
 
-router.put("/offline", catchAsync(userController.setOffline));
+/**
+ * @api {post} /api/user/peddler/offline Set Peddler's Presence to offline
+ * @apiName postPresenceOffline
+ * @apiGroup Presence Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Set peddler's presence status to offline
+ */
+router.post("/offline", catchAsync(userController.setOffline));
 
 /**
  * @api {get} /api/user/peddler/products Retrieve products addded by the admin to the system
@@ -46,6 +73,15 @@ router.get("/products", catchAsync(productController.getProducts));
  */
 router.get("/own-products", catchAsync(productController.getPeddlerProducts));
 
+/**
+ * @api {get} /api/user/peddler/profile get peddler's profile
+ * @apiName getProfileUpdate
+ * @apiGroup Profile Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription get peddler's profile
+ */
 router.get("/profile", catchAsync(userController.getProfile));
 
 router.get("/profile/:userId", catchAsync(userController.getProfile));
@@ -158,8 +194,11 @@ router.post("/driver/:driverId", catchAsync(userController.updateDriver));
  *
  * @apiDescription This endpoint will enable peddlers to add their truck which will later be assigned to drivers
  *
- * @apiParam {String} name name of the truck
- * @apiParam {Number} truckNo Designated number given to trucks as a means of identity
+ * @apiParam {String} model truck model number
+ * @apiParam {String} brand truck Brand
+ * @apiParam {ID} product type of product loaded on the truck
+ * @apiParam {Number} size size of truck in litres
+ * @apiParam {File} license truck liscence
  */
 router.post("/truck", catchAsync(truckController.createTruck));
 
@@ -184,8 +223,11 @@ router.get("/trucks", catchAsync(truckController.getPeddlerTrucks));
  *
  * @apiDescription This endpoint will enable peddlers to update their Truck
  *
- * @apiParam {String} name name of the truck
- * @apiParam {Number} truckNo Designated number given to trucks as a means of identity
+ * @apiParam {String} model truck model number
+ * @apiParam {String} brand truck Brand
+ * @apiParam {ID} product type of product loaded on the truck
+ * @apiParam {Number} size size of truck in litres
+ * @apiParam {File} license truck liscence
  */
 router.post("/truck/:truckId", catchAsync(truckController.updateTruck));
 
