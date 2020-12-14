@@ -8,6 +8,7 @@ const Order = require("./order");
 const Notification = require("./notification");
 const PeddlerProduct = require("./peddler-product");
 const Truck = require("./truck");
+const TruckDriver = require("./truck-driver");
 
 module.exports = {
 	Country,
@@ -20,4 +21,5 @@ module.exports = {
 	Notification,
 	PeddlerProduct,
 	Truck,
+	TruckDriver,
 };

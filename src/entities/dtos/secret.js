@@ -1,4 +1,4 @@
-module.exports = class Otp {
+module.exports = class Secret {
 	id;
 	user = {};
 	otpSecret;
