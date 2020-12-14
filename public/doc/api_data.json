@@ -1148,13 +1148,6 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "name",
-            "description": "<p>name of the truck</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "model",
             "description": "<p>truck model number</p>"
           },
@@ -1203,13 +1196,6 @@
     "parameter": {
       "fields": {
         "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "name",
-            "description": "<p>name of the truck</p>"
-          },
           {
             "group": "Parameter",
             "type": "String",
