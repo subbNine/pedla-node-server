@@ -1123,8 +1123,118 @@ define({ "api": [
     "groupTitle": "Peddler_Verification"
   },
   {
+    "type": "post",
+    "url": "/api/user/buyer/offline",
+    "title": "Set Buyer's Presence to offline",
+    "name": "postBuyerPresenceOffline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set buyer's presence status to offline</p>",
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/online",
+    "title": "Set Buyer's Presence to online",
+    "name": "postBuyerPresenceOnline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set buyer's presence status to online</p>",
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/offline",
+    "title": "Set Driver's Presence to offline",
+    "name": "postDriverPresenceOffline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set driver's presence status to offline</p>",
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/online",
+    "title": "Set Driver's Presence to online",
+    "name": "postDriverPresenceOnline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set driver's presence status to online</p>",
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/offline",
+    "title": "Set Peddler's Presence to offline",
+    "name": "postPresenceOffline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set peddler's presence status to offline</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/online",
+    "title": "Set Peddler's Presence to online",
+    "name": "postPresenceOnline",
+    "group": "Presence_Management",
+    "version": "1.0.0",
+    "description": "<p>Set peddler's presence status to online</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Presence_Management"
+  },
+  {
     "type": "get",
-    "url": "/api/user/peddler/truck",
+    "url": "/api/user/peddler/profile",
+    "title": "get peddler's profile",
+    "name": "getProfileUpdate",
+    "group": "Profile_Management",
+    "version": "1.0.0",
+    "description": "<p>get peddler's profile</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Profile_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/profile",
+    "title": "Update buyer's profile",
+    "name": "postBuyerProfileUpdate",
+    "group": "Profile_Management",
+    "version": "1.0.0",
+    "description": "<p>update buyer's profile</p>",
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Profile_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/profile",
+    "title": "Update driver's profile",
+    "name": "postDriverProfileUpdate",
+    "group": "Profile_Management",
+    "version": "1.0.0",
+    "description": "<p>update driver's profile</p>",
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Profile_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/profile",
+    "title": "Update peddler's profile",
+    "name": "postProfileUpdate",
+    "group": "Profile_Management",
+    "version": "1.0.0",
+    "description": "<p>update peddler's profile</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Profile_Management"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/trucks",
     "title": "Get trucks",
     "name": "getPeddlerTrucks",
     "group": "Truck_Management",
@@ -1178,6 +1288,27 @@ define({ "api": [
             "optional": false,
             "field": "license",
             "description": "<p>truck liscence</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "insurance",
+            "description": "<p>the truck's insurance</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "worthiness",
+            "description": "<p>the truck's road worthiness</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "ownership",
+            "description": "<p>the truck's proof of ownership</p>"
           }
         ]
       }
@@ -1230,6 +1361,27 @@ define({ "api": [
             "optional": false,
             "field": "license",
             "description": "<p>truck liscence</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "insurance",
+            "description": "<p>the truck's insurance</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "worthiness",
+            "description": "<p>the truck's road worthiness</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "ownership",
+            "description": "<p>the truck's proof of ownership</p>"
           }
         ]
       }
