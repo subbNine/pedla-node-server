@@ -1,5 +1,5 @@
 const BaseController = require("./base");
-const { TruckDriverDto } = require("../../entities/dtos");
+const { TruckDriverDto, UserDto } = require("../../entities/dtos");
 const { truckDriver: truckDriverService } = require("../../services");
 
 module.exports = class Truck extends BaseController {
@@ -18,6 +18,17 @@ module.exports = class Truck extends BaseController {
 		const result = await truckDriverService.assignTruckToDriver(
 			truckDriverDto
 		);
+
+		this.response(result, res);
+	}
+
+	async getTruckDrivers(req, res, next) {
+		const { user } = req._App;
+
+		const truckOwnerDto = new UserDto();
+		truckOwnerDto.id = user.id;
+
+		const result = await truckDriverService.findTruckDrivers(truckOwnerDto);
 
 		this.response(result, res);
 	}

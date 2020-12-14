@@ -27,7 +27,7 @@ let schema = new Schema({
 		imgId: String,
 		uri: String,
 	},
-	avatarImage: {
+	avatarImg: {
 		imgId: String,
 		uri: String,
 	},

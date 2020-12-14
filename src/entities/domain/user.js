@@ -14,7 +14,7 @@ module.exports = class User {
 	createdAt;
 	type;
 	pooImage;
-	avatarImage;
+	avatarImg;
 	presence;
 	userName;
 	latlon;
@@ -59,7 +59,7 @@ module.exports = class User {
 		objectRepr.address = this.address || null;
 		objectRepr.permission = this.permission || null;
 		objectRepr.type = this.type || null;
-		objectRepr.avatarImage = this.avatarImage || null;
+		objectRepr.avatarImg = this.avatarImg || null;
 		objectRepr.presence = this.presence || null;
 		objectRepr.peddlerCode = this.peddlerCode || null;
 		objectRepr.nTrucks = this.nTrucks || null;

@@ -1,7 +1,7 @@
 const BaseMapper = require("./base");
 const { ProductEnt } = require("../entities/domain");
 
-module.exports = class UserMapper extends BaseMapper {
+module.exports = class ProductMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;

@@ -183,6 +183,17 @@ module.exports = class User extends BaseController {
 		userDto.password = password;
 		userDto.id = driverId;
 
+		const { public_id, secure_url } = req.file || {};
+
+		if (public_id && secure_url) {
+			const avatarImg = {
+				imgId: public_id,
+				uri: secure_url,
+			};
+
+			userDto.avatarImg = avatarImg;
+		}
+
 		const result = await userService.updateDriver(userDto, user);
 
 		return this.response(result, res);

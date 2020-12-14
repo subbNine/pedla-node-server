@@ -61,13 +61,50 @@ module.exports = class Truck extends BaseController {
 	}
 
 	async updateTruck(req, res, next) {
-		const { name, truckNo } = req.body;
+		const { model, brand, productId, size } = req.body;
 		const { truckId } = req.params;
 
 		const truckDto = new TruckDto();
 		truckDto.id = truckId;
-		truckDto.name = name;
-		truckDto.truckNo = truckNo;
+		truckDto.product.id = productId;
+		truckDto.model = model;
+		truckDto.brand = brand;
+		truckDto.size = size;
+
+		if (req.files) {
+			const licenseImageObj =
+				req.files["license"] && req.files["license"][0];
+			const insuranceImageObj =
+				req.files["insurance"] && req.files["insurance"][0];
+			const worthinessImageObj =
+				req.files["worthiness"] && req.files["worthiness"][0];
+			const ownershipImageObj =
+				req.files["ownership"] && req.files["ownership"][0];
+
+			if (licenseImageObj)
+				truckDto.license = {
+					imgId: licenseImageObj.public_id,
+					uri: licenseImageObj.secure_url,
+				};
+
+			if (insuranceImageObj)
+				truckDto.insurance = {
+					imgId: insuranceImageObj.public_id,
+					uri: insuranceImageObj.secure_url,
+				};
+
+			if (worthinessImageObj)
+				truckDto.worthiness = {
+					imgId: worthinessImageObj.public_id,
+					uri: worthinessImageObj.secure_url,
+				};
+
+			if (ownershipImageObj)
+				truckDto.ownership = {
+					imgId: ownershipImageObj.public_id,
+					uri: ownershipImageObj.secure_url,
+				};
+		}
 
 		const result = await truckService.updateTruck(truckDto);
 

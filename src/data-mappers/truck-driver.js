@@ -1,7 +1,7 @@
 const BaseMapper = require("./base");
 const { TruckDriverEnt, TruckEnt, UserEnt } = require("../entities/domain");
 
-module.exports = class UserMapper extends BaseMapper {
+module.exports = class TruckDriverMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;
@@ -30,6 +30,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const doc = await TruckDriver.findOne(
 			this.toTruckDriverPersistence(filter)
 		)
+			.sort("-createdAt")
 			.populate("truckId")
 			.populate("driverId");
 
@@ -119,12 +120,22 @@ module.exports = class UserMapper extends BaseMapper {
 	}
 
 	toTruckDriverPersistence(ent) {
-		if (ent.truck && ent.truck.id) {
-			ent.truck = ent.truck.id;
+		if (ent.truck) {
+			if (ent.truck.id) {
+				ent.truck = ent.truck.id;
+			} else {
+				ent.truck =
+					typeof ent.truck === "object" ? undefined : ent.truck;
+			}
 		}
 
-		if (ent.driver && ent.driver.id) {
-			ent.driver = ent.driver.id;
+		if (ent.driver) {
+			if (ent.driver.id) {
+				ent.driver = ent.driver.id;
+			} else {
+				ent.driver =
+					typeof ent.driver === "object" ? undefined : ent.driver;
+			}
 		}
 
 		return this._toPersistence(ent, {

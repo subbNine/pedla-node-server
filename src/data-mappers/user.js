@@ -32,11 +32,11 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const result = await doc;
 		if (result) {
-			return this._toEntity(
-				result.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			const entObj = result.toObject();
+			if (result.avatarImg && result.avatarImg.uri) {
+				entObj.avatarImg = result.avatarImg.uri;
+			}
+			return this._toEntity(entObj, UserEnt, this._toEntityTransform);
 		}
 	}
 
@@ -46,9 +46,11 @@ module.exports = class UserMapper extends BaseMapper {
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(
-					this._toEntity(doc.toObject(), UserEnt, { _id: "id" })
-				);
+				const entObj = doc.toObject();
+				if (doc.avatarImg && doc.avatarImg.uri) {
+					entObj.avatarImg = doc.avatarImg.uri;
+				}
+				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
 			}
 
 			return results;
@@ -102,8 +104,6 @@ module.exports = class UserMapper extends BaseMapper {
 			userEnt,
 			this._toPersistenceTransform
 		);
-
-		console.log({ newUser });
 
 		const doc = await User.create(newUser);
 		if (doc) {

@@ -5,7 +5,7 @@ const {
 	ProductEnt,
 } = require("../entities/domain");
 
-module.exports = class UserMapper extends BaseMapper {
+module.exports = class PeddlerProductMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;

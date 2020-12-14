@@ -8,7 +8,7 @@ module.exports = class User {
 	password;
 	type;
 	pooImage;
-	avatarImage;
+	avatarImg;
 	presence;
 	userName;
 	permission;

@@ -21,4 +21,8 @@ module.exports = class TruckDriver {
 			driver: this.driver || null,
 		};
 	}
+
+	hasBeenAssignedTruck(truckDriverEnt) {
+		return truckDriverEnt.driver.id === this.driver.id;
+	}
 };

@@ -15,6 +15,7 @@ module.exports = {
 	expiredOtp: "Expired or Invalid Otp",
 	nameConflict: "An entity already exist with this name",
 	userNameConflict: "The username has already been taken",
+	truckDriverConflict: "This truck has already been assigned to the driver",
 	invalidCode: "You have entered a wrong code",
 	unverifiedProfile: "Profile not yet verified",
 	messageHelpers: {

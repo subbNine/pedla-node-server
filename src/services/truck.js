@@ -1,9 +1,6 @@
-const { utils, error } = require("../lib");
+const { utils } = require("../lib");
 const { TruckEnt } = require("../entities/domain");
 
-const AppError = error.AppError;
-const errorCodes = error.errorCodes;
-const errMessages = error.messages;
 const { Result } = utils;
 
 module.exports = class Truck {
@@ -25,27 +22,9 @@ module.exports = class Truck {
 	async createTruck(truckDto) {
 		const { truckMapper } = this.mappers;
 
-		const foundTruck = await truckMapper.findTruck({
-			product: truckDto.product,
-			owner: truckDto.owner,
-		});
+		await truckMapper.createTruck(new TruckEnt(truckDto));
 
-		console.log({ truckDto, foundTruck });
-
-		if (foundTruck) {
-			return Result.fail(
-				new AppError({
-					name: errorCodes.NameConflictError.name,
-					message: errMessages.nameConflict,
-					statusCode: errorCodes.NameConflictError.statusCode,
-				})
-			);
-		} else {
-			const newTruck = await truckMapper.createTruck(
-				new TruckEnt(truckDto)
-			);
-			return Result.ok(newTruck.repr());
-		}
+		return Result.ok({ success: true });
 	}
 
 	async findTrucks(truckDto) {

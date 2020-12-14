@@ -9,7 +9,8 @@
     "test": "jest --watch",
     "generate-doc": "apidoc -i src/api/routes/ -o public/doc",
     "seed-dev": "NODE_ENV=development ./node_modules/.bin/md-seed",
-    "seed-stage": "NODE_ENV=staging ./node_modules/.bin/md-seed"
+    "seed-stage": "NODE_ENV=staging ./node_modules/.bin/md-seed",
+    "debug": "NODE_ENV=production node --inspect src/index.js"
   },
   "apidoc": {
     "title": "Pedla Api Docs",

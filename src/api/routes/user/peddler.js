@@ -153,7 +153,11 @@ router.post(
  *
  */
 
-router.post("/driver", catchAsync(userController.createDriver));
+router.post(
+	"/driver",
+	fileUpload.single("avatarImg"),
+	catchAsync(userController.createDriver)
+);
 
 /**
  * @api {get} /api/user/peddler/drivers Get peddler's truck drivers
@@ -254,5 +258,19 @@ router.post(
 	]),
 	catchAsync(truckController.updateTruck)
 );
+
+/**
+ * @api {get} /api/user/peddler/truck-driver Assign Trucks to Driver
+ * @apiName postTruckDriver
+ * @apiGroup Truck Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers assign trucks to drivers
+ *
+ * @apiParam {ID} driverId Id of the driver to assign to a truck
+ * @apiParam {ID}  tuckId Id of the truck to assign to a driver
+ */
+router.post("/truck-driver", catchAsync(truckController.getPeddlerTrucks));
 
 module.exports = router;

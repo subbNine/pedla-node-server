@@ -163,14 +163,12 @@ module.exports = class User {
 						firstName: peddler.firstName,
 						lastName: peddler.lastName,
 						id: peddler.Id,
-						email: peddler.email,
 						phoneNumber: peddler.phoneNumber,
 					},
 				})
 			);
 
-			const objRepr = newUser.repr();
-			return Result.ok({ ...objRepr });
+			return Result.ok({ success: true });
 		} else {
 			return Result.ok(null);
 		}

@@ -1,7 +1,7 @@
 const BaseMapper = require("./base");
 const { TruckEnt, UserEnt, ProductEnt } = require("../entities/domain");
 
-module.exports = class UserMapper extends BaseMapper {
+module.exports = class TruckMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;
@@ -94,15 +94,33 @@ module.exports = class UserMapper extends BaseMapper {
 				});
 			}
 
-			const truckEnt = this._toEntity(
-				{ ...doc, owner: userEnt, product: productEnt },
-				TruckEnt,
-				{
-					_id: "id",
-					ownerId: "owner",
-					productId: "product",
-				}
-			);
+			const entObj = {
+				...doc,
+				owner: userEnt,
+				product: productEnt,
+			};
+
+			if (doc.license && doc.license.uri) {
+				entObj.license = doc.license.uri;
+			}
+
+			if (doc.insurance && doc.insurance.uri) {
+				entObj.insurance = doc.insurance.uri;
+			}
+
+			if (doc.worthiness && doc.worthiness.uri) {
+				entObj.worthiness = doc.worthiness.uri;
+			}
+
+			if (doc.ownership && doc.ownership.uri) {
+				entObj.ownership = doc.ownership.uri;
+			}
+
+			const truckEnt = this._toEntity(entObj, TruckEnt, {
+				_id: "id",
+				ownerId: "owner",
+				productId: "product",
+			});
 
 			return truckEnt;
 		}
@@ -113,7 +131,8 @@ module.exports = class UserMapper extends BaseMapper {
 			if (ent.product.id) {
 				ent.product = ent.product.id;
 			} else {
-				ent.product = undefined;
+				ent.product =
+					typeof ent.product === "object" ? undefined : ent.product;
 			}
 		}
 
@@ -121,7 +140,8 @@ module.exports = class UserMapper extends BaseMapper {
 			if (ent.owner.id) {
 				ent.owner = ent.owner.id;
 			} else {
-				ent.owner = undefined;
+				ent.owner =
+					typeof ent.owner === "object" ? undefined : ent.owner;
 			}
 		}
 

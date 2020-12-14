@@ -11,31 +11,31 @@ function sendRejectionMsg(userEnt) {
 
 	// smsService.send(peddlerCode);
 
-	emailService.send({
-		from: "Adekunle From Peddler <pedlaapp20@gmail.com>",
-		to: userEnt.email,
-		subject: "Added As a Driver",
-		html:
-			"Hello, " +
-			'<span style= "text-transform: capitalize; font-weight: bold;">' +
-			(userEnt.firstName || "") +
-			" " +
-			(userEnt.lastName || "") +
-			"</span>" +
-			" " +
-			"You Have just been added as a driver to" +
-			" " +
-			'<span style="font-weight: bold; text-transform: capitalize;">' +
-			(userEnt.peddler.firstName || "") +
-			" " +
-			(userEnt.peddler.lastName || "") +
-			"</span>" +
-			"<br> Your Login Credentials are" +
-			"<br>" +
-			"<b>Username: </b>" +
-			userEnt.userName +
-			"<br>" +
-			"<b>Password: </b>" +
-			userEnt.password,
-	});
+	// emailService.send({
+	// 	from: "Adekunle From Peddler <pedlaapp20@gmail.com>",
+	// 	to: userEnt.email,
+	// 	subject: "Added As a Driver",
+	// 	html:
+	// 		"Hello, " +
+	// 		'<span style= "text-transform: capitalize; font-weight: bold;">' +
+	// 		(userEnt.firstName || "") +
+	// 		" " +
+	// 		(userEnt.lastName || "") +
+	// 		"</span>" +
+	// 		" " +
+	// 		"You Have just been added as a driver to" +
+	// 		" " +
+	// 		'<span style="font-weight: bold; text-transform: capitalize;">' +
+	// 		(userEnt.peddler.firstName || "") +
+	// 		" " +
+	// 		(userEnt.peddler.lastName || "") +
+	// 		"</span>" +
+	// 		"<br> Your Login Credentials are" +
+	// 		"<br>" +
+	// 		"<b>Username: </b>" +
+	// 		userEnt.userName +
+	// 		"<br>" +
+	// 		"<b>Password: </b>" +
+	// 		userEnt.password,
+	// });
 }
