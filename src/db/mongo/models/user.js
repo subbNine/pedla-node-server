@@ -42,6 +42,7 @@ let schema = new Schema({
 	},
 	peddlerCode: String,
 	isActivePeddler: Boolean,
+	isDisabled: { type: Boolean, default: false },
 	isDeleted: { type: Boolean, default: false },
 });
 

@@ -48,7 +48,6 @@ module.exports = class Auth extends BaseController {
 			firstName,
 			lastName,
 			email,
-			address,
 			phoneNumber,
 			nTrucks,
 		} = req.body;
