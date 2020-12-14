@@ -74,14 +74,20 @@ module.exports = class Auth {
 
 			if (isPasswordMatch) {
 				const objRepr = foundUser.repr();
-				const token = generateJwtToken(
-					{ ...objRepr, permission: permissions.PERM000 },
-					"1h"
-				);
+
+				let token;
+				if (foundUser.isPeddler()) {
+					token = generateJwtToken(
+						{ ...objRepr, permission: permissions.PERM000 },
+						"1h"
+					);
+
+					eventEmitter.emit(eventTypes.loggedIn, foundUser);
+				} else {
+					token = generateJwtToken(objRepr);
+				}
 
 				objRepr.token = token;
-
-				eventEmitter.emit(eventTypes.loggedIn, foundUser);
 
 				return Result.ok(objRepr);
 			} else {
