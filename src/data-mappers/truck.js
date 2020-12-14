@@ -94,8 +94,6 @@ module.exports = class UserMapper extends BaseMapper {
 				});
 			}
 
-			console.log({ userEnt, productEnt });
-
 			const truckEnt = this._toEntity(
 				{ ...doc, owner: userEnt, product: productEnt },
 				TruckEnt,
