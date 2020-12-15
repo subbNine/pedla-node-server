@@ -35,7 +35,7 @@ module.exports = class Truck {
 			new TruckEnt(truckDto)
 		);
 
-		const truckWithDrivers = await asyncExec(
+		const trucksWithDrivers = await asyncExec(
 			foundTrucks,
 			async (truckEnt) => {
 				const truckWithDriver = await truckAndDriverMapper.findTruckAndDriver(
@@ -53,9 +53,9 @@ module.exports = class Truck {
 			}
 		);
 
-		if (truckWithDrivers) {
+		if (trucksWithDrivers) {
 			return Result.ok(
-				truckWithDrivers.map((eachTruck) => eachTruck.repr())
+				trucksWithDrivers.map((eachTruck) => eachTruck.repr())
 			);
 		} else {
 			return Result.ok([]);

@@ -16,6 +16,10 @@ module.exports = {
 	nameConflict: "An entity already exist with this name",
 	userNameConflict: "The username has already been taken",
 	truckAndDriverConflict: "This truck has already been assigned to the driver",
+	wrongDriverAssignment:
+		"You are attempting to assign a driver you did not create",
+	wrongTruckAssignment:
+		"You are attempting to assign a truck you did not create",
 	invalidCode: "You have entered a wrong code",
 	unverifiedProfile: "Profile not yet verified",
 	messageHelpers: {

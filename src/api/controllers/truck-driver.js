@@ -10,13 +10,16 @@ module.exports = class Truck extends BaseController {
 
 	async assignTruckToDriver(req, res, next) {
 		const { truckId, driverId } = req.body;
+		const { user } = req._App;
+
 		const truckAndDriverDto = new TruckAndDriverDto();
 
 		truckAndDriverDto.truck.id = truckId;
 		truckAndDriverDto.driver.id = driverId;
 
 		const result = await truckAndDriverService.assignTruckToDriver(
-			truckAndDriverDto
+			truckAndDriverDto,
+			user
 		);
 
 		this.response(result, res);

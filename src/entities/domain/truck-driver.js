@@ -23,6 +23,9 @@ module.exports = class TruckAndDriver {
 	}
 
 	hasBeenAssignedTruck(truckAndDriverEnt) {
-		return String(truckAndDriverEnt.driver.id) == String(this.driver.id);
+		return (
+			String(truckAndDriverEnt.driver.id) == String(this.driver.id) &&
+			String(truckAndDriverEnt.truck.id) == String(this.truck.id)
+		);
 	}
 };

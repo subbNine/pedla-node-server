@@ -1,5 +1,6 @@
 const ProductEnt = require("./product");
 const UserEnt = require("./user");
+const isType = require("../../lib/utils/is-type");
 
 module.exports = class Truck {
 	id;
@@ -25,15 +26,33 @@ module.exports = class Truck {
 	repr() {
 		return {
 			id: this.id || null,
-			owner: (this.owner && this.owner.repr()) || null,
+			owner:
+				(this.owner && this.owner.repr && this.owner.repr()) ||
+				this.owner ||
+				null,
 			model: this.model || null,
 			brand: this.brand || null,
-			product: (this.product && this.product.repr()) || null,
+			product:
+				(this.product && this.product.repr && this.product.repr()) ||
+				this.product ||
+				null,
 			size: this.size || null,
-			license: this.license || null,
-			insurance: this.insurance || null,
-			worthiness: this.worthiness || null,
-			ownership: this.ownership || null,
+			license:
+				(isType("object", this.license) && this.license.uri) ||
+				this.license ||
+				null,
+			insurance:
+				(isType("object", this.insurance) && this.insurance.uri) ||
+				this.insurance ||
+				null,
+			worthiness:
+				(isType("object", this.worthiness) && this.worthiness.uri) ||
+				this.worthiness ||
+				null,
+			ownership:
+				(isType("object", this.ownership) && this.ownership.uri) ||
+				this.ownership ||
+				null,
 			driver: this.driver || null,
 		};
 	}

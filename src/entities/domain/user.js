@@ -23,6 +23,7 @@ module.exports = class User {
 	isActivePeddler;
 	nTrucks;
 	peddler;
+	truck;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -75,13 +76,17 @@ module.exports = class User {
 			objectRepr.isActivePeddler = this.isActivePeddler || null;
 		}
 
+		if (this.isDriver()) {
+			objectRepr.truck = this.truck || null;
+		}
+
 		if (this.latlon) {
 			objectRepr.latlon = {
 				lon: this.latlon.coordinates[0],
 				lat: this.latlon.coordinates[1],
 			};
 		} else {
-			objectRepr.latlon = this.latlon;
+			objectRepr.latlon = null;
 		}
 
 		return objectRepr;

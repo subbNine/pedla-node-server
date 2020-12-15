@@ -2,6 +2,7 @@ const { UserEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { permissions } = require("../db/mongo/enums/user");
+const asyncExec = require("../lib/utils/async-exec");
 
 const { Result, generateJwtToken } = utils;
 const AppError = error.AppError;
@@ -216,12 +217,25 @@ module.exports = class User {
 	}
 
 	async findDrivers(userDto) {
-		const { userMapper } = this.mappers;
+		const { userMapper, truckAndDriverMapper } = this.mappers;
 
 		const foundUsers = await userMapper.findUsers(new UserEnt(userDto));
 
-		if (foundUsers) {
-			return Result.ok(foundUsers.map((eachUser) => eachUser.repr()));
+		const driversWithTrucks = await asyncExec(foundUsers, async (userEnt) => {
+			const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver({
+				driverId: userEnt.id,
+			});
+
+			if (driverWithTruck) {
+				userEnt.truck = driverWithTruck.truck.repr();
+				return userEnt;
+			} else {
+				return userEnt;
+			}
+		});
+
+		if (driversWithTrucks) {
+			return Result.ok(driversWithTrucks.map((eachUser) => eachUser.repr()));
 		} else {
 			return Result.ok([]);
 		}

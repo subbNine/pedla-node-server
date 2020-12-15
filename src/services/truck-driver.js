@@ -1,5 +1,5 @@
 const { utils, error } = require("../lib");
-const { TruckAndDriverEnt } = require("../entities/domain");
+const { TruckAndDriverEnt, TruckEnt } = require("../entities/domain");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -11,24 +11,99 @@ module.exports = class TruckAndDriver {
 		this.mappers = mappers;
 	}
 
-	async assignTruckToDriver(truckAndDriverDto) {
+	async _findOwnTrucks(owner) {
+		const { truckMapper } = this.mappers;
+
+		const truckEnt = new TruckEnt({ owner });
+
+		const myTrucks = await truckMapper.findTrucks(truckEnt);
+
+		if (myTrucks) {
+			return myTrucks.map((each) => each.id.toString());
+		}
+	}
+
+	async _findOwnDrivers(owner) {
+		const { userMapper } = this.mappers;
+
+		const myDrivers = await userMapper.findUsers({ peddler: owner.id });
+
+		if (myDrivers) {
+			return myDrivers.map((each) => each.id.toString());
+		}
+	}
+
+	async _checkOwnerOf(truckAndDriverDto, owner) {
+		const ownTrucksPromise = this._findOwnTrucks(owner);
+
+		const ownDriversPromise = this._findOwnDrivers(owner);
+
+		const [ownTruckIds, ownDriverIds] = await Promise.all([
+			ownTrucksPromise,
+			ownDriversPromise,
+		]);
+
+		const driverIdFromInput = truckAndDriverDto.driver.id;
+		const trukIdFromInput = truckAndDriverDto.truck.id;
+
+		if (!ownTruckIds || !ownTruckIds.includes(trukIdFromInput)) {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.WrongAssignment.name,
+					message: errMessages.wrongTruckAssignment,
+					statusCode: errorCodes.WrongAssignment.statusCode,
+				})
+			);
+		}
+
+		if (!ownDriverIds || !ownDriverIds.includes(driverIdFromInput)) {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.WrongAssignment.name,
+					message: errMessages.wrongDriverAssignment,
+					statusCode: errorCodes.WrongAssignment.statusCode,
+				})
+			);
+		}
+
+		return Result.ok(true);
+	}
+
+	async assignTruckToDriver(truckAndDriverDto, owner) {
 		const { truckAndDriverMapper } = this.mappers;
 
-		const foundTruckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
-			truckId: truckAndDriverDto.truck.id,
-			driverId: truckAndDriverDto.driver.id,
-		});
+		const isConfirmedUserOwnsTruckAndDriver = await this._checkOwnerOf(
+			truckAndDriverDto,
+			owner
+		);
 
-		if (foundTruckAndDriver) {
-			if (foundTruckAndDriver.hasBeenAssignedTruck(truckAndDriverDto)) {
-				return Result.fail(
-					new AppError({
-						name: errorCodes.DupplicateAssignmentError.name,
-						message: errMessages.truckAndDriverConflict,
-						statusCode:
-							errorCodes.DupplicateAssignmentError.statusCode,
-					})
-				);
+		if (isConfirmedUserOwnsTruckAndDriver.isFailure) {
+			return isConfirmedUserOwnsTruckAndDriver;
+		}
+
+		const truckAssignedADriverPromise = truckAndDriverMapper.findTruckAndDriver(
+			{
+				truckId: truckAndDriverDto.truck.id,
+			}
+		);
+
+		const driverAssignedATruckPromise = truckAndDriverMapper.findTruckAndDriver(
+			{
+				driverId: truckAndDriverDto.driver.id,
+			}
+		);
+
+		const [truckAssignedADriver, driverAssignedATruck] = await Promise.all([
+			truckAssignedADriverPromise,
+			driverAssignedATruckPromise,
+		]);
+
+		if (truckAssignedADriver && driverAssignedATruck) {
+			if (
+				truckAssignedADriver.id.toString() ===
+				driverAssignedATruck.id.toString()
+			) {
+				return Result.ok(driverAssignedATruck);
 			}
 		}
 
@@ -57,9 +132,7 @@ module.exports = class TruckAndDriver {
 			});
 
 			if (truckAndDrivers && truckAndDrivers.length) {
-				return Result.ok(
-					truckAndDrivers.map((each) => each && each.repr())
-				);
+				return Result.ok(truckAndDrivers.map((each) => each && each.repr()));
 			} else {
 				return Result.ok([]);
 			}

@@ -120,22 +120,6 @@ module.exports = class TruckMapper extends BaseMapper {
 				product: peddlerProductEnt,
 			};
 
-			if (doc.license && doc.license.uri) {
-				entObj.license = doc.license.uri;
-			}
-
-			if (doc.insurance && doc.insurance.uri) {
-				entObj.insurance = doc.insurance.uri;
-			}
-
-			if (doc.worthiness && doc.worthiness.uri) {
-				entObj.worthiness = doc.worthiness.uri;
-			}
-
-			if (doc.ownership && doc.ownership.uri) {
-				entObj.ownership = doc.ownership.uri;
-			}
-
 			const truckEnt = this._toEntity(entObj, TruckEnt, {
 				_id: "id",
 				ownerId: "owner",
