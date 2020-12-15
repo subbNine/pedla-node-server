@@ -38,7 +38,9 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 	async createTruckAndDriver(truckAndDriverEnt) {
 		const { TruckAndDriver } = this.models;
 
-		const newTruckAndDriver = this.toTruckAndDriverPersistence(truckAndDriverEnt);
+		const newTruckAndDriver = this.toTruckAndDriverPersistence(
+			truckAndDriverEnt
+		);
 
 		const doc = await TruckAndDriver.create(newTruckAndDriver);
 
@@ -120,8 +122,7 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 			if (ent.truck.id) {
 				ent.truck = ent.truck.id;
 			} else {
-				ent.truck =
-					typeof ent.truck === "object" ? undefined : ent.truck;
+				ent.truck = typeof ent.truck === "object" ? undefined : ent.truck;
 			}
 		}
 
@@ -129,8 +130,7 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 			if (ent.driver.id) {
 				ent.driver = ent.driver.id;
 			} else {
-				ent.driver =
-					typeof ent.driver === "object" ? undefined : ent.driver;
+				ent.driver = typeof ent.driver === "object" ? undefined : ent.driver;
 			}
 		}
 

@@ -1,5 +1,11 @@
 const BaseMapper = require("./base");
-const { TruckEnt, UserEnt, PeddlerProductEnt } = require("../entities/domain");
+const {
+	TruckEnt,
+	UserEnt,
+	PeddlerProductEnt,
+	ProductEnt,
+} = require("../entities/domain");
+const isType = require("../lib/utils/is-type");
 
 module.exports = class TruckMapper extends BaseMapper {
 	constructor(models) {
@@ -11,7 +17,7 @@ module.exports = class TruckMapper extends BaseMapper {
 		const { Truck } = this.models;
 		const docs = await Truck.find(this.toTruckPersistence(filter))
 			.populate("ownerId")
-			.populate("productId");
+			.populate({ path: "productId", populate: { path: "productId" } });
 
 		const results = [];
 		if (docs) {
@@ -27,17 +33,17 @@ module.exports = class TruckMapper extends BaseMapper {
 		const { Truck } = this.models;
 		const doc = await Truck.findOne(this.toTruckPersistence(filter))
 			.populate("ownerId")
-			.populate("productId");
+			.populate({ path: "productId", populate: { path: "productId" } });
 
 		if (doc) {
 			return this.toTruckEnt(doc.toObject());
 		}
 	}
 
-	async createTruck(productEnt) {
+	async createTruck(truckEnt) {
 		const { Truck } = this.models;
 
-		const newTruck = this.toTruckPersistence(productEnt);
+		const newTruck = this.toTruckPersistence(truckEnt);
 
 		const doc = await Truck.create(newTruck);
 
@@ -46,10 +52,10 @@ module.exports = class TruckMapper extends BaseMapper {
 		}
 	}
 
-	async updateTruckById(id, productEnt) {
+	async updateTruckById(id, truckEnt) {
 		const { Truck } = this.models;
 
-		const updates = this.toTruckPersistence(productEnt);
+		const updates = this.toTruckPersistence(truckEnt);
 
 		const doc = await Truck.findByIdAndUpdate(id, updates, { new: true });
 
@@ -71,7 +77,7 @@ module.exports = class TruckMapper extends BaseMapper {
 	toTruckEnt(doc) {
 		if (doc) {
 			let userEnt;
-			let productEnt;
+			let peddlerProductEnt;
 			if (doc.ownerId && doc.ownerId._id) {
 				userEnt = this._toEntity(doc.ownerId, UserEnt, {
 					_id: "id",
@@ -85,11 +91,21 @@ module.exports = class TruckMapper extends BaseMapper {
 			}
 
 			if (doc.productId && doc.productId._id) {
-				productEnt = this._toEntity(doc.productId, PeddlerProductEnt, {
+				const entObj = doc.productId;
+
+				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {
 					_id: "id",
 				});
+
+				if (isType("object", entObj.productId)) {
+					const productEnt = this._toEntity(entObj.productId, ProductEnt, {
+						_id: "id",
+					});
+
+					peddlerProductEnt.product = productEnt;
+				}
 			} else {
-				productEnt = this._toEntity(
+				peddlerProductEnt = this._toEntity(
 					{ id: doc.productId },
 					PeddlerProductEnt,
 					{
@@ -101,7 +117,7 @@ module.exports = class TruckMapper extends BaseMapper {
 			const entObj = {
 				...doc,
 				owner: userEnt,
-				product: productEnt,
+				product: peddlerProductEnt,
 			};
 
 			if (doc.license && doc.license.uri) {
@@ -135,8 +151,7 @@ module.exports = class TruckMapper extends BaseMapper {
 			if (ent.product.id) {
 				ent.product = ent.product.id;
 			} else {
-				ent.product =
-					typeof ent.product === "object" ? undefined : ent.product;
+				ent.product = typeof ent.product === "object" ? undefined : ent.product;
 			}
 		}
 
@@ -144,8 +159,7 @@ module.exports = class TruckMapper extends BaseMapper {
 			if (ent.owner.id) {
 				ent.owner = ent.owner.id;
 			} else {
-				ent.owner =
-					typeof ent.owner === "object" ? undefined : ent.owner;
+				ent.owner = typeof ent.owner === "object" ? undefined : ent.owner;
 			}
 		}
 
