@@ -131,3 +131,17 @@ module.exports = router;
  * 		"isOperational": true
  * 	}
  */
+
+/**
+ * @apiDefine DupplicateAssignmentError
+ *
+ * @apiError DupplicateAssignmentError This error occurs when you have duplicate assignment to an entity
+ *
+ * @apiErrorExample Error-Response:
+ * 	HTTP/1.1 409 Bad Request
+ * 	{
+ * 		"name": "DupplicateAssignmentError",
+ * 		"message": "The passed in Truck has already been assigned to the passed in driver",
+ * 		"isOperational": true
+ * 	}
+ */

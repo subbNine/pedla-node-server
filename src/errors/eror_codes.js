@@ -43,6 +43,10 @@ module.exports = {
 		statusCode: 409,
 		name: "EmailConflictError",
 	},
+	DupplicateAssignmentError: {
+		statusCode: 409,
+		name: "DupplicateAssignmentError",
+	},
 	PhoneConflictError: {
 		statusCode: 404,
 		name: "PhoneConflictError",

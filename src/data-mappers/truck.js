@@ -1,5 +1,5 @@
 const BaseMapper = require("./base");
-const { TruckEnt, UserEnt, ProductEnt } = require("../entities/domain");
+const { TruckEnt, UserEnt, PeddlerProductEnt } = require("../entities/domain");
 
 module.exports = class TruckMapper extends BaseMapper {
 	constructor(models) {
@@ -85,13 +85,17 @@ module.exports = class TruckMapper extends BaseMapper {
 			}
 
 			if (doc.productId && doc.productId._id) {
-				productEnt = this._toEntity(doc.productId, ProductEnt, {
+				productEnt = this._toEntity(doc.productId, PeddlerProductEnt, {
 					_id: "id",
 				});
 			} else {
-				productEnt = this._toEntity({ id: doc.productId }, ProductEnt, {
-					_id: "id",
-				});
+				productEnt = this._toEntity(
+					{ id: doc.productId },
+					PeddlerProductEnt,
+					{
+						_id: "id",
+					}
+				);
 			}
 
 			const entObj = {
