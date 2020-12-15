@@ -1234,68 +1234,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/user/peddler/trucks-drivers",
-    "title": "get Trucks which have been assigned Driver",
-    "name": "getTrucksDrivers",
-    "group": "Truck_Driver_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint will enable peddlers retrieve assign trucks to drivers</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "driverId",
-            "description": "<p>Id of the driver assigned a truck</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "tuckId",
-            "description": "<p>Id of the truck to assign to a driver</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/peddler.js",
-    "groupTitle": "Truck_Driver_Management"
-  },
-  {
-    "type": "post",
-    "url": "/api/user/peddler/truck-driver",
-    "title": "Assign Trucks to Driver",
-    "name": "postTruckDriver",
-    "group": "Truck_Driver_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint will enable peddlers assign trucks to drivers</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "driverId",
-            "description": "<p>Id of the driver to assign to a truck</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "tuckId",
-            "description": "<p>Id of the truck to assign to a driver</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/peddler.js",
-    "groupTitle": "Truck_Driver_Management"
-  },
-  {
-    "type": "get",
     "url": "/api/user/peddler/trucks",
     "title": "Get trucks",
     "name": "getPeddlerTrucks",
@@ -1450,5 +1388,116 @@ define({ "api": [
     },
     "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Truck_Management"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/trucks-drivers",
+    "title": "get Trucks which have been assigned Driver",
+    "name": "getTrucksDrivers",
+    "group": "Trucks_And_Drivers_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers retrieve assigned trucks and drivers</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Trucks_And_Drivers_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/truck-driver",
+    "title": "Assign Trucks to Driver",
+    "name": "postTruckDriver",
+    "group": "Trucks_And_Drivers_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers assign trucks to drivers</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>Id of the driver to assign to a truck</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "truckId",
+            "description": "<p>Id of the truck to assign to a driver</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Trucks_And_Drivers_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "DupplicateAssignmentError",
+            "description": "<p>This error occurs when you have duplicate assignment to an entity</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Bad Request\n{\n\t\"name\": \"DupplicateAssignmentError\",\n\t\"message\": \"The passed in Truck has already been assigned to the passed in driver\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/truck-driver/:truckDriverId",
+    "title": "update Trucks to Driver Assignment",
+    "name": "postTruckDriverUpdate",
+    "group": "Trucks_And_Drivers_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable peddlers update trucks to drivers assignment</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>Id of the driver to assign to a truck</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "truckId",
+            "description": "<p>Id of the truck to assign to a driver</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Trucks_And_Drivers_Management",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "DupplicateAssignmentError",
+            "description": "<p>This error occurs when you have duplicate assignment to an entity</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 409 Bad Request\n{\n\t\"name\": \"DupplicateAssignmentError\",\n\t\"message\": \"The passed in Truck has already been assigned to the passed in driver\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
   }
 ] });
