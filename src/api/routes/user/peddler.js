@@ -316,6 +316,20 @@ router.get(
 	catchAsync(truckAndDriverController.getTruckAndDrivers)
 );
 
+/**
+ * @api {get} /api/user/peddler/nearest-drivers?lat={lat}&&lon={lon}&&radius={search-radius} get Trucks which have been assigned Driver
+ * @apiName getTrucksDrivers
+ * @apiGroup Trucks And Drivers Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will fetch all online drivers within the radius passed in
+ * from the coordinate specified by lat and lon params
+ *
+ * @apiParam {Number} [lat]
+ * @apiParam {Number} [lon]
+ * @apiParam {Number} [radius=5]
+ */
 router.get(
 	"/nearest-drivers",
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)

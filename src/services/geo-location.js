@@ -1,6 +1,6 @@
 const { GeoEnt } = require("../entities/domain");
 const { utils } = require("../lib");
-const { types: userTypes } = require("../db/mongo/enums").user;
+const { types: userTypes, presence } = require("../db/mongo/enums").user;
 
 const { Result } = utils;
 
@@ -29,6 +29,7 @@ module.exports = class GeoLoc {
 			peddlers = await geoMapper.findUserByGeoLocation({
 				$and: [
 					{ type: userTypes.PEDDLER },
+					// { presence: presence.ONLINE },
 					{
 						latlon: {
 							$nearSphere: {

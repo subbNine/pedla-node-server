@@ -1401,10 +1401,49 @@ define({ "api": [
     "groupTitle": "Trucks_And_Drivers_Management"
   },
   {
+    "type": "get",
+    "url": "/api/user/peddler/nearest-drivers?lat={lat}&&lon={lon}&&radius={search-radius}",
+    "title": "get Trucks which have been assigned Driver",
+    "name": "getTrucksDrivers",
+    "group": "Trucks_And_Drivers_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will fetch all online drivers within the radius passed in from the coordinate specified by lat and lon params</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lat",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lon",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "radius",
+            "defaultValue": "5",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Trucks_And_Drivers_Management"
+  },
+  {
     "type": "post",
     "url": "/api/user/peddler/truck-driver",
     "title": "Assign Trucks to Driver",
-    "name": "postTruckDriver",
+    "name": "postTruckAndDriver",
     "group": "Trucks_And_Drivers_Management",
     "version": "1.0.0",
     "description": "<p>This endpoint will enable peddlers assign trucks to drivers</p>",
@@ -1452,9 +1491,9 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/user/peddler/truck-driver/:truckDriverId",
+    "url": "/api/user/peddler/truck-driver/:truckAndDriverId",
     "title": "update Trucks to Driver Assignment",
-    "name": "postTruckDriverUpdate",
+    "name": "postTruckAndDriverUpdate",
     "group": "Trucks_And_Drivers_Management",
     "version": "1.0.0",
     "description": "<p>This endpoint will enable peddlers update trucks to drivers assignment</p>",
