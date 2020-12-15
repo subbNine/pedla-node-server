@@ -226,6 +226,4 @@ module.exports = class User {
 			return Result.ok([]);
 		}
 	}
-
-	async assignTrucksToDriver() {}
 };

@@ -70,4 +70,9 @@ router.post(
 	catchAsync(geoLocationController.updateGeoLocation)
 );
 
+router.get(
+	"/nearest-peddlers",
+	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+);
+
 module.exports = router;

@@ -26,4 +26,22 @@ module.exports = class GeoLoc extends BaseController {
 		const result = await geoService.updateGeoLocation(geoDto);
 		return this.response(result, res);
 	}
+
+	async getNearestOnlinePeddlers(req, res, next) {
+		const { lat, lon, radius } = req.query;
+
+		const geoDto = new GeoDto();
+
+		const coordinates = [+lon, +lat];
+		const latlon = {
+			type: "Point",
+			coordinates,
+		};
+
+		geoDto.latlon = latlon;
+		geoDto.radius = radius;
+
+		const result = await geoService.findNearestOnlinePeddler(geoDto);
+		return this.response(result, res);
+	}
 };

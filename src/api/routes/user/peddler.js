@@ -316,4 +316,9 @@ router.get(
 	catchAsync(truckDriverController.getTruckDrivers)
 );
 
+router.get(
+	"/nearest-drivers",
+	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+);
+
 module.exports = router;

@@ -223,6 +223,4 @@ module.exports = class User extends BaseController {
 
 		this.response(result, res);
 	}
-
-	async getOnlinePeddlers(req, res, next) {}
 };

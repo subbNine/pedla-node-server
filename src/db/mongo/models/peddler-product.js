@@ -12,4 +12,4 @@ let schema = new Schema({
 	quantity: Number,
 });
 
-module.exports = mongoose.model("PedlersProduct", schema);
+module.exports = mongoose.model("PeddlersProduct", schema);

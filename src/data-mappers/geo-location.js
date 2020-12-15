@@ -1,5 +1,5 @@
 const BaseMapper = require("./base");
-const { GeoEnt } = require("../entities/domain");
+const { GeoEnt, UserEnt } = require("../entities/domain");
 
 module.exports = class GeoMapper extends BaseMapper {
 	constructor(models) {
@@ -25,6 +25,23 @@ module.exports = class GeoMapper extends BaseMapper {
 				GeoEnt,
 				this._toEntityTransform
 			);
+		}
+	}
+
+	async findUserByGeoLocation(filter) {
+		const { User } = this.models;
+		const docs = await User.find(filter);
+		const results = [];
+		if (docs) {
+			for (const doc of docs) {
+				const entObj = doc.toObject();
+				if (doc.avatarImg && doc.avatarImg.uri) {
+					entObj.avatarImg = doc.avatarImg.uri;
+				}
+				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
+			}
+
+			return results;
 		}
 	}
 };
