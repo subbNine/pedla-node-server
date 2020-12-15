@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const isType = require("../../lib/utils/is-type");
 
 const { permissions, types } = require("../../db/mongo/enums").user;
 
@@ -59,7 +60,10 @@ module.exports = class User {
 		objectRepr.address = this.address || null;
 		objectRepr.permission = this.permission || null;
 		objectRepr.type = this.type || null;
-		objectRepr.avatarImg = this.avatarImg || null;
+		objectRepr.avatarImg =
+			(isType("object", this.avatarImg) && this.avatarImg.uri) ||
+			this.avatarImg ||
+			null;
 		objectRepr.presence = this.presence || null;
 		objectRepr.peddlerCode = this.peddlerCode || null;
 		objectRepr.nTrucks = this.nTrucks || null;
