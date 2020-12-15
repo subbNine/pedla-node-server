@@ -12,6 +12,7 @@ module.exports = class Truck {
 	insurance;
 	worthiness;
 	ownership;
+	driver;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -33,6 +34,7 @@ module.exports = class Truck {
 			insurance: this.insurance || null,
 			worthiness: this.worthiness || null,
 			ownership: this.ownership || null,
+			driver: this.driver || null,
 		};
 	}
 };

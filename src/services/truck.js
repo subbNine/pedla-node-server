@@ -1,5 +1,6 @@
 const { utils } = require("../lib");
 const { TruckEnt } = require("../entities/domain");
+const asyncExec = require("../lib/utils/async-exec");
 
 const { Result } = utils;
 
@@ -28,14 +29,34 @@ module.exports = class Truck {
 	}
 
 	async findTrucks(truckDto) {
-		const { truckMapper } = this.mappers;
+		const { truckMapper, truckDriverMapper } = this.mappers;
 
 		const foundTrucks = await truckMapper.findTrucks(
 			new TruckEnt(truckDto)
 		);
 
-		if (foundTrucks) {
-			return Result.ok(foundTrucks.map((eachTruck) => eachTruck.repr()));
+		const truckWithDrivers = await asyncExec(
+			foundTrucks,
+			async (truckEnt) => {
+				const truckWithDriver = await truckDriverMapper.findTruckDriver(
+					{
+						truckId: truckEnt.id,
+					}
+				);
+
+				if (truckWithDriver) {
+					truckEnt.driver = truckWithDriver.driver.repr();
+					return truckEnt;
+				} else {
+					return truckEnt;
+				}
+			}
+		);
+
+		if (truckWithDrivers) {
+			return Result.ok(
+				truckWithDrivers.map((eachTruck) => eachTruck.repr())
+			);
 		} else {
 			return Result.ok([]);
 		}
