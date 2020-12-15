@@ -157,6 +157,17 @@ module.exports = class User extends BaseController {
 		userDto.type = userTypes.DRIVER;
 		userDto.permission = permissions.PERM002;
 
+		const { public_id, secure_url } = req.file || {};
+
+		if (public_id && secure_url) {
+			const avatarImg = {
+				imgId: public_id,
+				uri: secure_url,
+			};
+
+			userDto.avatarImg = avatarImg;
+		}
+
 		const result = await userService.createDriver(userDto, user);
 
 		return this.response(result, res);

@@ -153,7 +153,6 @@ router.post(
  * @apiParam {String} userName User name of the driver
  *
  */
-
 router.post(
 	"/driver",
 	fileUpload.single("avatarImg"),
@@ -188,7 +187,11 @@ router.get("/drivers", catchAsync(userController.getDrivers));
  * @apiParam {String} phoneNumber Phone Number of the driver
  * @apiParam {String} userName User name of the driver
  */
-router.post("/driver/:driverId", catchAsync(userController.updateDriver));
+router.post(
+	"/driver/:driverId",
+	fileUpload.single("avatarImg"),
+	catchAsync(userController.updateDriver)
+);
 
 /**
  * @api {post} /api/user/peddler/truck Create truck
