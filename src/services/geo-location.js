@@ -29,7 +29,7 @@ module.exports = class GeoLoc {
 			peddlers = await geoMapper.findUserByGeoLocation({
 				$and: [
 					{ type: userTypes.PEDDLER },
-					// { presence: presence.ONLINE },
+					{ presence: presence.ONLINE },
 					{
 						latlon: {
 							$nearSphere: {
@@ -37,9 +37,7 @@ module.exports = class GeoLoc {
 									type: "Point",
 									coordinates: [+lon, +lat],
 								},
-								$maxDistance:
-									(radiusIsNum ? +radius : 5) *
-									METERS_PER_MILE,
+								$maxDistance: (radiusIsNum ? +radius : 5) * METERS_PER_MILE,
 							},
 						},
 					},
