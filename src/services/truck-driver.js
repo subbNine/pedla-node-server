@@ -1,30 +1,30 @@
 const { utils, error } = require("../lib");
-const { TruckDriverEnt } = require("../entities/domain");
+const { TruckAndDriverEnt } = require("../entities/domain");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
 const errMessages = error.messages;
 const { Result } = utils;
 
-module.exports = class TruckDriver {
+module.exports = class TruckAndDriver {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}
 
-	async assignTruckToDriver(truckDriverDto) {
-		const { truckDriverMapper } = this.mappers;
+	async assignTruckToDriver(truckAndDriverDto) {
+		const { truckAndDriverMapper } = this.mappers;
 
-		const foundTruckDriver = await truckDriverMapper.findTruckDriver({
-			truckId: truckDriverDto.truck.id,
-			driverId: truckDriverDto.driver.id,
+		const foundTruckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
+			truckId: truckAndDriverDto.truck.id,
+			driverId: truckAndDriverDto.driver.id,
 		});
 
-		if (foundTruckDriver) {
-			if (foundTruckDriver.hasBeenAssignedTruck(truckDriverDto)) {
+		if (foundTruckAndDriver) {
+			if (foundTruckAndDriver.hasBeenAssignedTruck(truckAndDriverDto)) {
 				return Result.fail(
 					new AppError({
 						name: errorCodes.DupplicateAssignmentError.name,
-						message: errMessages.truckDriverConflict,
+						message: errMessages.truckAndDriverConflict,
 						statusCode:
 							errorCodes.DupplicateAssignmentError.statusCode,
 					})
@@ -32,14 +32,14 @@ module.exports = class TruckDriver {
 			}
 		}
 
-		const newTruckDriver = await truckDriverMapper.createTruckDriver(
-			new TruckDriverEnt(truckDriverDto)
+		const newTruckAndDriver = await truckAndDriverMapper.createTruckAndDriver(
+			new TruckAndDriverEnt(truckAndDriverDto)
 		);
-		return Result.ok(newTruckDriver.repr());
+		return Result.ok(newTruckAndDriver.repr());
 	}
 
-	async findTruckDrivers(truckOwnerDto) {
-		const { truckMapper, truckDriverMapper } = this.mappers;
+	async findTruckAndDrivers(truckOwnerDto) {
+		const { truckMapper, truckAndDriverMapper } = this.mappers;
 
 		const ownersTrucks = await truckMapper.findTrucks({
 			owner: truckOwnerDto,
@@ -52,13 +52,13 @@ module.exports = class TruckDriver {
 		}
 
 		if (truckIds) {
-			const truckDrivers = await truckDriverMapper.findTruckDrivers({
+			const truckAndDrivers = await truckAndDriverMapper.findTruckAndDrivers({
 				truckId: { $in: truckIds },
 			});
 
-			if (truckDrivers && truckDrivers.length) {
+			if (truckAndDrivers && truckAndDrivers.length) {
 				return Result.ok(
-					truckDrivers.map((each) => each && each.repr())
+					truckAndDrivers.map((each) => each && each.repr())
 				);
 			} else {
 				return Result.ok([]);
@@ -68,15 +68,15 @@ module.exports = class TruckDriver {
 		}
 	}
 
-	async updateTruckDriver(truckDriverDto) {
-		const { truckDriverMapper } = this.mappers;
-		const truckDriverEnt = new TruckDriverEnt(truckDriverDto);
+	async updateTruckAndDriver(truckAndDriverDto) {
+		const { truckAndDriverMapper } = this.mappers;
+		const truckAndDriverEnt = new TruckAndDriverEnt(truckAndDriverDto);
 
-		const updatedTruckDriver = await truckDriverMapper.updateTruckDriverById(
-			truckDriverEnt.id,
-			truckDriverEnt
+		const updatedTruckAndDriver = await truckAndDriverMapper.updateTruckAndDriverById(
+			truckAndDriverEnt.id,
+			truckAndDriverEnt
 		);
 
-		return Result.ok(updatedTruckDriver.repr());
+		return Result.ok(updatedTruckAndDriver.repr());
 	}
 };

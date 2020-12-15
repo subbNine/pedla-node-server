@@ -4,7 +4,7 @@ const ProductDto = require("./product");
 const PeddlerProductDto = require("./peddler-product");
 const GeoDto = require("./geo-location");
 const TruckDto = require("./truck");
-const TruckDriverDto = require("./truck-driver");
+const TruckAndDriverDto = require("./truck-driver");
 
 module.exports = {
 	UserDto,
@@ -13,5 +13,5 @@ module.exports = {
 	PeddlerProductDto,
 	GeoDto,
 	TruckDto,
-	TruckDriverDto,
+	TruckAndDriverDto,
 };

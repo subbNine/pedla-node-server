@@ -9,7 +9,7 @@ const {
 	user: userController,
 	geoLocation: geoLocationController,
 	truck: truckController,
-	truckDriver: truckDriverController,
+	truckAndDriver: truckAndDriverController,
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
@@ -265,7 +265,7 @@ router.post(
 
 /**
  * @api {post} /api/user/peddler/truck-driver Assign Trucks to Driver
- * @apiName postTruckDriver
+ * @apiName postTruckAndDriver
  * @apiGroup Trucks And Drivers Management
  *
  * @apiVersion 1.0.0
@@ -279,12 +279,12 @@ router.post(
  */
 router.post(
 	"/truck-driver",
-	catchAsync(truckDriverController.assignTruckToDriver)
+	catchAsync(truckAndDriverController.assignTruckToDriver)
 );
 
 /**
- * @api {post} /api/user/peddler/truck-driver/:truckDriverId update Trucks to Driver Assignment
- * @apiName postTruckDriverUpdate
+ * @api {post} /api/user/peddler/truck-driver/:truckAndDriverId update Trucks to Driver Assignment
+ * @apiName postTruckAndDriverUpdate
  * @apiGroup Trucks And Drivers Management
  *
  * @apiVersion 1.0.0
@@ -298,7 +298,7 @@ router.post(
  */
 router.post(
 	"/truck-driver/:truckDriverId",
-	catchAsync(truckDriverController.updateTruckDriver)
+	catchAsync(truckAndDriverController.updateTruckAndDriver)
 );
 
 /**
@@ -313,7 +313,7 @@ router.post(
  */
 router.get(
 	"/trucks-drivers",
-	catchAsync(truckDriverController.getTruckDrivers)
+	catchAsync(truckAndDriverController.getTruckAndDrivers)
 );
 
 router.get(

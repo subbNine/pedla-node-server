@@ -9,7 +9,7 @@ const Notification = require("./notification");
 const Order = require("./order");
 const GeoLocation = require("./geo-location");
 const Truck = require("./truck");
-const TruckDriver = require("./truck-driver");
+const TruckAndDriver = require("./truck-driver");
 
 module.exports = {
 	auth: new Auth({ mappers }),
@@ -21,5 +21,5 @@ module.exports = {
 	order: new Order({ mappers }),
 	geoLocation: new GeoLocation({ mappers }),
 	truck: new Truck({ mappers }),
-	truckDriver: new TruckDriver({ mappers }),
+	truckAndDriver: new TruckAndDriver({ mappers }),
 };

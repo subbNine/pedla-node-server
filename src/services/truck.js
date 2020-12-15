@@ -29,7 +29,7 @@ module.exports = class Truck {
 	}
 
 	async findTrucks(truckDto) {
-		const { truckMapper, truckDriverMapper } = this.mappers;
+		const { truckMapper, truckAndDriverMapper } = this.mappers;
 
 		const foundTrucks = await truckMapper.findTrucks(
 			new TruckEnt(truckDto)
@@ -38,7 +38,7 @@ module.exports = class Truck {
 		const truckWithDrivers = await asyncExec(
 			foundTrucks,
 			async (truckEnt) => {
-				const truckWithDriver = await truckDriverMapper.findTruckDriver(
+				const truckWithDriver = await truckAndDriverMapper.findTruckAndDriver(
 					{
 						truckId: truckEnt.id,
 					}

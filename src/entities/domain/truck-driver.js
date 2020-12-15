@@ -1,7 +1,7 @@
 const TruckEnt = require("./truck");
 const UserEnt = require("./user");
 
-module.exports = class TruckDriver {
+module.exports = class TruckAndDriver {
 	id;
 	truck = new TruckEnt();
 	driver = new UserEnt();
@@ -22,7 +22,7 @@ module.exports = class TruckDriver {
 		};
 	}
 
-	hasBeenAssignedTruck(truckDriverEnt) {
-		return String(truckDriverEnt.driver.id) == String(this.driver.id);
+	hasBeenAssignedTruck(truckAndDriverEnt) {
+		return String(truckAndDriverEnt.driver.id) == String(this.driver.id);
 	}
 };

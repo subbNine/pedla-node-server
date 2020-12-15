@@ -1,77 +1,77 @@
 const BaseMapper = require("./base");
-const { TruckDriverEnt, TruckEnt, UserEnt } = require("../entities/domain");
+const { TruckAndDriverEnt, TruckEnt, UserEnt } = require("../entities/domain");
 
-module.exports = class TruckDriverMapper extends BaseMapper {
+module.exports = class TruckAndDriverMapper extends BaseMapper {
 	constructor(models) {
 		super();
 		this.models = models;
 	}
 
-	async findTruckDrivers(filter) {
-		const { TruckDriver } = this.models;
-		const docs = await TruckDriver.find(filter)
+	async findTruckAndDrivers(filter) {
+		const { TruckAndDriver } = this.models;
+		const docs = await TruckAndDriver.find(filter)
 			.populate("truckId")
 			.populate("driverId");
 
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(this.toTruckDriverEnt(doc.toObject()));
+				results.push(this.toTruckAndDriverEnt(doc.toObject()));
 			}
 
 			return results;
 		}
 	}
 
-	async findTruckDriver(filter) {
-		const { TruckDriver } = this.models;
-		const doc = await TruckDriver.findOne(filter)
+	async findTruckAndDriver(filter) {
+		const { TruckAndDriver } = this.models;
+		const doc = await TruckAndDriver.findOne(filter)
 			.sort("-createdAt")
 			.populate("truckId")
 			.populate("driverId");
 
 		if (doc) {
-			return this.toTruckDriverEnt(doc.toObject());
+			return this.toTruckAndDriverEnt(doc.toObject());
 		}
 	}
 
-	async createTruckDriver(truckDriverEnt) {
-		const { TruckDriver } = this.models;
+	async createTruckAndDriver(truckAndDriverEnt) {
+		const { TruckAndDriver } = this.models;
 
-		const newTruckDriver = this.toTruckDriverPersistence(truckDriverEnt);
+		const newTruckAndDriver = this.toTruckAndDriverPersistence(truckAndDriverEnt);
 
-		const doc = await TruckDriver.create(newTruckDriver);
+		const doc = await TruckAndDriver.create(newTruckAndDriver);
 
 		if (doc) {
-			return this.toTruckDriverEnt(doc.toObject());
+			return this.toTruckAndDriverEnt(doc.toObject());
 		}
 	}
 
-	async updateTruckDriverById(id, truckDriverEnt) {
-		const { TruckDriver } = this.models;
+	async updateTruckAndDriverById(id, truckAndDriverEnt) {
+		const { TruckAndDriver } = this.models;
 
-		const updates = this.toTruckDriverPersistence(truckDriverEnt);
+		const updates = this.toTruckAndDriverPersistence(truckAndDriverEnt);
 
-		const doc = await TruckDriver.findByIdAndUpdate(id, updates, {
+		const doc = await TruckAndDriver.findByIdAndUpdate(id, updates, {
 			new: true,
 		});
 
 		if (doc) {
-			return this.toTruckDriverEnt(doc.toObject());
+			return this.toTruckAndDriverEnt(doc.toObject());
 		}
 	}
 
-	async deleteTruckDriver(id) {
-		const { TruckDriver } = this.models;
+	async deleteTruckAndDriver(id) {
+		const { TruckAndDriver } = this.models;
 
-		const doc = await TruckDriver.findByIdAndDelete(id);
+		const doc = await TruckAndDriver.findByIdAndDelete(id);
 
 		if (doc) {
-			return this.toTruckDriverEnt(doc.toObject());
+			return this.toTruckAndDriverEnt(doc.toObject());
 		}
 	}
 
-	toTruckDriverEnt(doc) {
+	toTruckAndDriverEnt(doc) {
 		if (doc) {
 			let truckEnt;
 			let driverEnt;
@@ -105,17 +105,17 @@ module.exports = class TruckDriverMapper extends BaseMapper {
 			doc.truckId = truckEnt;
 			doc.driverId = driverEnt;
 
-			const truckDriverEnt = this._toEntity(doc, TruckDriverEnt, {
+			const truckAndDriverEnt = this._toEntity(doc, TruckAndDriverEnt, {
 				_id: "id",
 				truckId: "truck",
 				driverId: "driver",
 			});
 
-			return truckDriverEnt;
+			return truckAndDriverEnt;
 		}
 	}
 
-	toTruckDriverPersistence(ent) {
+	toTruckAndDriverPersistence(ent) {
 		if (ent.truck) {
 			if (ent.truck.id) {
 				ent.truck = ent.truck.id;

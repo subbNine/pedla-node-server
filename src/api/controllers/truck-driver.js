@@ -1,6 +1,6 @@
 const BaseController = require("./base");
-const { TruckDriverDto, UserDto } = require("../../entities/dtos");
-const { truckDriver: truckDriverService } = require("../../services");
+const { TruckAndDriverDto, UserDto } = require("../../entities/dtos");
+const { truckAndDriver: truckAndDriverService } = require("../../services");
 
 module.exports = class Truck extends BaseController {
 	constructor() {
@@ -10,40 +10,42 @@ module.exports = class Truck extends BaseController {
 
 	async assignTruckToDriver(req, res, next) {
 		const { truckId, driverId } = req.body;
-		const truckDriverDto = new TruckDriverDto();
+		const truckAndDriverDto = new TruckAndDriverDto();
 
-		truckDriverDto.truck.id = truckId;
-		truckDriverDto.driver.id = driverId;
+		truckAndDriverDto.truck.id = truckId;
+		truckAndDriverDto.driver.id = driverId;
 
-		const result = await truckDriverService.assignTruckToDriver(
-			truckDriverDto
+		const result = await truckAndDriverService.assignTruckToDriver(
+			truckAndDriverDto
 		);
 
 		this.response(result, res);
 	}
 
-	async getTruckDrivers(req, res, next) {
+	async getTruckAndDrivers(req, res, next) {
 		const { user } = req._App;
 
 		const truckOwnerDto = new UserDto();
 		truckOwnerDto.id = user.id;
 
-		const result = await truckDriverService.findTruckDrivers(truckOwnerDto);
+		const result = await truckAndDriverService.findTruckAndDrivers(
+			truckOwnerDto
+		);
 
 		this.response(result, res);
 	}
 
-	async updateTruckDriver(req, res, next) {
+	async updateTruckAndDriver(req, res, next) {
 		const { truckId, driverId } = req.body;
 		const { truckDriverId } = req.params;
 
-		const truckDriverDto = new TruckDriverDto();
-		truckDriverDto.id = truckDriverId;
-		truckDriverDto.truck.id = truckId;
-		truckDriverDto.driver.id = driverId;
+		const truckAndDriverDto = new TruckAndDriverDto();
+		truckAndDriverDto.id = truckDriverId;
+		truckAndDriverDto.truck.id = truckId;
+		truckAndDriverDto.driver.id = driverId;
 
-		const result = await truckDriverService.updateTruckDriver(
-			truckDriverDto
+		const result = await truckAndDriverService.updateTruckAndDriver(
+			truckAndDriverDto
 		);
 
 		this.response(result, res);
