@@ -15,16 +15,18 @@ module.exports = class TruckDriver {
 		const { truckDriverMapper } = this.mappers;
 
 		const foundTruckDriver = await truckDriverMapper.findTruckDriver({
-			truck: truckDriverDto.truck,
+			truckId: truckDriverDto.truck.id,
+			driverId: truckDriverDto.driver.id,
 		});
 
 		if (foundTruckDriver) {
 			if (foundTruckDriver.hasBeenAssignedTruck(truckDriverDto)) {
 				return Result.fail(
 					new AppError({
-						name: errorCodes.NameConflictError.name,
+						name: errorCodes.DupplicateAssignmentError.name,
 						message: errMessages.truckDriverConflict,
-						statusCode: errorCodes.NameConflictError.statusCode,
+						statusCode:
+							errorCodes.DupplicateAssignmentError.statusCode,
 					})
 				);
 			}
@@ -39,23 +41,42 @@ module.exports = class TruckDriver {
 	async findTruckDrivers(truckOwnerDto) {
 		const { truckMapper, truckDriverMapper } = this.mappers;
 
-		const ownersTrucks = await truckMapper.findTrucks(truckOwnerDto);
+		const ownersTrucks = await truckMapper.findTrucks({
+			owner: truckOwnerDto,
+		});
+
+		let truckIds;
 
 		if (ownersTrucks) {
-			let truckDriverQueryList = [];
+			truckIds = ownersTrucks.map((each) => each.id);
+		}
 
-			for (const truckEnt of truckEntList) {
-				const query = truckDriverMapper.findTruck({ truck: truckEnt });
-				truckDriverQueryList.push(query);
-			}
+		if (truckIds) {
+			const truckDrivers = await truckDriverMapper.findTruckDrivers({
+				truckId: { $in: truckIds },
+			});
 
-			const results = await Promise.all(truckDriverQueryList);
-
-			if (results && results.length) {
-				return Result.ok(results.map((each) => each.repr()));
+			if (truckDrivers && truckDrivers.length) {
+				return Result.ok(
+					truckDrivers.map((each) => each && each.repr())
+				);
+			} else {
+				return Result.ok([]);
 			}
 		} else {
 			return Result.ok([]);
 		}
+	}
+
+	async updateTruckDriver(truckDriverDto) {
+		const { truckDriverMapper } = this.mappers;
+		const truckDriverEnt = new TruckDriverEnt(truckDriverDto);
+
+		const updatedTruckDriver = await truckDriverMapper.updateTruckDriverById(
+			truckDriverEnt.id,
+			truckDriverEnt
+		);
+
+		return Result.ok(updatedTruckDriver.repr());
 	}
 };

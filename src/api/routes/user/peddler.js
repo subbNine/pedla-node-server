@@ -9,6 +9,7 @@ const {
 	user: userController,
 	geoLocation: geoLocationController,
 	truck: truckController,
+	truckDriver: truckDriverController,
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
@@ -260,17 +261,56 @@ router.post(
 );
 
 /**
- * @api {get} /api/user/peddler/truck-driver Assign Trucks to Driver
+ * @api {post} /api/user/peddler/truck-driver Assign Trucks to Driver
  * @apiName postTruckDriver
- * @apiGroup Truck Driver Management
+ * @apiGroup Trucks And Drivers Management
  *
  * @apiVersion 1.0.0
  *
  * @apiDescription This endpoint will enable peddlers assign trucks to drivers
  *
  * @apiParam {ID} driverId Id of the driver to assign to a truck
- * @apiParam {ID}  tuckId Id of the truck to assign to a driver
+ * @apiParam {ID}  truckId Id of the truck to assign to a driver
+ *
+ * @apiUse DupplicateAssignmentError
  */
-router.post("/truck-driver", catchAsync(truckController.getPeddlerTrucks));
+router.post(
+	"/truck-driver",
+	catchAsync(truckDriverController.assignTruckToDriver)
+);
+
+/**
+ * @api {post} /api/user/peddler/truck-driver/:truckDriverId update Trucks to Driver Assignment
+ * @apiName postTruckDriverUpdate
+ * @apiGroup Trucks And Drivers Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers update trucks to drivers assignment
+ *
+ * @apiParam {ID} driverId Id of the driver to assign to a truck
+ * @apiParam {ID}  truckId Id of the truck to assign to a driver
+ *
+ * @apiUse DupplicateAssignmentError
+ */
+router.post(
+	"/truck-driver/:truckDriverId",
+	catchAsync(truckDriverController.updateTruckDriver)
+);
+
+/**
+ * @api {get} /api/user/peddler/trucks-drivers get Trucks which have been assigned Driver
+ * @apiName getTrucksDrivers
+ * @apiGroup Trucks And Drivers Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable peddlers retrieve assigned trucks and drivers
+ *
+ */
+router.get(
+	"/trucks-drivers",
+	catchAsync(truckDriverController.getTruckDrivers)
+);
 
 module.exports = router;

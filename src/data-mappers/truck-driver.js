@@ -9,16 +9,14 @@ module.exports = class TruckDriverMapper extends BaseMapper {
 
 	async findTruckDrivers(filter) {
 		const { TruckDriver } = this.models;
-		const docs = await TruckDriver.find(
-			this.toTruckDriverPersistence(filter)
-		)
+		const docs = await TruckDriver.find(filter)
 			.populate("truckId")
 			.populate("driverId");
 
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(this.toTruckDriverEnt(doc));
+				results.push(this.toTruckDriverEnt(doc.toObject()));
 			}
 
 			return results;
@@ -27,9 +25,7 @@ module.exports = class TruckDriverMapper extends BaseMapper {
 
 	async findTruckDriver(filter) {
 		const { TruckDriver } = this.models;
-		const doc = await TruckDriver.findOne(
-			this.toTruckDriverPersistence(filter)
-		)
+		const doc = await TruckDriver.findOne(filter)
 			.sort("-createdAt")
 			.populate("truckId")
 			.populate("driverId");

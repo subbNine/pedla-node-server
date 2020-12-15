@@ -32,4 +32,20 @@ module.exports = class Truck extends BaseController {
 
 		this.response(result, res);
 	}
+
+	async updateTruckDriver(req, res, next) {
+		const { truckId, driverId } = req.body;
+		const { truckDriverId } = req.params;
+
+		const truckDriverDto = new TruckDriverDto();
+		truckDriverDto.id = truckDriverId;
+		truckDriverDto.truck.id = truckId;
+		truckDriverDto.driver.id = driverId;
+
+		const result = await truckDriverService.updateTruckDriver(
+			truckDriverDto
+		);
+
+		this.response(result, res);
+	}
 };
