@@ -89,4 +89,9 @@ router.get(
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)
 );
 
+router.get(
+	"/nearest-peddlers",
+	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+);
+
 module.exports = router;
