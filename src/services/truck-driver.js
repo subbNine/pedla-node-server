@@ -77,7 +77,7 @@ module.exports = class TruckAndDriver {
 			owner
 		);
 
-		if (isConfirmedUserOwnsTruckAndDriver.isFailure) {
+		if (isConfirmedOwnershipOnTruckAndDriver.isFailure) {
 			return isConfirmedOwnershipOnTruckAndDriver;
 		}
 
