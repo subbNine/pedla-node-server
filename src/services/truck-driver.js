@@ -72,13 +72,13 @@ module.exports = class TruckAndDriver {
 	async assignTruckToDriver(truckAndDriverDto, owner) {
 		const { truckAndDriverMapper } = this.mappers;
 
-		const isConfirmedUserOwnsTruckAndDriver = await this._checkOwnerOf(
+		const isConfirmedOwnershipOnTruckAndDriver = await this._checkOwnerOf(
 			truckAndDriverDto,
 			owner
 		);
 
 		if (isConfirmedUserOwnsTruckAndDriver.isFailure) {
-			return isConfirmedUserOwnsTruckAndDriver;
+			return isConfirmedOwnershipOnTruckAndDriver;
 		}
 
 		const truckAssignedADriverPromise = truckAndDriverMapper.findTruckAndDriver(
