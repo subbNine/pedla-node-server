@@ -71,7 +71,10 @@ module.exports = class User {
 		objectRepr.peddler = this.peddler || null;
 
 		if (this.isPeddler()) {
-			objectRepr.pooImage = this.pooImage || null;
+			objectRepr.pooImage =
+				(isType("object", this.pooImage) && this.pooImage.uri) ||
+				this.pooImage ||
+				null;
 			objectRepr.userName = this.userName || null;
 			objectRepr.isActivePeddler = this.isActivePeddler || null;
 		}
