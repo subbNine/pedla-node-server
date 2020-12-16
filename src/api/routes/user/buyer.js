@@ -70,8 +70,22 @@ router.post(
 	catchAsync(geoLocationController.updateGeoLocation)
 );
 
+/**
+ * @api {get} /api/user/buyer/nearest-drivers?lat={lat}&&lon={lon}&&radius={search-radius} get Trucks which have been assigned Driver
+ * @apiName getBuyerTruckDrivers
+ * @apiGroup Buyer - Get Truck Drivers
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will fetch all online truck drivers within the radius passed in
+ * from the coordinate specified by lat and lon params
+ *
+ * @apiParam {Number} [lat]
+ * @apiParam {Number} [lon]
+ * @apiParam {Number} [radius=10]
+ */
 router.get(
-	"/nearest-peddlers",
+	"/nearest-drivers",
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)
 );
 

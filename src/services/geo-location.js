@@ -37,7 +37,7 @@ module.exports = class GeoLoc {
 									type: "Point",
 									coordinates: [+lon, +lat],
 								},
-								$maxDistance: (radiusIsNum ? +radius : 5) * METERS_PER_MILE,
+								$maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
 							},
 						},
 					},

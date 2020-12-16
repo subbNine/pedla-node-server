@@ -968,6 +968,45 @@
     "groupTitle": "Driver_Management"
   },
   {
+    "type": "get",
+    "url": "/api/user/peddler/nearest-peddlers?lat={lat}&&lon={lon}&&radius={search-radius}",
+    "title": "get Trucks which have been assigned Driver",
+    "name": "getTrucksDrivers",
+    "group": "Drivers",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will fetch all online truck drivers within the radius passed in from the coordinate specified by lat and lon params</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lat",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lon",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "radius",
+            "defaultValue": "5",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Drivers"
+  },
+  {
     "type": "post",
     "url": "/api/user/peddler/geo-location",
     "title": "Geo-location Update for peddlers",
@@ -1397,45 +1436,6 @@
     "group": "Trucks_And_Drivers_Management",
     "version": "1.0.0",
     "description": "<p>This endpoint will enable peddlers retrieve assigned trucks and drivers</p>",
-    "filename": "src/api/routes/user/peddler.js",
-    "groupTitle": "Trucks_And_Drivers_Management"
-  },
-  {
-    "type": "get",
-    "url": "/api/user/peddler/nearest-drivers?lat={lat}&&lon={lon}&&radius={search-radius}",
-    "title": "get Trucks which have been assigned Driver",
-    "name": "getTrucksDrivers",
-    "group": "Trucks_And_Drivers_Management",
-    "version": "1.0.0",
-    "description": "<p>This endpoint will fetch all online drivers within the radius passed in from the coordinate specified by lat and lon params</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "lat",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "lon",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "radius",
-            "defaultValue": "5",
-            "description": ""
-          }
-        ]
-      }
-    },
     "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Trucks_And_Drivers_Management"
   },

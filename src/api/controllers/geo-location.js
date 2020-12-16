@@ -30,9 +30,20 @@ module.exports = class GeoLoc extends BaseController {
 	async getNearestOnlinePeddlers(req, res, next) {
 		const { lat, lon, radius } = req.query;
 
+		const { user } = req._App;
+
 		const geoDto = new GeoDto();
 
-		const coordinates = [+lon, +lat];
+		let coordinates = [+lon, +lat];
+
+		if (!(lat && lon)) {
+			if (user.latlon) {
+				coordinates = [+user.latlon.lon, +user.latlon.lat];
+			}
+		} else {
+			coordinates = [+lon, +lat];
+		}
+
 		const latlon = {
 			type: "Point",
 			coordinates,

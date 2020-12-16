@@ -77,6 +77,7 @@ module.exports = class User {
 		}
 
 		if (this.isDriver()) {
+			objectRepr.userName = this.userName || null;
 			objectRepr.truck = this.truck || null;
 		}
 
@@ -86,7 +87,7 @@ module.exports = class User {
 				lat: this.latlon.coordinates[1],
 			};
 		} else {
-			objectRepr.latlon = null;
+			objectRepr.latlon = this.latlon;
 		}
 
 		return objectRepr;

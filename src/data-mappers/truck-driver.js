@@ -1,5 +1,10 @@
 const BaseMapper = require("./base");
-const { TruckAndDriverEnt, TruckEnt, UserEnt } = require("../entities/domain");
+const {
+	TruckAndDriverEnt,
+	TruckEnt,
+	UserEnt,
+	ProductEnt,
+} = require("../entities/domain");
 
 module.exports = class TruckAndDriverMapper extends BaseMapper {
 	constructor(models) {
@@ -27,7 +32,7 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 		const { TruckAndDriver } = this.models;
 		const doc = await TruckAndDriver.findOne(filter)
 			.sort("-createdAt")
-			.populate("truckId")
+			.populate({ path: "truckId", populate: { path: "productId" } })
 			.populate("driverId");
 
 		if (doc) {
@@ -84,6 +89,12 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 					ownerId: "owner",
 					productId: "product",
 				});
+
+				if (doc.truckId.productId && doc.truckId.productId._id) {
+					truckEnt.product = this._toEntity(doc.truckId.productId, ProductEnt, {
+						_id: "id",
+					});
+				}
 			} else {
 				truckEnt = this._toEntity({ id: doc.truckId }, TruckEnt, {
 					_id: "id",
