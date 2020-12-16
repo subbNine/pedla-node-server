@@ -10,27 +10,27 @@ module.exports = class GeoMapper extends BaseMapper {
 	async updateGeoLocation(geoId, geoEnt) {
 		const { User } = this.models;
 
-		const updates = this._toPersistence(
-			geoEnt,
-			this._toPersistenceTransform
-		);
+		const updates = this._toPersistence(geoEnt, this._toPersistenceTransform);
 
 		const doc = await User.findByIdAndUpdate(geoId, updates, {
 			new: true,
 		});
 
 		if (doc) {
-			return this._toEntity(
-				doc.toObject(),
-				GeoEnt,
-				this._toEntityTransform
-			);
+			return this._toEntity(doc.toObject(), GeoEnt, this._toEntityTransform);
 		}
 	}
 
-	async findUserByGeoLocation(filter) {
+	async findUsersByGeoLocation(filter, limit) {
 		const { User } = this.models;
-		const docs = await User.find(filter);
+		const query = User.find(filter);
+
+		if (limit && +limit) {
+			query.limit(+limit);
+		}
+
+		const docs = await query;
+
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {

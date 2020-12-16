@@ -26,26 +26,59 @@ module.exports = class GeoLoc {
 			// return all users within five miles in
 			// sorted order from nearest to farthest
 			const METERS_PER_MILE = geoEnt.METERS_PER_MILE;
-			peddlers = await geoMapper.findUserByGeoLocation({
-				$and: [
-					{ type: userTypes.DRIVER },
-					{ presence: presence.ONLINE },
-					{
-						latlon: {
-							$nearSphere: {
-								$geometry: {
-									type: "Point",
-									coordinates: [+lon, +lat],
+
+			const peddlersWithinMaxDistanceOfPosition = geoMapper.findUsersByGeoLocation(
+				{
+					$and: [
+						{ type: userTypes.DRIVER },
+						{ presence: presence.ONLINE },
+						{
+							latlon: {
+								$nearSphere: {
+									$geometry: {
+										type: "Point",
+										coordinates: [+lon, +lat],
+									},
+									$maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
 								},
-								$maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
 							},
 						},
-					},
-				],
-			});
+					],
+				}
+			);
 
-			if (peddlers) {
-				return Result.ok(peddlers.map((eachUser) => eachUser.repr()));
+			const peddlersNearestToPosition = geoMapper.findUsersByGeoLocation(
+				{
+					$and: [
+						{ type: userTypes.DRIVER },
+						{ presence: presence.ONLINE },
+						{
+							latlon: {
+								$nearSphere: {
+									$geometry: {
+										type: "Point",
+										coordinates: [+lon, +lat],
+									},
+								},
+							},
+						},
+					],
+				},
+				10
+			);
+
+			peddlers = await Promise.all([
+				peddlersWithinMaxDistanceOfPosition,
+				peddlersNearestToPosition,
+			]);
+
+			if (peddlers && (peddlers[0] || peddlers[1])) {
+				return Result.ok(
+					(
+						(peddlers[0] && peddlers[0].length && peddlers[0]) ||
+						(peddlers[1] && peddlers[1].length && peddlers[1])
+					).map((eachUser) => eachUser.repr())
+				);
 			} else {
 				return Result.ok([]);
 			}
