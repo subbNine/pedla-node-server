@@ -28,7 +28,7 @@ module.exports = class GeoLoc {
 			const METERS_PER_MILE = geoEnt.METERS_PER_MILE;
 			peddlers = await geoMapper.findUserByGeoLocation({
 				$and: [
-					{ type: userTypes.PEDDLER },
+					{ type: userTypes.DRIVER },
 					{ presence: presence.ONLINE },
 					{
 						latlon: {
