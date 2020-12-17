@@ -4,7 +4,7 @@ define({ "api": [
     "url": "/api/user/admin/products",
     "title": "Fetch added products",
     "name": "getProducts",
-    "group": "Admin_Product_Management",
+    "group": "Admin_-_Product_Management",
     "version": "1.0.0",
     "description": "<p>Fetch all products added</p>",
     "parameter": {
@@ -41,7 +41,7 @@ define({ "api": [
       }
     },
     "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Admin_Product_Management",
+    "groupTitle": "Admin_-_Product_Management",
     "error": {
       "fields": {
         "Error 4xx": [
@@ -67,7 +67,7 @@ define({ "api": [
     "url": "/api/user/admin/product",
     "title": "Product Addition from admin dashboard",
     "name": "postProduct",
-    "group": "Admin_Product_Management",
+    "group": "Admin_-_Product_Management",
     "version": "1.0.0",
     "description": "<p>Create new Product. It is with this endpoint that the respective products (DPK, AGO, PMS, ...etc) will be added to the System by the admin.</p>",
     "parameter": {
@@ -104,7 +104,7 @@ define({ "api": [
       }
     },
     "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Admin_Product_Management",
+    "groupTitle": "Admin_-_Product_Management",
     "error": {
       "fields": {
         "Error 4xx": [
@@ -130,7 +130,7 @@ define({ "api": [
     "url": "/api/user/admin/product/:productId",
     "title": "Product Update from admin dashboard",
     "name": "putProduct",
-    "group": "Admin_Product_Management",
+    "group": "Admin_-_Product_Management",
     "version": "1.0.0",
     "description": "<p>Update Product</p>",
     "parameter": {
@@ -174,7 +174,7 @@ define({ "api": [
       }
     },
     "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Admin_Product_Management",
+    "groupTitle": "Admin_-_Product_Management",
     "error": {
       "fields": {
         "Error 4xx": [
@@ -194,6 +194,169 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/peddlers?vstatus=uncategorized",
+    "title": "get peddlers",
+    "name": "getPeddlers",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "vStatus",
+            "description": "<p>verification status of user you want to retrieve</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>page limit</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get peddlers by verification status</p>",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "vStatus",
+            "description": "<p>Verification status verified|unverified|uncategorized</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/users?types=admin,peddler,driver,buyer&&page=1&&limit=10",
+    "title": "get users",
+    "name": "getUsers",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "types",
+            "description": "<p>types of user (ADMIN|DRIVER|BUYER|PEDDLER) to retrieve defaults to all types of user in the system</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>page limit</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get peddlers by verification status</p>",
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/verify-peddler/:peddlerId",
+    "title": "Verify peddler",
+    "name": "postPeddlerVerification",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "description": "<p>verify peddler profile</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "peddlerId",
+            "description": "<p>Peddler's id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>user id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/reject-peddler/:peddlerId",
+    "title": "reject peddler",
+    "name": "postPeddlerVerification",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "description": "<p>reject peddler profile</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "peddlerId",
+            "description": "<p>Peddler's id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "ID",
+            "optional": false,
+            "field": "id",
+            "description": "<p>user id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
   },
   {
     "type": "post",
@@ -684,80 +847,6 @@ define({ "api": [
     }
   },
   {
-    "type": "put",
-    "url": "/api/user/admin/verify-peddler/:peddlerId",
-    "title": "Admin verification of peddler profile",
-    "name": "postPeddlerVerification",
-    "group": "Authentication",
-    "version": "1.0.0",
-    "description": "<p>verify peddler profile</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "peddlerId",
-            "description": "<p>Peddler's id.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "ID",
-            "optional": false,
-            "field": "id",
-            "description": "<p>user id</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Authentication"
-  },
-  {
-    "type": "put",
-    "url": "/api/user/admin/reject-peddler/:peddlerId",
-    "title": "Admin verification of peddler profile",
-    "name": "postPeddlerVerification",
-    "group": "Authentication",
-    "version": "1.0.0",
-    "description": "<p>reject peddler profile</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "peddlerId",
-            "description": "<p>Peddler's id.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "ID",
-            "optional": false,
-            "field": "id",
-            "description": "<p>user id</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Authentication"
-  },
-  {
     "type": "post",
     "url": "/api/auth/signin",
     "title": "Buyer Sign In",
@@ -772,7 +861,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "userName",
+            "field": "email",
             "description": "<p>User's unique Username.</p>"
           },
           {
@@ -813,8 +902,8 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "IncorrectUsernameError",
-            "description": "<p>The username of the user is incorrect</p>"
+            "field": "IncorrectEmailError",
+            "description": "<p>A user with the email was not found</p>"
           },
           {
             "group": "Error 4xx",
@@ -827,7 +916,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n\t\"name\": \"IncorrectUsernameError\",\n\t\"message\": \"The username you entered is incorrect\",\n\t\"isOperational\": true\n}",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"IncorrectEmailError\",\n\t\"message\": \"The email you entered was not found\",\n\t\"isOperational\": true\n}",
           "type": "json"
         },
         {
@@ -837,6 +926,45 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "type": "get",
+    "url": "/api/user/buyer/nearest-drivers?lat={lat}&&lon={lon}&&radius={search-radius}",
+    "title": "get Trucks which have been assigned Driver",
+    "name": "getBuyerTruckDrivers",
+    "group": "Buyer_-_Get_Truck_Drivers",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will fetch all online truck drivers within the radius passed in from the coordinate specified by lat and lon params</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lat",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "lon",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "radius",
+            "defaultValue": "10",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Get_Truck_Drivers"
   },
   {
     "type": "get",
@@ -968,45 +1096,6 @@ define({ "api": [
     "groupTitle": "Driver_Management"
   },
   {
-    "type": "get",
-    "url": "/api/user/peddler/nearest-peddlers?lat={lat}&&lon={lon}&&radius={search-radius}",
-    "title": "get Trucks which have been assigned Driver",
-    "name": "getTrucksDrivers",
-    "group": "Drivers",
-    "version": "1.0.0",
-    "description": "<p>This endpoint will fetch all online truck drivers within the radius passed in from the coordinate specified by lat and lon params</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "lat",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "lon",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "radius",
-            "defaultValue": "5",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/buyer.js",
-    "groupTitle": "Drivers"
-  },
-  {
     "type": "post",
     "url": "/api/user/peddler/geo-location",
     "title": "Geo-location Update for peddlers",
@@ -1136,30 +1225,6 @@ define({ "api": [
         }
       ]
     }
-  },
-  {
-    "type": "get",
-    "url": "/api/user/admin/peddlers?vstatus=uncategorized",
-    "title": "get peddlers",
-    "name": "getPeddlers",
-    "group": "Peddler_Verification",
-    "version": "1.0.0",
-    "description": "<p>Get peddlers by verification status</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "vStatus",
-            "description": "<p>Verification status verified|unverified|uncategorized</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Peddler_Verification"
   },
   {
     "type": "post",
