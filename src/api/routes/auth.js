@@ -5,6 +5,9 @@ const fileUpload = require("../middlewares/file-upload");
 const { auth: authController } = require("../controllers");
 const { catchAsync } = require("../../errors");
 
+const { validateBody } = require("../middlewares/validator-helpers");
+const validationSchemas = require("../validators");
+
 const router = Router();
 
 /**
@@ -16,16 +19,20 @@ const router = Router();
  *
  * @apiDescription Buyers Sign In end-point
  *
- * @apiParam {String} userName User's unique Username.
+ * @apiParam {String} email User's unique Username.
  * @apiParam {String} password User's Password.
  *
  * @apiSuccess {String} token Authentication token
  * @apiSuccess {ID} id user id
  *
- * @apiUse IncorrectUsernameError
+ * @apiUse IncorrectEmailError
  * @apiUse IncorrectPasswordError
  */
-router.post("/signin", catchAsync(authController.signIn));
+router.post(
+	"/signin",
+	validateBody(validationSchemas.postEmailAndPassword),
+	catchAsync(authController.signIn)
+);
 
 /**
  * @api {post} /api/auth/peddler/signin Peddler Sign In
@@ -48,7 +55,11 @@ router.post("/signin", catchAsync(authController.signIn));
  * @apiUse IncorrectUsernameError
  * @apiUse IncorrectPasswordError
  */
-router.post("/peddler/signin", catchAsync(authController.peddlerSignIn));
+router.post(
+	"/peddler/signin",
+	validateBody(validationSchemas.postUsernameAndPassword),
+	catchAsync(authController.peddlerSignIn)
+);
 
 /**
  * @api {post} /api/auth/admin/signin Admin Sign In
@@ -68,7 +79,11 @@ router.post("/peddler/signin", catchAsync(authController.peddlerSignIn));
  * @apiUse IncorrectEmailError
  * @apiUse IncorrectPasswordError
  */
-router.post("/admin/signin", catchAsync(authController.adminSignIn));
+router.post(
+	"/admin/signin",
+	validateBody(validationSchemas.postEmailAndPassword),
+	catchAsync(authController.adminSignIn)
+);
 
 /**
  * @api {post} /api/auth/peddler Create Peddler Profile
@@ -94,6 +109,7 @@ router.post("/admin/signin", catchAsync(authController.adminSignIn));
  */
 router.post(
 	"/peddler",
+	validateBody(validationSchemas.postPeddlerProfile),
 	fileUpload.single("pooImage"),
 	catchAsync(authController.createPeddlerProfile)
 );
@@ -116,7 +132,12 @@ router.post(
  * @apiUse NameConflictError
  * @apiUse UnverifiedProfileError
  */
-router.post("/peddler-signup", shield(), catchAsync(authController.peddlerSignUp));
+router.post(
+	"/peddler-signup",
+	validateBody(validationSchemas.postUsernameAndPassword),
+	shield(),
+	catchAsync(authController.peddlerSignUp)
+);
 
 /**
  * @api {post} /api/auth/peddler-code Peddler's code Activation
@@ -127,7 +148,7 @@ router.post("/peddler-signup", shield(), catchAsync(authController.peddlerSignUp
  *
  * @apiDescription verifies registration code recieved by peddlers when admin has approved a peddler's profile.
  * This route is protected just like the signup route
- * 
+ *
  * @apiParam {String} code Peddler's registration code.
  *
  * @apiSuccess {ID} id user id
@@ -136,6 +157,7 @@ router.post("/peddler-signup", shield(), catchAsync(authController.peddlerSignUp
  */
 router.post(
 	"/peddler-code",
+	validateBody(validationSchemas.postPeddlerCode),
 	shield(),
 	catchAsync(authController.verifyPeddlerCode)
 );
@@ -161,6 +183,10 @@ router.post(
  *
  * @apiUse EmailConflictError
  */
-router.post("/buyer", catchAsync(authController.buyerSignUp));
+router.post(
+	"/buyer",
+	validateBody(validationSchemas.buyerSignup),
+	catchAsync(authController.buyerSignUp)
+);
 
 module.exports = router;

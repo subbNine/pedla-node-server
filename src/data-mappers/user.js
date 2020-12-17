@@ -21,10 +21,7 @@ module.exports = class UserMapper extends BaseMapper {
 	async findUser(filter, populateFn) {
 		const { User } = this.models;
 
-		const search = this._toPersistence(
-			filter,
-			this._toPersistenceTransform
-		);
+		const search = this._toPersistence(filter, this._toPersistenceTransform);
 		const doc = User.findOne(search);
 		if (populateFn) {
 			populateFn(doc);
@@ -40,24 +37,7 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
-	async findUsers(filter) {
-		const { User } = this.models;
-		const docs = await User.find(this._toPersistence(filter));
-		const results = [];
-		if (docs) {
-			for (const doc of docs) {
-				const entObj = doc.toObject();
-				if (doc.avatarImg && doc.avatarImg.uri) {
-					entObj.avatarImg = doc.avatarImg.uri;
-				}
-				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
-			}
-
-			return results;
-		}
-	}
-
-	async findPeddlersByVStatus(status) {
+	async countDocsByVStatus(status) {
 		const { User } = this.models;
 
 		const PEDDLER_STATUS = {
@@ -80,16 +60,78 @@ module.exports = class UserMapper extends BaseMapper {
 			}
 		}
 
-		const docs = await User.find(search);
+		return await User.countDocuments(search);
+	}
+
+	async countDocs(filter) {
+		const { User } = this.models;
+		return await User.countDocuments(filter);
+	}
+
+	async findUsers(filter, { pagination: { limit, page } }) {
+		const { User } = this.models;
+		const query = User.find(this._toPersistence(filter));
+
+		if (limit) {
+			query.limit(+limit);
+
+			query.skip(+limit * +page);
+		}
+
+		const docs = await query;
+
+		const results = [];
+		if (docs) {
+			for (const doc of docs) {
+				const entObj = doc.toObject();
+				if (doc.avatarImg && doc.avatarImg.uri) {
+					entObj.avatarImg = doc.avatarImg.uri;
+				}
+				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
+			}
+
+			return results;
+		}
+	}
+
+	async findPeddlersByVStatus(status, { pagination: { limit, page } }) {
+		const { User } = this.models;
+
+		const PEDDLER_STATUS = {
+			uncategorized: "uncategorized",
+			verified: "verified",
+			unverified: "unverified",
+		};
+
+		const search = { type: types.PEDDLER };
+
+		if (status === PEDDLER_STATUS.uncategorized) {
+			search.isActivePeddler = { $exists: false };
+		} else {
+			if (status === PEDDLER_STATUS.verified) {
+				search.isActivePeddler = true;
+			} else {
+				if (status === PEDDLER_STATUS.unverified) {
+					search.isActivePeddler = false;
+				}
+			}
+		}
+
+		const query = User.find(search);
+
+		if (limit) {
+			query.limit(+limit);
+
+			query.skip(+limit * +page);
+		}
+
+		const docs = await query;
+
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
 				results.push(
-					this._toEntity(
-						doc.toObject(),
-						UserEnt,
-						this._toEntityTransform
-					)
+					this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform)
 				);
 			}
 
@@ -100,19 +142,12 @@ module.exports = class UserMapper extends BaseMapper {
 	async createUser(userEnt) {
 		const { User } = this.models;
 
-		const newUser = this._toPersistence(
-			userEnt,
-			this._toPersistenceTransform
-		);
+		const newUser = this._toPersistence(userEnt, this._toPersistenceTransform);
 
 		const doc = await User.create(newUser);
 		if (doc) {
 			console.log({ doc });
-			return this._toEntity(
-				doc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
 	}
 
@@ -129,11 +164,7 @@ module.exports = class UserMapper extends BaseMapper {
 		});
 
 		if (doc) {
-			return this._toEntity(
-				doc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
 	}
 
@@ -149,11 +180,7 @@ module.exports = class UserMapper extends BaseMapper {
 		);
 
 		if (doc) {
-			return this._toEntity(
-				doc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
 	}
 
@@ -201,14 +228,8 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await User.findOne(matchEmailOrUserName);
 
-		console.log({ doc, matchEmailOrUserName });
-
 		if (doc && !isObjectEmpty(matchEmailOrUserName)) {
-			return this._toEntity(
-				doc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
 	}
 };

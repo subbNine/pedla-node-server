@@ -64,13 +64,25 @@ module.exports = class User {
 		}
 	}
 
-	async getPeddlers(status) {
+	async getPeddlers(status, { pagination }) {
 		const { userMapper } = this.mappers;
 
-		const peddlers = await userMapper.findPeddlersByVStatus(status);
+		const { limit, page } = pagination || {};
+
+		const totalDocs = await userMapper.countDocsByVStatus(status);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const peddlers = await userMapper.findPeddlersByVStatus(status, {
+			pagination: { limit, page },
+		});
 
 		if (peddlers) {
-			return Result.ok(peddlers.map((eachUser) => eachUser.repr()));
+			return Result.ok(
+				peddlers.map((eachUser) =>
+					Object.assign(eachUser.repr(), { totalPages, currentPage: page })
+				)
+			);
 		} else {
 			return Result.ok([]);
 		}
@@ -236,6 +248,33 @@ module.exports = class User {
 
 		if (driversWithTrucks) {
 			return Result.ok(driversWithTrucks.map((eachUser) => eachUser.repr()));
+		} else {
+			return Result.ok([]);
+		}
+	}
+
+	async getUsers(listOfUserTypes, options) {
+		const { userMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const filter = { type: { $in: listOfUserTypes } };
+
+		const totalDocs = await userMapper.countDocs(filter);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundUsers = await userMapper.findUsers(filter, {
+			pagination: { limit, page },
+		});
+
+		if (foundUsers) {
+			return Result.ok(
+				foundUsers.map((eachUser) =>
+					Object.assign(eachUser.repr(), { totalPages, currentPage: page || 0 })
+				)
+			);
 		} else {
 			return Result.ok([]);
 		}

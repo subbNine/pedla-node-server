@@ -65,9 +65,11 @@ module.exports = class User extends BaseController {
 	}
 
 	async getPeddlers(req, res, next) {
-		const { vstatus: status } = req.query;
+		const { vstatus: status, limit, page } = req.query;
 
-		const result = await userService.getPeddlers(status);
+		const result = await userService.getPeddlers(status, {
+			pagination: { limit, page },
+		});
 
 		return this.response(result, res);
 	}
@@ -140,13 +142,7 @@ module.exports = class User extends BaseController {
 		const userDto = new UserDto();
 
 		const { user } = req._App;
-		const {
-			firstName,
-			lastName,
-			password,
-			phoneNumber,
-			userName,
-		} = req.body;
+		const { firstName, lastName, password, phoneNumber, userName } = req.body;
 
 		userDto.firstName = firstName;
 		userDto.lastName = lastName;
@@ -179,13 +175,7 @@ module.exports = class User extends BaseController {
 		const { driverId } = req.params;
 
 		const { user } = req._App;
-		const {
-			firstName,
-			lastName,
-			password,
-			phoneNumber,
-			userName,
-		} = req.body;
+		const { firstName, lastName, password, phoneNumber, userName } = req.body;
 
 		userDto.firstName = firstName;
 		userDto.lastName = lastName;
@@ -220,6 +210,20 @@ module.exports = class User extends BaseController {
 		userDto.peddler = peddlerId || user.id;
 
 		const result = await userService.findDrivers(userDto);
+
+		this.response(result, res);
+	}
+
+	async getUsers(req, res, next) {
+		const { types, limit, page } = req.query;
+
+		const listOfUserTypes = types
+			? types.split(/\s*,\s*/).map((userType) => ("" + userType).toUpperCase())
+			: Object.values(userTypes);
+
+		const result = await userService.getUsers(listOfUserTypes, {
+			pagination: { limit, page },
+		});
 
 		this.response(result, res);
 	}

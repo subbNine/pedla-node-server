@@ -23,9 +23,7 @@ module.exports = class Auth {
 		});
 
 		if (foundUser) {
-			const isPasswordMatch = await foundUser.comparePassword(
-				userDto.password
-			);
+			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
 				const objRepr = foundUser.repr();
@@ -39,17 +37,16 @@ module.exports = class Auth {
 					new AppError({
 						message: errMessages.incorrectPassword,
 						name: errorCodes.IncorrectPasswordError.name,
-						statusCode:
-							errorCodes.IncorrectPasswordError.statusCode,
+						statusCode: errorCodes.IncorrectPasswordError.statusCode,
 					})
 				);
 			}
 		} else {
 			return Result.fail(
 				new AppError({
-					message: errMessages.incorrectUsername,
-					name: errorCodes.IncorrectUsernameError.name,
-					statusCode: errorCodes.IncorrectUsernameError.statusCode,
+					message: errMessages.incorrectEmail,
+					name: errorCodes.IncorrectEmailError.name,
+					statusCode: errorCodes.IncorrectEmailError.statusCode,
 				})
 			);
 		}
@@ -59,17 +56,12 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			$and: [
-				{ userName: { $exists: true } },
-				{ userName: userDto.userName },
-			],
+			$and: [{ userName: { $exists: true } }, { userName: userDto.userName }],
 		});
 
 		if (foundUser) {
 			// console.log.log({foundUser})
-			const isPasswordMatch = await foundUser.comparePassword(
-				userDto.password
-			);
+			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
 				const objRepr = foundUser.repr();
@@ -94,8 +86,7 @@ module.exports = class Auth {
 					new AppError({
 						message: errMessages.incorrectPassword,
 						name: errorCodes.IncorrectPasswordError.name,
-						statusCode:
-							errorCodes.IncorrectPasswordError.statusCode,
+						statusCode: errorCodes.IncorrectPasswordError.statusCode,
 					})
 				);
 			}
@@ -119,9 +110,7 @@ module.exports = class Auth {
 		});
 
 		if (foundUser) {
-			const isPasswordMatch = await foundUser.comparePassword(
-				userDto.password
-			);
+			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
 				const objRepr = foundUser.repr();
@@ -134,8 +123,7 @@ module.exports = class Auth {
 					new AppError({
 						message: errMessages.incorrectPassword,
 						name: errorCodes.IncorrectPasswordError.name,
-						statusCode:
-							errorCodes.IncorrectPasswordError.statusCode,
+						statusCode: errorCodes.IncorrectPasswordError.statusCode,
 					})
 				);
 			}
@@ -158,9 +146,7 @@ module.exports = class Auth {
 		});
 
 		if (foundUser && foundUser.userName) {
-			const isPasswordMatch = await foundUser.comparePassword(
-				userDto.password
-			);
+			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
 				const objRepr = foundUser.repr();
@@ -183,16 +169,12 @@ module.exports = class Auth {
 					new AppError({
 						message: errMessages.unverifiedProfile,
 						name: errorCodes.UnverifiedProfileError.name,
-						statusCode:
-							errorCodes.UnverifiedProfileError.statusCode,
+						statusCode: errorCodes.UnverifiedProfileError.statusCode,
 					})
 				);
 			} else {
 				const userEnt = new UserEnt(userDto);
-				const updatedUser = await userMapper.signup(
-					foundUser.id,
-					userEnt
-				);
+				const updatedUser = await userMapper.signup(foundUser.id, userEnt);
 
 				const objRepr = updatedUser.repr();
 				const token = generateJwtToken({ ...objRepr });

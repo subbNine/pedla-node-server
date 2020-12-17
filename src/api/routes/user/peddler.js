@@ -13,6 +13,12 @@ const {
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
+const {
+	validateBody,
+	validateParams,
+} = require("../../middlewares/validator-helpers");
+const validationSchemas = require("../../validators");
+
 const router = Router();
 
 router.use(bounceNonPeddlers);
@@ -156,6 +162,7 @@ router.post(
 router.post(
 	"/driver",
 	fileUpload.single("avatarImg"),
+	validateBody(validationSchemas.postDriver),
 	catchAsync(userController.createDriver)
 );
 
@@ -219,6 +226,7 @@ router.post(
 		{ name: "worthiness", maxCount: 1 },
 		{ name: "ownership", maxCount: 1 },
 	]),
+	validateBody(validationSchemas.postTruck),
 	catchAsync(truckController.createTruck)
 );
 
@@ -260,6 +268,7 @@ router.post(
 		{ name: "worthiness", maxCount: 1 },
 		{ name: "ownership", maxCount: 1 },
 	]),
+	validateBody(validationSchemas.postTruck),
 	catchAsync(truckController.updateTruck)
 );
 
@@ -279,6 +288,7 @@ router.post(
  */
 router.post(
 	"/truck-driver",
+	validateBody(validationSchemas.postTruckAndDriver),
 	catchAsync(truckAndDriverController.assignTruckToDriver)
 );
 
@@ -318,6 +328,7 @@ router.get(
 
 router.get(
 	"/nearest-drivers",
+	validateBody(validationSchemas.latlon),
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)
 );
 
