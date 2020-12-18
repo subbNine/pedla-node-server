@@ -1111,6 +1111,13 @@ define({ "api": [
             "optional": false,
             "field": "buyerLon",
             "description": "<p>the longitude of the buyer</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deliveryAddress",
+            "description": "<p>delivery address</p>"
           }
         ]
       }
