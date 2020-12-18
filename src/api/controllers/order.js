@@ -54,6 +54,8 @@ module.exports = class Order extends BaseController {
 			buyerLon,
 			amount,
 			deliveryAddress,
+			deliveryDate,
+			creditPaymentDate,
 		} = req.body;
 
 		const { user } = req._App;
@@ -75,6 +77,8 @@ module.exports = class Order extends BaseController {
 			coordinates: [+buyerLon, +buyerLat],
 		};
 		orderDto.deliveryAddress = deliveryAddress;
+		orderDto.deliveryDate = deliveryDate;
+		orderDto.creditPaymentDate = creditPaymentDate;
 
 		const result = await orderService.createOrder(orderDto);
 

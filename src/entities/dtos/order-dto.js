@@ -14,4 +14,6 @@ module.exports = class Order {
 	driverLatlon;
 	buyerLatlon;
 	deliveryAddress;
+	deliveryDate;
+	creditPaymentDate;
 };

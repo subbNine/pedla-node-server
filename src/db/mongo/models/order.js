@@ -27,6 +27,8 @@ let schema = new Schema({
 	},
 	cancelledReason: String,
 	deliveryAddress: String,
+	deliveryDate: Date,
+	creditPaymentDate: Date,
 });
 
 schema.index({ buyerLatLon: "2dsphere", driverLatlon: "2dsphere" });

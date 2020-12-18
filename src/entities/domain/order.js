@@ -15,6 +15,8 @@ module.exports = class Order {
 	driverLatlon;
 	buyerLatLon;
 	deliveryAddress;
+	deliveryDate;
+	creditPaymentDate;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -58,7 +60,9 @@ module.exports = class Order {
 							lat: this.buyerLatlon.coordinates[1],
 					  }
 					: null,
-			deliveryAddress: this.deliveryAddress,
+			deliveryAddress: this.deliveryAddress || null,
+			deliveryDate: this.deliveryDate || null,
+			creditPaymentDate: this.creditPaymentDate || null,
 		};
 	}
 };
