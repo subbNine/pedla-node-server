@@ -68,9 +68,13 @@ module.exports = class UserMapper extends BaseMapper {
 		return await User.countDocuments(filter);
 	}
 
-	async findUsers(filter, { pagination: { limit, page } }) {
+	async findUsers(filter, options) {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));
+
+		const { pagination } = options || {};
+
+		const { limit = 0, page = 0 } = pagination || {};
 
 		if (limit) {
 			query.limit(+limit);
