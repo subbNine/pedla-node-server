@@ -25,6 +25,8 @@ module.exports = {
 	messageHelpers: {
 		replacement,
 	},
+	notAcceptableOrder:
+		"The order cannot be completed as the driver has a pending order",
 };
 
 function replacement(subjectArg, subjectNameArg) {

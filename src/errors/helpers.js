@@ -21,7 +21,7 @@ function _sendProdError(err, res) {
 
 		return res.status(errorCodes.InternalServerError.statusCode).json({
 			name: errorCodes.InternalServerError.name,
-			message: "Something went wrong",
+			message: "Sorry an unexpected error has occured",
 		});
 	}
 }
