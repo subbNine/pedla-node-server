@@ -186,4 +186,24 @@ router.post(
 	catchAsync(orderController.confirmOrderDelivery)
 );
 
+/**
+ * @api {post} /api/user/buyer/search Search driver
+ * @apiName getDriversBySearch
+ * @apiGroup Driver - Search
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Search for driver
+ *
+ * @apiParam productId
+ * @apiParam quantity
+ * @apiParam page
+ * @apiParam limit
+ * @apiParam lat
+ * @apiParam lon
+ * @apiParam radius
+ *
+ */
+router.post("/search", catchAsync(userController.searchForProductDrivers));
+
 module.exports = router;

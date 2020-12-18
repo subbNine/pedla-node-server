@@ -1,7 +1,7 @@
 const { UserEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
-const { permissions } = require("../db/mongo/enums/user");
+const { permissions, presence } = require("../db/mongo/enums/user");
 const asyncExec = require("../lib/utils/async-exec");
 
 const { Result, generateJwtToken } = utils;
@@ -321,5 +321,26 @@ module.exports = class User {
 		} else {
 			return Result.ok([]);
 		}
+	}
+
+	async searchForProductDrivers(
+		{ productId, quantity, geo },
+		{ pagination: { page, limit } }
+	) {
+		const { userMapper } = this.mappers;
+
+		const users = await userMapper.searchForProductDrivers(
+			{
+				productId,
+				quantity,
+				geo,
+			},
+			{ pagination: { page: page ? page - 1 : 1, limit } }
+		);
+
+		if (users) {
+			return Result.ok(users);
+		}
+		return Result.ok([]);
 	}
 };

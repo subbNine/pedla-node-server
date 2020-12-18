@@ -1,7 +1,10 @@
 const BaseMapper = require("./base");
-const { UserEnt } = require("../entities/domain");
+
 const isObjectEmpty = require("../lib/utils/is-object-empty");
+const { UserEnt, PeddlerProductEnt, GeoEnt } = require("../entities/domain");
+const { presence } = require("../db/mongo/enums/user");
 const { types } = require("../db/mongo/enums").user;
+const { Types } = require("mongoose");
 
 module.exports = class UserMapper extends BaseMapper {
 	_toEntityTransform = {
@@ -235,5 +238,93 @@ module.exports = class UserMapper extends BaseMapper {
 		if (doc && !isObjectEmpty(matchEmailOrUserName)) {
 			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
+	}
+
+	async searchForProductDrivers({ productId, quantity, geo }, options) {
+		const { PeddlerProduct } = this.models;
+
+		const { pagination } = options || {};
+		const { page, limit } = pagination || {};
+
+		const geoEnt = new GeoEnt(geo);
+		const lat = geoEnt.getLat();
+		const lon = geoEnt.getLon();
+		const radius = geoEnt.radius;
+
+		const radiusIsNum = radius && typeof +radius === "number";
+		const METERS_PER_MILE = geoEnt.METERS_PER_MILE;
+
+		const products = await PeddlerProduct.aggregate([
+			{
+				$match: {
+					quantity: { $gt: quantity },
+					productId: Types.ObjectId(productId),
+				},
+			},
+			{
+				$lookup: {
+					from: "users",
+					let: { peddId: "$peddlerId" },
+					pipeline: [
+						{
+							$geoNear: {
+								near: { type: "Point", coordinates: [+lon, +lat] },
+								maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
+								key: "latlon",
+								distanceField: "dist.calculated",
+								spherical: true,
+							},
+						},
+						{
+							$match: {
+								$expr: {
+									$and: [
+										{ $eq: ["$peddler", "$$peddId"] },
+										{ presence: presence.ONLINE },
+									],
+								},
+							},
+						},
+					],
+					as: "drivers",
+				},
+			},
+			{ $skip: +page },
+			{ $limit: +limit },
+		]);
+
+		const driversList = [];
+
+		if (products) {
+			for (const p of products) {
+				const { drivers, ...product } = p;
+				if (drivers && drivers.length) {
+					for (const driver of drivers) {
+						const driverEnt = this._toEntity(driver, UserEnt, {
+							streetAddress: "address",
+							_id: "id",
+						});
+						const peddlerProductEnt = this._toEntity(
+							product,
+							PeddlerProductEnt,
+							{
+								_id: "id",
+								peddlerId: "peddler",
+								productId: "product",
+							}
+						);
+						driversList.push(
+							Object.assign(
+								{},
+								{ driver: driverEnt.repr() },
+								{ product: peddlerProductEnt.repr() }
+							)
+						);
+					}
+				}
+			}
+		}
+
+		return driversList;
 	}
 };

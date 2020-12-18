@@ -1,5 +1,5 @@
 const BaseController = require("./base");
-const { UserDto } = require("../../entities/dtos");
+const { UserDto, GeoDto } = require("../../entities/dtos");
 const { user: userService } = require("../../services");
 const {
 	types: userTypes,
@@ -230,7 +230,26 @@ module.exports = class User extends BaseController {
 		this.response(result, res);
 	}
 
-	async search(req, res, next) {
-		const { productId, quantity } = req.body;
+	async searchForProductDrivers(req, res, next) {
+		const { productId, quantity, page, limit, lat, lon, radius } = req.body;
+
+		const geoDto = new GeoDto();
+
+		let coordinates = [+lon, +lat];
+
+		const latlon = {
+			type: "Point",
+			coordinates,
+		};
+
+		geoDto.latlon = latlon;
+		geoDto.radius = radius;
+
+		const result = await userService.searchForProductDrivers(
+			{ productId, quantity, geo: geoDto },
+			{ pagination: { page, limit: limit || 10 } }
+		);
+
+		this.response(result, res);
 	}
 };

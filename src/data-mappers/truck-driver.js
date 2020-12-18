@@ -14,11 +14,22 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 		this.models = models;
 	}
 
-	async findTruckAndDrivers(filter) {
+	async findTruckAndDrivers(filter, options) {
 		const { TruckAndDriver } = this.models;
-		const docs = await TruckAndDriver.find(filter)
+		const query = TruckAndDriver.find(filter)
 			.populate("truckId")
 			.populate("driverId");
+
+		const { pagination } = options || {};
+		const { page, limit } = pagination || {};
+
+		if (limit && page) {
+			query.limit(+limit);
+
+			query.skip(+page * +limit);
+		}
+
+		const docs = await query;
 
 		const results = [];
 		if (docs) {
