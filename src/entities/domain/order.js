@@ -17,6 +17,8 @@ module.exports = class Order {
 	deliveryAddress;
 	deliveryDate;
 	creditPaymentDate;
+	paymentMethod;
+	peddlerCode;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -63,6 +65,8 @@ module.exports = class Order {
 			deliveryAddress: this.deliveryAddress || null,
 			deliveryDate: this.deliveryDate || null,
 			creditPaymentDate: this.creditPaymentDate || null,
+			paymentMethod: this.paymentMethod || null,
+			peddlerCode: this.peddlerCode || null,
 		};
 	}
 };

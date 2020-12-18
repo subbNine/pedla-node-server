@@ -56,6 +56,7 @@ module.exports = class Order extends BaseController {
 			deliveryAddress,
 			deliveryDate,
 			creditPaymentDate,
+			paymentMethod,
 		} = req.body;
 
 		const { user } = req._App;
@@ -79,6 +80,7 @@ module.exports = class Order extends BaseController {
 		orderDto.deliveryAddress = deliveryAddress;
 		orderDto.deliveryDate = deliveryDate;
 		orderDto.creditPaymentDate = creditPaymentDate;
+		orderDto.paymentMethod = paymentMethod;
 
 		const result = await orderService.createOrder(orderDto);
 

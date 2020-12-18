@@ -29,6 +29,7 @@ let schema = new Schema({
 	deliveryAddress: String,
 	deliveryDate: Date,
 	creditPaymentDate: Date,
+	paymentMethod: String,
 });
 
 schema.index({ buyerLatLon: "2dsphere", driverLatlon: "2dsphere" });

@@ -152,6 +152,7 @@ module.exports = class User extends BaseController {
 		userDto.peddler = user.id;
 		userDto.type = userTypes.DRIVER;
 		userDto.permission = permissions.PERM002;
+		userDto.peddlerCode = user.peddlerCode;
 
 		const { public_id, secure_url } = req.file || {};
 
@@ -183,6 +184,7 @@ module.exports = class User extends BaseController {
 		userDto.userName = userName;
 		userDto.password = password;
 		userDto.id = driverId;
+		userDto.peddlerCode = user.peddlerCode;
 
 		const { public_id, secure_url } = req.file || {};
 
@@ -226,5 +228,9 @@ module.exports = class User extends BaseController {
 		});
 
 		this.response(result, res);
+	}
+
+	async search(req, res, next) {
+		const { productId, quantity } = req.body;
 	}
 };

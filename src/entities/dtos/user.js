@@ -16,4 +16,5 @@ module.exports = class User {
 	peddlerCode;
 	isActivePeddler;
 	peddler;
+	paymentMethod;
 };
