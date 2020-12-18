@@ -74,13 +74,13 @@ module.exports = class User {
 		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
 
 		const peddlers = await userMapper.findPeddlersByVStatus(status, {
-			pagination: { limit, page: page - 1 },
+			pagination: { limit, page: page ? page - 1 : 1 },
 		});
 
 		if (peddlers) {
 			return Result.ok({
 				data: peddlers.map((eachUser) => eachUser.repr()),
-				pagination: { totalPages, currentPage: page || 1, totalDocs },
+				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
 			return Result.ok([]);
@@ -292,13 +292,13 @@ module.exports = class User {
 		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
 
 		const foundUsers = await userMapper.findUsers(filter, {
-			pagination: { limit, page: page - 1 },
+			pagination: { limit, page: page ? page - 1 : 1 },
 		});
 
 		if (foundUsers) {
 			return Result.ok({
 				data: foundUsers.map((eachUser) => eachUser.repr()),
-				pagination: { totalPages, currentPage: page || 1, totalDocs },
+				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
 			return Result.ok([]);
