@@ -293,15 +293,14 @@ module.exports = class User {
 		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
 
 		const foundUsers = await userMapper.findUsers(filter, {
-			pagination: { limit, page },
+			pagination: { limit, page: page - 1 },
 		});
 
 		if (foundUsers) {
-			return Result.ok(
-				foundUsers.map((eachUser) =>
-					Object.assign(eachUser.repr(), { totalPages, currentPage: page || 0 })
-				)
-			);
+			return Result.ok({
+				data: foundUsers.map((eachUser) => eachUser.repr()),
+				pagination: { totalPages, currentPage: page || 1, totalDocs },
+			});
 		} else {
 			return Result.ok([]);
 		}
