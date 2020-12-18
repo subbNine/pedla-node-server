@@ -1229,6 +1229,65 @@
     "groupTitle": "Driver_-_Order"
   },
   {
+    "type": "post",
+    "url": "/api/user/buyer/search",
+    "title": "Search driver",
+    "name": "getDriversBySearch",
+    "group": "Driver_-_Search",
+    "version": "1.0.0",
+    "description": "<p>Search for driver</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "productId",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "quantity",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "page",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "limit",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "lat",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "lon",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "radius",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Driver_-_Search"
+  },
+  {
     "type": "get",
     "url": "/api/user/peddler/drivers",
     "title": "Get peddler's truck drivers",
