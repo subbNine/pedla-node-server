@@ -1,4 +1,4 @@
-const ProductEnt = require("./product");
+const PeddlerProductEnt = require("./peddler-product");
 const UserEnt = require("./user");
 const isType = require("../../lib/utils/is-type");
 
@@ -7,7 +7,7 @@ module.exports = class Truck {
 	owner = new UserEnt();
 	model;
 	brand;
-	product = new ProductEnt();
+	product = new PeddlerProductEnt();
 	size;
 	license;
 	insurance;

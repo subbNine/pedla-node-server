@@ -7,6 +7,7 @@ const PeddlerProductMapper = require("./peddler-product");
 const GeoMapper = require("./geo-location");
 const TruckMapper = require("./truck");
 const TruckAndDriverMapper = require("./truck-driver");
+const OrderMapper = require("./order");
 
 module.exports = {
 	userMapper: new UserMapper(dbModels),
@@ -16,4 +17,5 @@ module.exports = {
 	geoMapper: new GeoMapper(dbModels),
 	truckMapper: new TruckMapper(dbModels),
 	truckAndDriverMapper: new TruckAndDriverMapper(dbModels),
+	orderMapper: new OrderMapper(dbModels),
 };

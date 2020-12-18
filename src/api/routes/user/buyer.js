@@ -7,8 +7,11 @@ const {
 	product: productController,
 	user: userController,
 	geoLocation: geoLocationController,
+	orderController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
+const { validateBody } = require("../../middlewares/validator-helpers");
+const validationSchemas = require("../../validators");
 
 const router = Router();
 
@@ -63,6 +66,16 @@ router.get(
 
 router.get("/profile", catchAsync(userController.getProfile));
 
+/**
+ * @api {get} /api/user/buyer/profile/:driverId get driver's profile
+ * @apiName getProfileUpdate
+ * @apiGroup Driver Profile
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription get driver's profile. To get all possible return fields call this test route logged in as a buyer: 
+ * /api/user/buyer/profile/5fd8b3fc7a78f300173bd7ee
+ */
 router.get("/profile/:userId", catchAsync(userController.getProfile));
 
 router.post(
@@ -92,6 +105,67 @@ router.get(
 router.get(
 	"/nearest-peddlers",
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+);
+
+/**
+ * @api {post} /api/user/buyer/order Make an order for a product
+ * @apiName postOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Make a new order for peddlers product
+ *
+ * @apiParam {ID} driverId
+ * @apiParam {ID} productId the seller's product id
+ * @apiParam {Number} quantity the quantity in litres of product sold
+ * @apiParam {Number} unitAmount the price per litre that the product cost
+ * @apiParam {Number} driverLat the latitude if the driver
+ * @apiParam {Number} driverLon the longitude of the driver
+ * @apiParam {Number} buyerLat the latitude of the buyer
+ * @apiParam {Number} buyerLon the longitude of the buyer
+ */
+router.post(
+	"/order",
+	shield(permissions.PERM002),
+	validateBody(validationSchemas.postOrder),
+	catchAsync(orderController.createOrder)
+);
+
+/**
+ * @api {post} /api/user/buyer/order/:orderId/cancel Cancel An Order
+ * @apiName postCancelOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription cancel an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to cancel
+ * @apiParam {String} reason the reason for cancelling an order
+ */
+router.post(
+	"/order/:orderId/cancel",
+	shield(permissions.PERM002),
+	validateBody(validationSchemas.orderReason),
+	catchAsync(orderController.cancelOrder)
+);
+
+/**
+ * @api {post} /api/user/buyer/order/:orderId/complete Confirm Order delivery
+ * @apiName postCompleteOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Complete an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to confirm has completed
+ */
+router.post(
+	"/order/:orderId/complete",
+	shield(permissions.PERM002),
+	catchAsync(orderController.confirmOrderDelivery)
 );
 
 module.exports = router;

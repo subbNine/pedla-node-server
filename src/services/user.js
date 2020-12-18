@@ -88,10 +88,37 @@ module.exports = class User {
 		}
 	}
 
+	async findDriver(driverEnt) {
+		const { truckAndDriverMapper } = this.mappers;
+
+		const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver({
+			driverId: driverEnt.id,
+		});
+
+		if (driverWithTruck) {
+			driverEnt.truck = driverWithTruck.truck.repr();
+		}
+		return driverEnt;
+	}
+
+	async getDriverOrderSats(driverEnt) {
+		const { orderMapper } = this.mappers;
+
+		return await orderMapper.driverOrderStats(driverEnt.id);
+	}
+
 	async getProfile(userId) {
 		const { userMapper } = this.mappers;
 
 		const user = await userMapper.findUser({ _id: userId });
+
+		if (user) {
+			if (user.isDriver()) {
+				const driverStats = await this.getDriverOrderSats(user);
+				user.driverStats = driverStats;
+				await this.findDriver(user);
+			}
+		}
 
 		if (user) {
 			return Result.ok(user.repr());

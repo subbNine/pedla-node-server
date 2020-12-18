@@ -1,5 +1,6 @@
 const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
+const { orderService } = require("../../services");
 
 const {} = (module.exports = class Order extends BaseController {
 	constructor() {
@@ -7,10 +8,9 @@ const {} = (module.exports = class Order extends BaseController {
 		this._bindAll(this);
 	}
 
-	requestPeddlerProduct(req, res, next) {
+	async createOrder(req, res, next) {
 		const {
 			driverId,
-			buyerId,
 			productId,
 			quantity,
 			unitAmount,
@@ -20,28 +20,54 @@ const {} = (module.exports = class Order extends BaseController {
 			buyerLon,
 		} = req.body;
 
+		const { user } = req._App;
+
 		const orderDto = new OrderDto();
 
-		orderDto.driverId = driverId;
-		orderDto.buyerId = buyerId;
-		orderDto.productId = productId;
-		orderDto.quantity = quantity;
-		orderDto.unitAmount = unitAmount;
+		orderDto.driver.id = driverId;
+		orderDto.buyer.id = user.id;
+		orderDto.product.id = productId;
+		orderDto.quantity = +quantity;
+		orderDto.unitAmount = +unitAmount;
+		orderDto.amount = +quantity * +unitAmount;
 		orderDto.driverLatlon = {
 			type: "Point",
 			coordinates: [+driverLon, +driverLat],
 		};
-		orderDto.buyerLatlon = {
+		orderDto.buyerLatLon = {
 			type: "Point",
 			coordinates: [+buyerLon, +buyerLat],
 		};
+
+		const result = await orderService.createOrder(orderDto);
+
+		this.response(result, res);
 	}
 
-	confirmProductDelivery() {
-		throw new Error("Not implemented");
+	async confirmOrderDelivery(req, res, next) {
+		const { orderId } = req.params;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+
+		const result = await orderService.confirmOrderDelivery(orderDto);
+
+		this.response(result, res);
 	}
 
-	rateTransaction() {
-		throw new Error("Not implemented");
+	// cancelledReason
+	async cancelOrder(req, res, next) {
+		const { orderId } = req.params;
+		const { reason } = req.body;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+		orderDto.cancelledReason = reason;
+
+		const result = await orderService.cancelOrder(orderDto);
+
+		this.response(result, res);
 	}
 });

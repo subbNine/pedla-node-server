@@ -24,6 +24,7 @@ module.exports = class User {
 	nTrucks;
 	peddler;
 	truck;
+	driverStats;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -69,6 +70,7 @@ module.exports = class User {
 		objectRepr.peddlerCode = this.peddlerCode || null;
 		objectRepr.nTrucks = this.nTrucks || null;
 		objectRepr.peddler = this.peddler || null;
+		objectRepr.driverStats = this.driverStats || null;
 
 		if (this.isPeddler()) {
 			objectRepr.pooImage =

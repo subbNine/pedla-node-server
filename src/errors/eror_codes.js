@@ -51,6 +51,10 @@ module.exports = {
 		statusCode: 409,
 		name: "DupplicateAssignmentError",
 	},
+	NotAcceptableOrderError: {
+		statusCode: 406,
+		name: "NotAcceptableOrderError",
+	},
 	PhoneConflictError: {
 		statusCode: 404,
 		name: "PhoneConflictError",

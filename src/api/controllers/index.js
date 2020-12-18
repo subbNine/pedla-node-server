@@ -6,6 +6,7 @@ const Order = require("./order");
 const User = require("./user");
 const Truck = require("./truck");
 const TruckAndDriver = require("./truck-driver");
+const OrderController = require("./order");
 
 module.exports = {
 	auth: new Auth(),
@@ -16,4 +17,5 @@ module.exports = {
 	user: new User(),
 	truck: new Truck(),
 	truckAndDriver: new TruckAndDriver(),
+	orderController: new OrderController(),
 };
