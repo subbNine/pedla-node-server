@@ -74,10 +74,11 @@ module.exports.postOrder = Joi.object().keys({
 	rating: Joi.number(),
 	amount: Joi.number(),
 	status: Joi.string(),
-	driverLat: Joi.number().required(),
-	driverLon: Joi.number().required(),
-	buyerLat: Joi.number().required(),
-	buyerLon: Joi.number().required(),
+	driverLat: Joi.number(),
+	driverLon: Joi.number(),
+	buyerLat: Joi.number(),
+	buyerLon: Joi.number(),
+	deliveryAddress: Joi.string(),
 });
 
 module.exports.orderReason = Joi.object().keys({

@@ -124,6 +124,7 @@ router.get(
  * @apiParam {Number} driverLon the longitude of the driver
  * @apiParam {Number} buyerLat the latitude of the buyer
  * @apiParam {Number} buyerLon the longitude of the buyer
+ * @apiParam {String} deliveryAddress delivery address
  */
 router.post(
 	"/order",

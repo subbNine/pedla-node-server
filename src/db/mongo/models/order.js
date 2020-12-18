@@ -26,6 +26,7 @@ let schema = new Schema({
 		coordinates: [{ type: Number, required: true }],
 	},
 	cancelledReason: String,
+	deliveryAddress: String,
 });
 
 schema.index({ buyerLatLon: "2dsphere", driverLatlon: "2dsphere" });

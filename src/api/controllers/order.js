@@ -53,6 +53,7 @@ module.exports = class Order extends BaseController {
 			buyerLat,
 			buyerLon,
 			amount,
+			deliveryAddress,
 		} = req.body;
 
 		const { user } = req._App;
@@ -73,6 +74,7 @@ module.exports = class Order extends BaseController {
 			type: "Point",
 			coordinates: [+buyerLon, +buyerLat],
 		};
+		orderDto.deliveryAddress = deliveryAddress;
 
 		const result = await orderService.createOrder(orderDto);
 
