@@ -73,7 +73,7 @@ router.get("/profile", catchAsync(userController.getProfile));
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription get driver's profile. To get all possible return fields call this test route logged in as a buyer: 
+ * @apiDescription get driver's profile. To get all possible return fields call this test route logged in as a buyer:
  * /api/user/buyer/profile/5fd8b3fc7a78f300173bd7ee
  */
 router.get("/profile/:userId", catchAsync(userController.getProfile));
@@ -149,6 +149,23 @@ router.post(
 	shield(permissions.PERM002),
 	validateBody(validationSchemas.orderReason),
 	catchAsync(orderController.cancelOrder)
+);
+
+/**
+ * @api {get} /api/user/buyer/order/:orderId Retrieve a specific order
+ * @apiName getSpecificOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Get a specific order
+ *
+ * @apiParam {ID} orderId the id of the order you want to retrieve
+ */
+router.get(
+	"/order/:orderId",
+	shield(permissions.PERM002),
+	catchAsync(orderController.getOrderById)
 );
 
 /**

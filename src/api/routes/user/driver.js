@@ -7,8 +7,11 @@ const {
 	product: productController,
 	user: userController,
 	geoLocation: geoLocationController,
+	orderController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
+const { validateBody } = require("../../middlewares/validator-helpers");
+const validationSchemas = require("../../validators");
 
 const router = Router();
 
@@ -68,6 +71,59 @@ router.get("/profile/:userId", catchAsync(userController.getProfile));
 router.post(
 	"/geo-location",
 	catchAsync(geoLocationController.updateGeoLocation)
+);
+
+/**
+ * @api {post} /api/user/driver/order/:orderId/accept Accept Order
+ * @apiName postAcceptDriverOrder
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint will enable drivers to Accept an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to confirm has acceptd
+ */
+router.post(
+	"/order/:orderId/accept",
+	shield(permissions.PERM002),
+	catchAsync(orderController.acceptOrder)
+);
+
+/**
+ * @api {get} /api/user/driver/order/:orderId Retrieve a specific order
+ * @apiName getSpecificDriverOrder
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Get a specific order
+ *
+ * @apiParam {ID} orderId the id of the order you want to retrieve
+ */
+router.get(
+	"/order/:orderId",
+	shield(permissions.PERM002),
+	catchAsync(orderController.getOrderById)
+);
+
+/**
+ * @api {post} /api/user/driver/order/:orderId/cancel Cancel An Order
+ * @apiName postCancelDriverOrder
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription cancel an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to cancel
+ * @apiParam {String} reason the reason for cancelling an order
+ */
+router.post(
+	"/order/:orderId/cancel",
+	shield(permissions.PERM002),
+	validateBody(validationSchemas.orderReason),
+	catchAsync(orderController.cancelOrder)
 );
 
 module.exports = router;

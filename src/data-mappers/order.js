@@ -55,7 +55,21 @@ module.exports = class OrderMapper extends BaseMapper {
 
 	async findOrder(filter) {
 		const { Order } = this.models;
-		const doc = await Order.findOne(filter)
+
+		const { id, ...rest } = filter || {};
+
+		const search = {};
+		if (id) {
+			search._id = id;
+		}
+
+		if (rest) {
+			Object.assign(search, {
+				...rest,
+			});
+		}
+
+		const doc = await Order.findOne(this.toOrderPersistence(search))
 			.populate({ path: "productId", populate: { path: "productId" } })
 			.populate("driverId")
 			.populate("buyerId");

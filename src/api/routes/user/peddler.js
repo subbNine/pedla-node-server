@@ -10,11 +10,13 @@ const {
 	geoLocation: geoLocationController,
 	truck: truckController,
 	truckAndDriver: truckAndDriverController,
+	orderController,
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
 const { validateBody } = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
+const { permissions } = require("../../../db/mongo/enums").user;
 
 const router = Router();
 
@@ -327,6 +329,18 @@ router.get(
 	"/nearest-drivers",
 	validateBody(validationSchemas.latlon),
 	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+);
+
+router.post(
+	"/order/:orderId/accept",
+	shield(permissions.PERM002),
+	catchAsync(orderController.acceptOrder)
+);
+
+router.get(
+	"/order/:orderId",
+	shield(permissions.PERM002),
+	catchAsync(orderController.getOrderById)
 );
 
 module.exports = router;

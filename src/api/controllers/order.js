@@ -8,6 +8,18 @@ const {} = (module.exports = class Order extends BaseController {
 		this._bindAll(this);
 	}
 
+	async getOrderById(req, res, next) {
+		const { orderId } = req.params;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+
+		const result = await orderService.findOrder(orderDto);
+
+		this.response(result, res);
+	}
+
 	async createOrder(req, res, next) {
 		const {
 			driverId,
@@ -52,6 +64,21 @@ const {} = (module.exports = class Order extends BaseController {
 		orderDto.id = orderId;
 
 		const result = await orderService.confirmOrderDelivery(orderDto);
+
+		this.response(result, res);
+	}
+
+	async acceptOrder(req, res, next) {
+		const { orderId } = req.params;
+
+		const { user } = req._App;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+		orderDto.driver.id = user.id;
+
+		const result = await orderService.acceptOrder(orderDto);
 
 		this.response(result, res);
 	}

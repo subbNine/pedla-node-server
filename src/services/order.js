@@ -17,14 +17,24 @@ module.exports = class Order {
 	async findOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
-		const foundOrders = await orderMapper.findOrders(
-			new PeddlerProductEnt(orderFilterDto)
-		);
+		const foundOrders = await orderMapper.findOrders(orderFilterDto);
 
 		if (foundOrders) {
-			return Result.ok(foundOrders.map((eachProduct) => eachProduct.repr()));
+			return Result.ok(foundOrders.map((eachOrder) => eachOrder.repr()));
 		} else {
 			return Result.ok([]);
+		}
+	}
+
+	async findOrder(orderDto) {
+		const { orderMapper } = this.mappers;
+
+		const foundOrder = await orderMapper.findOrder(orderDto);
+
+		if (foundOrder) {
+			return Result.ok(foundOrder.repr());
+		} else {
+			return Result.ok(null);
 		}
 	}
 
@@ -88,6 +98,24 @@ module.exports = class Order {
 		return Result.ok(true);
 	}
 
+	async acceptOrder(order) {
+		const { orderMapper } = this.mappers;
+
+		const orderEnt = new OrderEnt(order);
+		orderEnt.status = orderStatus.ACCEPTED;
+
+		const updatedOrder = await orderMapper.updateOrderBy(
+			{ _id: order.id, driverId: order.driver.id, status: orderStatus.PENDING },
+			orderEnt
+		);
+
+		if (updatedOrder) {
+			return Result.ok({ id: updatedOrder.repr().id });
+		}
+
+		return Result.ok(true);
+	}
+
 	async cancelOrder(order) {
 		const { orderMapper } = this.mappers;
 
@@ -95,7 +123,7 @@ module.exports = class Order {
 		orderEnt.status = orderStatus.CANCELLED;
 
 		const updatedOrder = await orderMapper.updateOrderBy(
-			{ _id: order.id, status: orderStatus.PENDING },
+			{ _id: order.id },
 			orderEnt
 		);
 		return Result.ok({ id: updatedOrder.repr().id });
