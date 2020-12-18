@@ -967,6 +967,30 @@
     "groupTitle": "Buyer_-_Get_Truck_Drivers"
   },
   {
+    "type": "get",
+    "url": "/api/user/buyer/order/:orderId",
+    "title": "Retrieve a specific order",
+    "name": "getSpecificOrder",
+    "group": "Buyer_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Get a specific order</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to retrieve</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Order"
+  },
+  {
     "type": "post",
     "url": "/api/user/buyer/order/:orderId/cancel",
     "title": "Cancel An Order",
@@ -1093,6 +1117,109 @@
     },
     "filename": "src/api/routes/user/buyer.js",
     "groupTitle": "Buyer_-_Order"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/driver/orders?status=pending+accepted",
+    "title": "Retrieve orders",
+    "name": "getDriverOrders",
+    "group": "Driver_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Return orders based on status (pending|accepted|completed|cancelled) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>order status. multiple order status should be seperated with a &quot;+&quot; symbol</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/driver/order/:orderId",
+    "title": "Retrieve a specific order",
+    "name": "getSpecificDriverOrder",
+    "group": "Driver_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Get a specific order</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to retrieve</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/order/:orderId/accept",
+    "title": "Accept Order",
+    "name": "postAcceptDriverOrder",
+    "group": "Driver_-_Order",
+    "version": "1.0.0",
+    "description": "<p>This endpoint will enable drivers to Accept an order</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to confirm has acceptd</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/order/:orderId/cancel",
+    "title": "Cancel An Order",
+    "name": "postCancelDriverOrder",
+    "group": "Driver_-_Order",
+    "version": "1.0.0",
+    "description": "<p>cancel an order</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to cancel</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "reason",
+            "description": "<p>the reason for cancelling an order</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
   },
   {
     "type": "get",
