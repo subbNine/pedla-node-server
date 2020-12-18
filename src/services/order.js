@@ -29,10 +29,36 @@ module.exports = class Order {
 		const foundOrders = await orderMapper.findOrders(search);
 
 		if (foundOrders) {
-			return Result.ok(foundOrders.map((eachOrder) => eachOrder.repr()));
+			const results = [];
+
+			for (const eachOrder of foundOrders) {
+				await this.loadPeddlerCode(eachOrder);
+				results.push(eachOrder.repr());
+			}
+
+			return Result.ok(results);
 		} else {
 			return Result.ok([]);
 		}
+	}
+
+	async loadPeddlerCode(order) {
+		const { userMapper } = this.mappers;
+
+		const driver = await userMapper.findUser(
+			{ _id: order.driver.id },
+			(doc) => {
+				doc.populate("peddler");
+			}
+		);
+
+		if (driver && driver.peddler) {
+			if (order.driver) {
+				order.driver.peddlerCode = driver.peddler.peddlerCode;
+			}
+		}
+
+		return order;
 	}
 
 	async findOrder(orderDto) {
@@ -41,6 +67,7 @@ module.exports = class Order {
 		const foundOrder = await orderMapper.findOrder(orderDto);
 
 		if (foundOrder) {
+			await this.loadPeddlerCode(foundOrder);
 			return Result.ok(foundOrder.repr());
 		} else {
 			return Result.ok(null);

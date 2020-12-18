@@ -100,21 +100,39 @@ module.exports = class User {
 		return driverEnt;
 	}
 
-	async getDriverOrderSats(driverEnt) {
+	async getDriverOrderStats(driverEnt) {
 		const { orderMapper } = this.mappers;
 
 		return await orderMapper.driverOrderStats(driverEnt.id);
 	}
 
+	async loadPeddlerCode(user) {
+		const { userMapper } = this.mappers;
+
+		const driver = await userMapper.findUser({ _id: user.id }, (doc) => {
+			doc.populate("peddler");
+		});
+
+		if (driver && driver.peddler) {
+			user.peddlerCode = driver.peddler.peddlerCode;
+		}
+
+		return user;
+	}
+
 	async getProfile(userId) {
 		const { userMapper } = this.mappers;
 
-		const user = await userMapper.findUser({ _id: userId });
+		const user = await userMapper.findUser({ _id: userId }, (doc) => {
+			doc.populate("peddler");
+		});
 
 		if (user) {
 			if (user.isDriver()) {
-				const driverStats = await this.getDriverOrderSats(user);
+				const driverStats = await this.getDriverOrderStats(user);
 				user.driverStats = driverStats;
+				user.peddlerCode = user.peddler.peddlerCode;
+				user.peddler = null;
 				await this.findDriver(user);
 			}
 		}
