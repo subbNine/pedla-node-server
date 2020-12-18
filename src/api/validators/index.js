@@ -24,4 +24,5 @@ module.exports = {
 		JoiValidator(payload, usersSchema.postTruckAndDriver),
 	latlon: (payload) => JoiValidator(payload, usersSchema.latlon),
 	postOrder: (payload) => JoiValidator(payload, usersSchema.postOrder),
+	orderReason: (payload) => JoiValidator(payload, usersSchema.orderReason),
 };

@@ -13,10 +13,7 @@ const {
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
-const {
-	validateBody,
-	validateParams,
-} = require("../../middlewares/validator-helpers");
+const { validateBody } = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
 
 const router = Router();

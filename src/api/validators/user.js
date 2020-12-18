@@ -66,16 +66,20 @@ module.exports.latlon = Joi.object().keys({
 });
 
 module.exports.postOrder = Joi.object().keys({
-	driverId: mongoIdVal.string().mongoId(),
+	driverId: mongoIdVal.string().mongoId().required(),
 	buyerId: mongoIdVal.string().mongoId(),
-	productId: mongoIdVal.string().mongoId(),
-	quantity: Joi.number(),
-	unitAmount: Joi.number(),
+	productId: mongoIdVal.string().mongoId().required(),
+	quantity: Joi.number().required(),
+	unitAmount: Joi.number().required(),
 	rating: Joi.number(),
 	amount: Joi.number(),
 	status: Joi.string(),
-	driverLat: Joi.number(),
-	driverLon: Joi.number(),
-	buyerLat: Joi.number(),
-	buyerLon: Joi.number(),
+	driverLat: Joi.number().required(),
+	driverLon: Joi.number().required(),
+	buyerLat: Joi.number().required(),
+	buyerLon: Joi.number().required(),
+});
+
+module.exports.orderReason = Joi.object().keys({
+	reason: Joi.string().required(),
 });
