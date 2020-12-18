@@ -17,7 +17,16 @@ module.exports = class Order {
 	async findOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
-		const foundOrders = await orderMapper.findOrders(orderFilterDto);
+		const search = {
+			$and: [
+				{ driverId: orderFilterDto.driver.id },
+				{
+					status: orderFilterDto.status,
+				},
+			],
+		};
+
+		const foundOrders = await orderMapper.findOrders(search);
 
 		if (foundOrders) {
 			return Result.ok(foundOrders.map((eachOrder) => eachOrder.repr()));

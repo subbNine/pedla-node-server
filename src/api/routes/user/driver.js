@@ -108,6 +108,23 @@ router.get(
 );
 
 /**
+ * @api {get} /api/user/driver/orders?status=pending+accepted Retrieve orders
+ * @apiName getDriverOrders
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Return orders based on status (pending|accepted|completed|cancelled) passed in the status query params.
+ * To return results with more than one status, seperate the status passed in the query with a plus symbol
+ * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
+ */
+router.get(
+	"/orders",
+	shield(permissions.PERM002),
+	catchAsync(orderController.getOrders)
+);
+
+/**
  * @api {post} /api/user/driver/order/:orderId/cancel Cancel An Order
  * @apiName postCancelDriverOrder
  * @apiGroup Driver - Order

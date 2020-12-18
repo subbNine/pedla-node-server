@@ -1,11 +1,33 @@
 const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
 const { orderService } = require("../../services");
+const { orderStatus } = require("../../db/mongo/enums/order");
 
-const {} = (module.exports = class Order extends BaseController {
+module.exports = class Order extends BaseController {
 	constructor() {
 		super();
 		this._bindAll(this);
+	}
+
+	async getOrders(req, res, next) {
+		const { user } = req._App;
+		const { status } = req.query;
+
+		const orderDto = new OrderDto();
+
+		orderStatus;
+		orderDto.driver.id = user.id;
+		orderDto.status = {
+			status: {
+				$in: status
+					? status.split(/\s*+\s*/).map((status) => ("" + status).toUpperCase())
+					: Object.values(orderStatus),
+			},
+		};
+
+		const result = await orderService.findOrders(orderDto);
+
+		this.response(result, res);
 	}
 
 	async getOrderById(req, res, next) {
@@ -30,6 +52,7 @@ const {} = (module.exports = class Order extends BaseController {
 			driverLon,
 			buyerLat,
 			buyerLon,
+			amount,
 		} = req.body;
 
 		const { user } = req._App;
@@ -41,7 +64,7 @@ const {} = (module.exports = class Order extends BaseController {
 		orderDto.product.id = productId;
 		orderDto.quantity = +quantity;
 		orderDto.unitAmount = +unitAmount;
-		orderDto.amount = +quantity * +unitAmount;
+		orderDto.amount = +amount;
 		orderDto.driverLatlon = {
 			type: "Point",
 			coordinates: [+driverLon, +driverLat],
@@ -97,4 +120,4 @@ const {} = (module.exports = class Order extends BaseController {
 
 		this.response(result, res);
 	}
-});
+};
