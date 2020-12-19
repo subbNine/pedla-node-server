@@ -25,4 +25,5 @@ module.exports = {
 	latlon: (payload) => JoiValidator(payload, usersSchema.latlon),
 	postOrder: (payload) => JoiValidator(payload, usersSchema.postOrder),
 	orderReason: (payload) => JoiValidator(payload, usersSchema.orderReason),
+	search: (payload) => JoiValidator(payload, usersSchema.search),
 };

@@ -249,10 +249,6 @@ module.exports = class UserMapper extends BaseMapper {
 		const geoEnt = new GeoEnt(geo);
 		const lat = geoEnt.getLat();
 		const lon = geoEnt.getLon();
-		const radius = geoEnt.radius;
-
-		const radiusIsNum = radius && typeof +radius === "number";
-		const METERS_PER_MILE = geoEnt.METERS_PER_MILE;
 
 		const products = await PeddlerProduct.aggregate([
 			{
@@ -269,7 +265,6 @@ module.exports = class UserMapper extends BaseMapper {
 						{
 							$geoNear: {
 								near: { type: "Point", coordinates: [+lon, +lat] },
-								maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
 								key: "latlon",
 								distanceField: "dist.calculated",
 								spherical: true,

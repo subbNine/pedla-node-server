@@ -195,15 +195,18 @@ router.post(
  *
  * @apiDescription Search for driver
  *
- * @apiParam productId
- * @apiParam quantity
- * @apiParam page
- * @apiParam limit
- * @apiParam lat
- * @apiParam lon
- * @apiParam radius
+ * @apiParam productId id of the product
+ * @apiParam quantity quantity of the product
+ * @apiParam [page] page number pagination
+ * @apiParam [limit] limit page limit
+ * @apiParam lat latitude of the search user
+ * @apiParam lon longitude of the search user
  *
  */
-router.post("/search", catchAsync(userController.searchForProductDrivers));
+router.post(
+	"/search",
+	validateBody(validationSchemas.search),
+	catchAsync(userController.searchForProductDrivers)
+);
 
 module.exports = router;
