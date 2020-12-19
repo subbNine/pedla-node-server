@@ -275,7 +275,7 @@ module.exports = class UserMapper extends BaseMapper {
 								$expr: {
 									$and: [
 										{ $eq: ["$peddler", "$$peddId"] },
-										{ presence: presence.ONLINE },
+										{ $eq: ["$presence", presence.ONLINE] },
 									],
 								},
 							},
