@@ -253,7 +253,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const products = await PeddlerProduct.aggregate([
 			{
 				$match: {
-					quantity: { $gt: quantity },
+					quantity: { $gt: +quantity || 1 },
 					productId: Types.ObjectId(productId),
 				},
 			},
