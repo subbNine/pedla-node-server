@@ -1243,43 +1243,37 @@
             "group": "Parameter",
             "optional": false,
             "field": "productId",
-            "description": ""
+            "description": "<p>id of the product</p>"
           },
           {
             "group": "Parameter",
             "optional": false,
             "field": "quantity",
-            "description": ""
+            "description": "<p>quantity of the product</p>"
           },
           {
             "group": "Parameter",
-            "optional": false,
+            "optional": true,
             "field": "page",
-            "description": ""
+            "description": "<p>page number pagination</p>"
           },
           {
             "group": "Parameter",
-            "optional": false,
+            "optional": true,
             "field": "limit",
-            "description": ""
+            "description": "<p>limit page limit</p>"
           },
           {
             "group": "Parameter",
             "optional": false,
             "field": "lat",
-            "description": ""
+            "description": "<p>latitude of the search user</p>"
           },
           {
             "group": "Parameter",
             "optional": false,
             "field": "lon",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "radius",
-            "description": ""
+            "description": "<p>longitude of the search user</p>"
           }
         ]
       }
