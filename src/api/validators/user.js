@@ -84,3 +84,12 @@ module.exports.postOrder = Joi.object().keys({
 module.exports.orderReason = Joi.object().keys({
 	reason: Joi.string().required(),
 });
+
+module.exports.search = Joi.object().keys({
+	lat: Joi.number().required(),
+	lon: Joi.number().required(),
+	quantity: Joi.number(),
+	page: Joi.number(),
+	limit: Joi.number(),
+	productId: mongoIdVal.string().mongoId().required(),
+});
