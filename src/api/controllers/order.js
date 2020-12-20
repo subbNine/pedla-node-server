@@ -24,7 +24,7 @@ module.exports = class Order extends BaseController {
 			orderDto.buyer.id = user.id;
 		}
 		orderDto.status = status && {
-			$in: status 
+			$in: status
 				? status.split("+").map((status) => ("" + status).toUpperCase().trim())
 				: Object.values(orderStatus),
 		};
@@ -82,8 +82,9 @@ module.exports = class Order extends BaseController {
 			coordinates: [+buyerLon, +buyerLat],
 		};
 		orderDto.deliveryAddress = deliveryAddress;
-		orderDto.deliveryDate = deliveryDate;
-		orderDto.creditPaymentDate = creditPaymentDate;
+		orderDto.deliveryDate = deliveryDate && new Date(deliveryDate);
+		orderDto.creditPaymentDate =
+			creditPaymentDate && new Date(creditPaymentDate);
 		orderDto.paymentMethod = paymentMethod;
 
 		const result = await orderService.createOrder(orderDto);
