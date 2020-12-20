@@ -1,7 +1,12 @@
 const BaseMapper = require("./base");
 
 const isObjectEmpty = require("../lib/utils/is-object-empty");
-const { UserEnt, PeddlerProductEnt, GeoEnt } = require("../entities/domain");
+const {
+	UserEnt,
+	PeddlerProductEnt,
+	GeoEnt,
+	ProductEnt,
+} = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
 const { types } = require("../db/mongo/enums").user;
 const { Types } = require("mongoose");
@@ -241,7 +246,7 @@ module.exports = class UserMapper extends BaseMapper {
 	}
 
 	async searchForProductDrivers({ productId, quantity, geo }, options) {
-		const { PeddlerProduct } = this.models;
+		const { PeddlerProduct, TruckAndDriver } = this.models;
 
 		const { pagination } = options || {};
 		const { page, limit } = pagination || {};
@@ -295,26 +300,57 @@ module.exports = class UserMapper extends BaseMapper {
 				const { drivers, ...product } = p;
 				if (drivers && drivers.length) {
 					for (const driver of drivers) {
-						const driverEnt = this._toEntity(driver, UserEnt, {
-							streetAddress: "address",
-							_id: "id",
-						});
-						const peddlerProductEnt = this._toEntity(
-							product,
-							PeddlerProductEnt,
-							{
+						//#
+						const truckAndDriver = await TruckAndDriver.findOne({
+							driverId: driver._id,
+						})
+							.populate({
+								path: "truckId",
+								populate: {
+									path: "productId", // peddlers product loaded on the truck
+									populate: {
+										path: "productId", // system product
+									},
+								},
+							})
+							.sort("-createdAt");
+
+						const foundDriverProduct =
+							truckAndDriver &&
+							truckAndDriver.truckId &&
+							truckAndDriver.truckId.productId;
+						if (isEqualIds(foundDriverProduct, product)) {
+							const driverEnt = this._toEntity(driver, UserEnt, {
+								streetAddress: "address",
 								_id: "id",
-								peddlerId: "peddler",
-								productId: "product",
-							}
-						);
-						driversList.push(
-							Object.assign(
-								{},
-								{ driver: driverEnt.repr() },
-								{ product: peddlerProductEnt.repr() }
-							)
-						);
+							});
+
+							const productTypeEnt = this._toEntity(
+								foundDriverProduct.productId,
+								ProductEnt,
+								{ _id: "id" }
+							);
+
+							product.productId = productTypeEnt;
+
+							const peddlerProductEnt = this._toEntity(
+								product,
+								PeddlerProductEnt,
+								{
+									_id: "id",
+									peddlerId: "peddler",
+									productId: "product",
+								}
+							);
+							driversList.push(
+								Object.assign(
+									{},
+									{ driver: driverEnt.repr() },
+									{ product: peddlerProductEnt.repr() }
+								)
+							);
+						}
+						//#
 					}
 				}
 			}
@@ -323,3 +359,15 @@ module.exports = class UserMapper extends BaseMapper {
 		return driversList;
 	}
 };
+
+function isEqualIds(mongoObj1, mongoObj2) {
+	return (
+		mongoObj1 &&
+		mongoObj1._id &&
+		mongoObj1._id.toString &&
+		mongoObj2 &&
+		mongoObj2._id &&
+		mongoObj2._id.toString &&
+		mongoObj1._id.toString() == mongoObj2._id.toString()
+	);
+}
