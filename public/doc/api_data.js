@@ -1163,6 +1163,13 @@ define({ "api": [
             "optional": false,
             "field": "paymentMethod",
             "description": "<p>mode of payment</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "priceCategory",
+            "description": "<p>product price category</p>"
           }
         ]
       }

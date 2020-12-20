@@ -128,6 +128,7 @@ router.get(
  * @apiParam {Date} deliveryDate delivery date
  * @apiParam {Date} creditPaymentDate proposed date to pay for product
  * @apiParam {String} paymentMethod mode of payment
+ * @apiParam {String} priceCategory product price category
  */
 router.post(
 	"/order",
