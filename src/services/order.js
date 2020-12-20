@@ -108,7 +108,7 @@ module.exports = class Order {
 	async _checkPendingOrderOnDriver(driverId) {
 		const { orderMapper } = this.mappers;
 		return await orderMapper.findOrder({
-			$and: [{ driverId }, { status: orderStatus.PENDING }],
+			$and: [{ driverId }, { status: orderStatus.ACCEPTED }],
 		});
 	}
 
