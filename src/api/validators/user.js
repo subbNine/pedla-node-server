@@ -79,6 +79,9 @@ module.exports.postOrder = Joi.object().keys({
 	buyerLat: Joi.number(),
 	buyerLon: Joi.number(),
 	deliveryAddress: Joi.string(),
+	deliveryDate: Joi.number(),
+	creditPaymentDate: Joi.number(),
+	paymentMethod: Joi.string(),
 });
 
 module.exports.orderReason = Joi.object().keys({
@@ -92,4 +95,8 @@ module.exports.search = Joi.object().keys({
 	page: Joi.number(),
 	limit: Joi.number(),
 	productId: mongoIdVal.string().mongoId().required(),
+});
+
+module.exports.rating = Joi.object().keys({
+	rating: Joi.number().min(1).max(5),
 });

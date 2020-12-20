@@ -21,7 +21,7 @@ let schema = new Schema({
 		type: { type: String },
 		coordinates: [{ type: Number, required: true }],
 	},
-	buyerLatLon: {
+	buyerLatlon: {
 		type: { type: String },
 		coordinates: [{ type: Number, required: true }],
 	},
@@ -32,6 +32,6 @@ let schema = new Schema({
 	paymentMethod: String,
 });
 
-schema.index({ buyerLatLon: "2dsphere", driverLatlon: "2dsphere" });
+schema.index({ buyerLatlon: "2dsphere", driverLatlon: "2dsphere" });
 
 module.exports = mongoose.model("Order", schema);

@@ -125,6 +125,9 @@ router.get(
  * @apiParam {Number} buyerLat the latitude of the buyer
  * @apiParam {Number} buyerLon the longitude of the buyer
  * @apiParam {String} deliveryAddress delivery address
+ * @apiParam {Date} deliveryDate delivery date
+ * @apiParam {Date} creditPaymentDate proposed date to pay for product
+ * @apiParam {String} paymentMethod mode of payment
  */
 router.post(
 	"/order",
@@ -201,6 +204,24 @@ router.post(
 	"/order/:orderId/complete",
 	shield(permissions.PERM002),
 	catchAsync(orderController.confirmOrderDelivery)
+);
+
+/**
+ * @api {post} /api/user/buyer/order/:orderId/rating Search driver
+ * @apiName postOrderRating
+ * @apiGroup Driver - Rate a driver
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Rate a driver. minimum rating = 1 maximum rating = 5
+ *
+ * @apiParam {Number} rating score for a transaction
+ */
+router.post(
+	"/order/:orderId/rating",
+	shield(permissions.PERM002),
+	validateBody(validationSchemas.postRating),
+	catchAsync(orderController.rateOrder)
 );
 
 /**

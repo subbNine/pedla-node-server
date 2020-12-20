@@ -13,7 +13,7 @@ module.exports = class Order {
 	amount;
 	status;
 	driverLatlon;
-	buyerLatLon;
+	buyerLatlon;
 	deliveryAddress;
 	deliveryDate;
 	creditPaymentDate;
