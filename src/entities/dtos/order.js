@@ -16,4 +16,5 @@ module.exports = class Order {
 	deliveryAddress;
 	deliveryDate;
 	creditPaymentDate;
+	priceCategory;
 };

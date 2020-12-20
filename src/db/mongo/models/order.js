@@ -30,6 +30,7 @@ let schema = new Schema({
 	deliveryDate: Date,
 	creditPaymentDate: Date,
 	paymentMethod: String,
+	priceCategory: String,
 });
 
 schema.index({ buyerLatlon: "2dsphere", driverLatlon: "2dsphere" });
