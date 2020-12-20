@@ -220,7 +220,7 @@ module.exports = class User extends BaseController {
 		const { types, limit, page } = req.query;
 
 		const listOfUserTypes = types
-			? types.split(/\s*,\s*/).map((userType) => ("" + userType).toUpperCase())
+			? types.split(",").map((userType) => ("" + userType).toUpperCase().trim())
 			: Object.values(userTypes);
 
 		const result = await userService.getUsers(listOfUserTypes, {
