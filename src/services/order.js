@@ -86,20 +86,20 @@ module.exports = class Order {
 	async createOrder(order) {
 		const { orderMapper } = this.mappers;
 
-		// ensure there is no pending order on the driver
-		const pendingOrderOnDriver = await this._checkPendingOrderOnDriver(
-			order.driver.id
-		);
+		// // ensure there is no pending order on the driver
+		// const pendingOrderOnDriver = await this._checkPendingOrderOnDriver(
+		// 	order.driver.id
+		// );
 
-		if (pendingOrderOnDriver) {
-			return Result.fail(
-				new AppError({
-					name: errorCodes.NotAcceptableOrderError.name,
-					message: errMessages.notAcceptableOrder,
-					statusCode: errorCodes.NotAcceptableOrderError.statusCode,
-				})
-			);
-		}
+		// if (pendingOrderOnDriver) {
+		// 	return Result.fail(
+		// 		new AppError({
+		// 			name: errorCodes.NotAcceptableOrderError.name,
+		// 			message: errMessages.notAcceptableOrder,
+		// 			statusCode: errorCodes.NotAcceptableOrderError.statusCode,
+		// 		})
+		// 	);
+		// }
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 		return Result.ok({ id: newOrder.repr().id });
