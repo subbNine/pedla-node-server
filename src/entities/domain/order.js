@@ -46,7 +46,10 @@ module.exports = class Order {
 				this.product ||
 				null,
 			rating: this.rating || null,
-			amount: this.amount || null,
+			amount:
+				this.unitAmount && this.quantity
+					? +this.unitAmount * +this.quantity
+					: 0,
 			status: this.status || null,
 			driverLatlon:
 				this.driverLatlon && this.driverLatlon.coordinates
