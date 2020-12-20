@@ -16,13 +16,17 @@ module.exports = class Order extends BaseController {
 		const orderDto = new OrderDto();
 
 		orderStatus;
-		orderDto.driver.id = user.id;
-		orderDto.status = {
-			status: {
-				$in: status
-					? status.split(/\s*+\s*/).map((status) => ("" + status).toUpperCase())
-					: Object.values(orderStatus),
-			},
+
+		if (user.isDriver()) {
+			orderDto.driver.id = user.id;
+		}
+		if (user.isBuyer()) {
+			orderDto.buyer.id = user.id;
+		}
+		orderDto.status = status && {
+			$in: status 
+				? status.split("+").map((status) => ("" + status).toUpperCase().trim())
+				: Object.values(orderStatus),
 		};
 
 		const result = await orderService.findOrders(orderDto);

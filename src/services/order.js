@@ -17,13 +17,22 @@ module.exports = class Order {
 	async findOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
+		const $and = [];
+
+		if (orderFilterDto.driver.id) {
+			$and.push({ driverId: orderFilterDto.driver.id });
+		} else {
+			if (orderFilterDto.buyer.id) {
+				$and.push({ buyerId: orderFilterDto.buyer.id });
+			}
+		}
+
+		if (orderFilterDto.status) {
+			$and.push({ status: orderFilterDto.status });
+		}
+
 		const search = {
-			$and: [
-				{ driverId: orderFilterDto.driver.id },
-				{
-					status: orderFilterDto.status,
-				},
-			],
+			$and,
 		};
 
 		const foundOrders = await orderMapper.findOrders(search);
