@@ -191,32 +191,15 @@ router.get(
 );
 
 /**
- * @api {post} /api/user/buyer/order/:orderId/complete Confirm Order delivery
- * @apiName postCompleteOrder
- * @apiGroup Buyer - Order
- *
- * @apiVersion 1.0.0
- *
- * @apiDescription Complete an order
- *
- * @apiParam {ID} orderId the id of the order you want to confirm has completed
- */
-router.post(
-	"/order/:orderId/complete",
-	shield(permissions.PERM002),
-	catchAsync(orderController.confirmOrderDelivery)
-);
-
-/**
- * @api {post} /api/user/buyer/order/:orderId/rating Search driver
+ * @api {post} /api/user/buyer/order/:orderId/rating Rate a driver
  * @apiName postOrderRating
- * @apiGroup Driver - Rate a driver
+ * @apiGroup Buyer - Order
  *
  * @apiVersion 1.0.0
  *
  * @apiDescription Rate a driver. minimum rating = 1 maximum rating = 5
  *
- * @apiParam {Number} rating score for a transaction
+ * @apiParam {Number} rating score for a transaction 1-5
  */
 router.post(
 	"/order/:orderId/rating",
@@ -226,9 +209,62 @@ router.post(
 );
 
 /**
+ * @api {post} /api/user/buyer/order/:orderId/cancel Cancel An Order
+ * @apiName postCancelBuyerOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription cancel an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to cancel
+ * @apiParam {String} reason the reason for cancelling an order
+ */
+router.post(
+	"/order/:orderId/cancel",
+	shield(permissions.PERM002),
+	validateBody(validationSchemas.orderReason),
+	catchAsync(orderController.cancelOrder)
+);
+
+/**
+ * @api {post} /api/user/buyer/order/:orderId/delivered Confirm Order delivery
+ * @apiName postDeliveredOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Confirm order has been delivered
+ *
+ * @apiParam {ID} orderId the id of the order you want to confirm has been delivered
+ */
+router.post(
+	"/order/:orderId/delivered",
+	shield(permissions.PERM002),
+	catchAsync(orderController.confirmOrderDelivery)
+);
+
+/**
+ * @api {post} /api/user/buyer/order/:orderId/rejected Reject Order delivery
+ * @apiName postRejectedOrder
+ * @apiGroup Buyer - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Reject order delivery
+ *
+ * @apiParam {ID} orderId the id of the order you want to confirm has been delivered
+ */
+router.post(
+	"/order/:orderId/rejected",
+	shield(permissions.PERM002),
+	catchAsync(orderController.confirmOrderDelivery)
+);
+
+/**
  * @api {post} /api/user/buyer/search Search driver
- * @apiName getDriversBySearch
- * @apiGroup Driver - Search
+ * @apiName getBuyersBySearch
+ * @apiGroup Buyer - Search
  *
  * @apiVersion 1.0.0
  *

@@ -1,7 +1,7 @@
 const { OrderEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const {
-	order: { orderStatus },
+	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
 
 const AppError = error.AppError;
@@ -123,20 +123,84 @@ module.exports = class Order {
 		});
 	}
 
-	async confirmOrderDelivery(order) {
+	async completeOrder(order) {
 		const { orderMapper } = this.mappers;
 
 		const orderEnt = new OrderEnt(order);
 		orderEnt.status = orderStatus.COMPLETE;
 
 		const updatedOrder = await orderMapper.updateOrderBy(
-			{ _id: order.id, status: orderStatus.PENDING },
+			{
+				_id: order.id,
+				status: orderStatus.INPROGRESS,
+				driverId: order.driver.id,
+			},
+			orderEnt
+		);
+
+		if (updatedOrder) {
+			return Result.ok({ id: updatedOrder.repr().id });
+		}
+
+		return Result.ok(true);
+	}
+
+	async confirmOrderDelivery(order) {
+		const { orderMapper } = this.mappers;
+
+		const orderEnt = new OrderEnt(order);
+		orderEnt.deliveryStatus = deliveryStatus.DELIVERED;
+
+		const updatedOrder = await orderMapper.updateOrderBy(
+			{ _id: order.id, status: orderStatus.COMPLETE, buyerId: order.buyer.id },
 			orderEnt
 		);
 
 		if (updatedOrder) {
 			this._deductOrderedQuantityFromProduct(updatedOrder);
 
+			return Result.ok({ id: updatedOrder.repr().id });
+		}
+
+		return Result.ok(true);
+	}
+
+	async rejectOrderDelivery(order) {
+		const { orderMapper } = this.mappers;
+
+		const orderEnt = new OrderEnt(order);
+		orderEnt.deliveryStatus = deliveryStatus.REJECTED;
+
+		const updatedOrder = await orderMapper.updateOrderBy(
+			{ _id: order.id, status: orderStatus.COMPLETE, buyerId: order.buyer.id },
+			orderEnt
+		);
+
+		if (updatedOrder) {
+			this._deductOrderedQuantityFromProduct(updatedOrder);
+
+			return Result.ok({ id: updatedOrder.repr().id });
+		}
+
+		return Result.ok(true);
+	}
+
+	async startOrderDelivery(order) {
+		const { orderMapper } = this.mappers;
+
+		const orderEnt = new OrderEnt(order);
+		orderEnt.status = orderStatus.INPROGRESS;
+
+		const updatedOrder = await orderMapper.updateOrderBy(
+			{
+				_id: order.id,
+				status: orderStatus.ACCEPTED,
+				driverId: order.driver.id,
+			},
+			orderEnt
+		);
+
+		if (updatedOrder) {
 			return Result.ok({ id: updatedOrder.repr().id });
 		}
 
@@ -168,7 +232,7 @@ module.exports = class Order {
 		orderEnt.status = orderStatus.CANCELLED;
 
 		const updatedOrder = await orderMapper.updateOrderBy(
-			{ _id: order.id },
+			{ _id: order.id, status: orderStatus.PENDING },
 			orderEnt
 		);
 		return Result.ok({ id: updatedOrder.repr().id });

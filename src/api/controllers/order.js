@@ -94,14 +94,47 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
+	async completeOrder(req, res, next) {
+		const { orderId } = req.params;
+
+		const { user } = req._App;
+
+		const orderDto = new OrderDto();
+		orderDto.driver.id = user.id;
+
+		orderDto.id = orderId;
+
+		const result = await orderService.completeOrder(orderDto);
+
+		this.response(result, res);
+	}
+
 	async confirmOrderDelivery(req, res, next) {
 		const { orderId } = req.params;
 
+		const { user } = req._App;
+
 		const orderDto = new OrderDto();
+		orderDto.buyer.id = user.id;
 
 		orderDto.id = orderId;
 
 		const result = await orderService.confirmOrderDelivery(orderDto);
+
+		this.response(result, res);
+	}
+
+	async rejectOrderDelivery(req, res, next) {
+		const { orderId } = req.params;
+
+		const { user } = req._App;
+
+		const orderDto = new OrderDto();
+		orderDto.buyer.id = user.id;
+
+		orderDto.id = orderId;
+
+		const result = await orderService.rejectOrderDelivery(orderDto);
 
 		this.response(result, res);
 	}
@@ -117,6 +150,21 @@ module.exports = class Order extends BaseController {
 		orderDto.driver.id = user.id;
 
 		const result = await orderService.acceptOrder(orderDto);
+
+		this.response(result, res);
+	}
+
+	async startDelivery(req, res, next) {
+		const { orderId } = req.params;
+
+		const { user } = req._App;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+		orderDto.driver.id = user.id;
+
+		const result = await orderService.startOrderDelivery(orderDto);
 
 		this.response(result, res);
 	}

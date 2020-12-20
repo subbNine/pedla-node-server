@@ -31,6 +31,11 @@ let schema = new Schema({
 	creditPaymentDate: Date,
 	paymentMethod: String,
 	priceCategory: String,
+	deliveryStatus: {
+		type: String,
+		enum: Object.values(orderEnums.deliveryStatus),
+		default: orderEnums.deliveryStatus.NOTDELIVERED,
+	},
 });
 
 schema.index({ buyerLatlon: "2dsphere", driverLatlon: "2dsphere" });

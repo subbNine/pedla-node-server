@@ -143,4 +143,38 @@ router.post(
 	catchAsync(orderController.cancelOrder)
 );
 
+/**
+ * @api {post} /api/user/driver/order/:orderId/start-delivery Start delivery of An Order
+ * @apiName postStartDeliveryOrder
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription start journey for an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to cancel
+ */
+router.post(
+	"/order/:orderId/start-delivery",
+	shield(permissions.PERM002),
+	catchAsync(orderController.startDelivery)
+);
+
+/**
+ * @api {post} /api/user/driver/order/:orderId/complete Confirm Order delivery
+ * @apiName postCompleteOrder
+ * @apiGroup Driver - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Complete an order
+ *
+ * @apiParam {ID} orderId the id of the order you want to confirm has completed
+ */
+router.post(
+	"/order/:orderId/complete",
+	shield(permissions.PERM002),
+	catchAsync(orderController.completeOrder)
+);
+
 module.exports = router;
