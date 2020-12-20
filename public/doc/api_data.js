@@ -1018,6 +1018,37 @@ define({ "api": [
     "type": "post",
     "url": "/api/user/buyer/order/:orderId/cancel",
     "title": "Cancel An Order",
+    "name": "postCancelBuyerOrder",
+    "group": "Buyer_-_Order",
+    "version": "1.0.0",
+    "description": "<p>cancel an order</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to cancel</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "reason",
+            "description": "<p>the reason for cancelling an order</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Order"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/order/:orderId/cancel",
+    "title": "Cancel An Order",
     "name": "postCancelOrder",
     "group": "Buyer_-_Order",
     "version": "1.0.0",
@@ -1047,12 +1078,12 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/user/buyer/order/:orderId/complete",
+    "url": "/api/user/buyer/order/:orderId/delivered",
     "title": "Confirm Order delivery",
-    "name": "postCompleteOrder",
+    "name": "postDeliveredOrder",
     "group": "Buyer_-_Order",
     "version": "1.0.0",
-    "description": "<p>Complete an order</p>",
+    "description": "<p>Confirm order has been delivered</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1061,7 +1092,7 @@ define({ "api": [
             "type": "ID",
             "optional": false,
             "field": "orderId",
-            "description": "<p>the id of the order you want to confirm has completed</p>"
+            "description": "<p>the id of the order you want to confirm has been delivered</p>"
           }
         ]
       }
@@ -1178,6 +1209,107 @@ define({ "api": [
     "groupTitle": "Buyer_-_Order"
   },
   {
+    "type": "post",
+    "url": "/api/user/buyer/order/:orderId/rating",
+    "title": "Rate a driver",
+    "name": "postOrderRating",
+    "group": "Buyer_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Rate a driver. minimum rating = 1 maximum rating = 5</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>score for a transaction 1-5</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Order"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/order/:orderId/rejected",
+    "title": "Reject Order delivery",
+    "name": "postRejectedOrder",
+    "group": "Buyer_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Reject order delivery</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>the id of the order you want to confirm has been delivered</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Order"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/search",
+    "title": "Search driver",
+    "name": "getBuyersBySearch",
+    "group": "Buyer_-_Search",
+    "version": "1.0.0",
+    "description": "<p>Search for driver</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "productId",
+            "description": "<p>id of the product</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>quantity of the product</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number pagination</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>limit page limit</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "lat",
+            "description": "<p>latitude of the search user</p>"
+          },
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "lon",
+            "description": "<p>longitude of the search user</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Buyer_-_Search"
+  },
+  {
     "type": "get",
     "url": "/api/user/driver/orders?status=pending+accepted",
     "title": "Retrieve orders",
@@ -1282,80 +1414,51 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/user/buyer/order/:orderId/rating",
-    "title": "Search driver",
-    "name": "postOrderRating",
-    "group": "Driver_-_Rate_a_driver",
+    "url": "/api/user/driver/order/:orderId/complete",
+    "title": "Confirm Order delivery",
+    "name": "postCompleteOrder",
+    "group": "Driver_-_Order",
     "version": "1.0.0",
-    "description": "<p>Rate a driver. minimum rating = 1 maximum rating = 5</p>",
+    "description": "<p>Complete an order</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "ID",
             "optional": false,
-            "field": "rating",
-            "description": "<p>score for a transaction</p>"
+            "field": "orderId",
+            "description": "<p>the id of the order you want to confirm has completed</p>"
           }
         ]
       }
     },
-    "filename": "src/api/routes/user/buyer.js",
-    "groupTitle": "Driver_-_Rate_a_driver"
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
   },
   {
     "type": "post",
-    "url": "/api/user/buyer/search",
-    "title": "Search driver",
-    "name": "getDriversBySearch",
-    "group": "Driver_-_Search",
+    "url": "/api/user/driver/order/:orderId/start-delivery",
+    "title": "Start delivery of An Order",
+    "name": "postStartDeliveryOrder",
+    "group": "Driver_-_Order",
     "version": "1.0.0",
-    "description": "<p>Search for driver</p>",
+    "description": "<p>start journey for an order</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "ID",
             "optional": false,
-            "field": "productId",
-            "description": "<p>id of the product</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "quantity",
-            "description": "<p>quantity of the product</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": true,
-            "field": "page",
-            "description": "<p>page number pagination</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": true,
-            "field": "limit",
-            "description": "<p>limit page limit</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "lat",
-            "description": "<p>latitude of the search user</p>"
-          },
-          {
-            "group": "Parameter",
-            "optional": false,
-            "field": "lon",
-            "description": "<p>longitude of the search user</p>"
+            "field": "orderId",
+            "description": "<p>the id of the order you want to cancel</p>"
           }
         ]
       }
     },
-    "filename": "src/api/routes/user/buyer.js",
-    "groupTitle": "Driver_-_Search"
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Driver_-_Order"
   },
   {
     "type": "get",
