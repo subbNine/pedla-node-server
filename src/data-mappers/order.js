@@ -19,6 +19,7 @@ module.exports = class OrderMapper extends BaseMapper {
 	async findOrders(filter) {
 		const { Order } = this.models;
 		const docs = await Order.find(filter)
+			.sort("-createdAt")
 			.populate({ path: "productId", populate: { path: "productId" } })
 			.populate("driverId")
 			.populate("buyerId");
@@ -42,14 +43,27 @@ module.exports = class OrderMapper extends BaseMapper {
 			$and: [{ driverId: driverId }, { status: orderStatus.COMPLETE }],
 		});
 
-		const [nCompleteOrders, nCancelledOrders] = await Promise.all([
+		const nAllOrdersPromise = Order.countDocuments({
+			driverId: driverId,
+		});
+
+		// const
+
+		const [nCompleteOrders, nCancelledOrders, nAllOrders] = await Promise.all([
 			nCompleteOrdersPromise,
 			nCancelledOrdersPromise,
+			nAllOrdersPromise,
 		]);
+
+		const percAcceptance = ((+nCompleteOrders || 0) / (+nAllOrders || 1)) * 100;
+		const percCancelled = ((+nCancelledOrders || 0) / (+nAllOrders || 1)) * 100;
+		const totalOrdersRating = nAllOrders * 5;
 
 		return {
 			nCancelled: +nCancelledOrders || 0,
 			nComplete: +nCompleteOrders || 0,
+			percAcceptance: percAcceptance ? percAcceptance.toFixed(2) : 0,
+			percCancelled: percCancelled ? percCancelled.toFixed(2) : 0,
 		};
 	}
 
