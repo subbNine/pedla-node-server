@@ -174,7 +174,15 @@ module.exports = class Order {
 		return Result.ok({ id: updatedOrder.repr().id });
 	}
 
-	rateTransaction() {
-		throw new Error("Not implemented");
+	async rateTransaction(order) {
+		const { orderMapper } = this.mappers;
+
+		const orderEnt = new OrderEnt(order);
+
+		const updatedOrder = await orderMapper.updateOrderBy(
+			{ _id: order.id },
+			orderEnt
+		);
+		return Result.ok({ id: updatedOrder.repr().id });
 	}
 };

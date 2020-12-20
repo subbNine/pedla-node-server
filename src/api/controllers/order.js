@@ -77,7 +77,7 @@ module.exports = class Order extends BaseController {
 			type: "Point",
 			coordinates: [+driverLon, +driverLat],
 		};
-		orderDto.buyerLatLon = {
+		orderDto.buyerLatlon = {
 			type: "Point",
 			coordinates: [+buyerLon, +buyerLat],
 		};
@@ -118,7 +118,6 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
-	// cancelledReason
 	async cancelOrder(req, res, next) {
 		const { orderId } = req.params;
 		const { reason } = req.body;
@@ -129,6 +128,20 @@ module.exports = class Order extends BaseController {
 		orderDto.cancelledReason = reason;
 
 		const result = await orderService.cancelOrder(orderDto);
+
+		this.response(result, res);
+	}
+
+	async rateOrder(req, res, next) {
+		const { orderId } = req.params;
+		const { rating } = req.body;
+
+		const orderDto = new OrderDto();
+
+		orderDto.id = orderId;
+		orderDto.rating = rating;
+
+		const result = await orderService.rateTransaction(orderDto);
 
 		this.response(result, res);
 	}
