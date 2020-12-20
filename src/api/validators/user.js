@@ -79,8 +79,8 @@ module.exports.postOrder = Joi.object().keys({
 	buyerLat: Joi.number(),
 	buyerLon: Joi.number(),
 	deliveryAddress: Joi.string(),
-	deliveryDate: Joi.number(),
-	creditPaymentDate: Joi.number(),
+	deliveryDate: Joi.string(),
+	creditPaymentDate: Joi.string(),
 	paymentMethod: Joi.string(),
 });
 
