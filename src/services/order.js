@@ -86,29 +86,14 @@ module.exports = class Order {
 	async createOrder(order) {
 		const { orderMapper } = this.mappers;
 
-		// // ensure there is no pending order on the driver
-		// const pendingOrderOnDriver = await this._checkPendingOrderOnDriver(
-		// 	order.driver.id
-		// );
-
-		// if (pendingOrderOnDriver) {
-		// 	return Result.fail(
-		// 		new AppError({
-		// 			name: errorCodes.NotAcceptableOrderError.name,
-		// 			message: errMessages.notAcceptableOrder,
-		// 			statusCode: errorCodes.NotAcceptableOrderError.statusCode,
-		// 		})
-		// 	);
-		// }
-
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 		return Result.ok({ id: newOrder.repr().id });
 	}
 
-	async _checkPendingOrderOnDriver(driverId) {
+	async _isExistingOrderInProgress(driverId) {
 		const { orderMapper } = this.mappers;
 		return await orderMapper.findOrder({
-			$and: [{ driverId }, { status: orderStatus.ACCEPTED }],
+			$and: [{ driverId }, { status: orderStatus.INPROGRESS }],
 		});
 	}
 
@@ -190,6 +175,20 @@ module.exports = class Order {
 
 		const orderEnt = new OrderEnt(order);
 		orderEnt.status = orderStatus.INPROGRESS;
+
+		const isExistingOrderInProgress = await this._isExistingOrderInProgress(
+			order.driver.id
+		);
+
+		if (isExistingOrderInProgress) {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.BadRequestError,
+					statusCode: errorCodes.BadRequestError.statusCode,
+					message: errMessages.invalidOrderState,
+				})
+			);
+		}
 
 		const updatedOrder = await orderMapper.updateOrderBy(
 			{

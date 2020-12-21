@@ -21,6 +21,7 @@ module.exports = {
 	wrongTruckAssignment:
 		"You are attempting to assign a truck you did not create",
 	invalidCode: "You have entered a wrong code",
+	invalidOrderState: "You cannot have more than one order in progress",
 	unverifiedProfile: "Profile not yet verified",
 	messageHelpers: {
 		replacement,
