@@ -20,6 +20,7 @@ module.exports = class Order {
 	paymentMethod;
 	priceCategory;
 	deliveryStatus;
+	createdAt;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -72,6 +73,7 @@ module.exports = class Order {
 			paymentMethod: this.paymentMethod || null,
 			priceCategory: this.priceCategory || null,
 			deliveryStatus: this.deliveryStatus || null,
+			createdAt: this.createdAt || null,
 		};
 	}
 };
