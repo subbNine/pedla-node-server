@@ -1269,36 +1269,42 @@
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "ID",
             "optional": false,
             "field": "productId",
             "description": "<p>id of the product</p>"
           },
           {
             "group": "Parameter",
+            "type": "Number",
             "optional": false,
             "field": "quantity",
             "description": "<p>quantity of the product</p>"
           },
           {
             "group": "Parameter",
+            "type": "Number",
             "optional": true,
             "field": "page",
             "description": "<p>page number pagination</p>"
           },
           {
             "group": "Parameter",
+            "type": "Number",
             "optional": true,
             "field": "limit",
             "description": "<p>limit page limit</p>"
           },
           {
             "group": "Parameter",
+            "type": "Number",
             "optional": false,
             "field": "lat",
             "description": "<p>latitude of the search user</p>"
           },
           {
             "group": "Parameter",
+            "type": "Number",
             "optional": false,
             "field": "lon",
             "description": "<p>longitude of the search user</p>"
@@ -1632,6 +1638,141 @@
     "groupTitle": "Geo-location"
   },
   {
+    "type": "post",
+    "url": "/api/user/buyer/notification",
+    "title": "Send Push Notification From Buyer's App",
+    "name": "postBuyersNotification",
+    "group": "Notification",
+    "version": "1.0.0",
+    "description": "<p>Send Push Notification From Buyer's App. It is important to specify the platform as a user may have two mobile devices running a particular instance of the app</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>title of the message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "receiverId",
+            "description": "<p>the id of the receiver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>message body</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>the platform which the message is sent from (android|ios)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Notification"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/driver/notification",
+    "title": "Send Push Notification From Driver's App",
+    "name": "postBuyersNotification",
+    "group": "Notification",
+    "version": "1.0.0",
+    "description": "<p>Send Push Notification From Driver's App. It is important to specify the platform as a user may have two mobile devices running a particular instance of the app</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>title of the message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "receiverId",
+            "description": "<p>The Id of the receiver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>message body</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>the platform which the message is sent from (android|ios)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/driver.js",
+    "groupTitle": "Notification"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/notification",
+    "title": "Send Push Notification From Peddler's App",
+    "name": "postBuyersNotification",
+    "group": "Notification",
+    "version": "1.0.0",
+    "description": "<p>Send Push Notification From Peddler's App. It is important to specify the platform as a user may have two mobile devices running a particular instance of the app</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>title of the message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "receiverId",
+            "description": "<p>The id of the receiver</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>message body</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>the platform which the message is sent from (android|ios)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Notification"
+  },
+  {
     "type": "get",
     "url": "/api/user/peddler/own-products",
     "title": "Retrieve products owned by peddler",
@@ -1814,6 +1955,54 @@
     "title": "Update buyer's profile",
     "name": "postBuyerProfileUpdate",
     "group": "Profile_Management",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>platform which the app is running on (android|ios)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deviceToken",
+            "description": "<p>device token which will be used for push notification</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "firstName",
+            "description": "<p>user's first name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>user's email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "address",
+            "description": "<p>user's address</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>user's phoneNumber</p>"
+          }
+        ]
+      }
+    },
     "version": "1.0.0",
     "description": "<p>update buyer's profile</p>",
     "filename": "src/api/routes/user/buyer.js",
