@@ -44,13 +44,7 @@ module.exports = class Auth extends BaseController {
 
 	async createPeddlerProfile(req, res, next) {
 		const userDto = new UserDto();
-		const {
-			firstName,
-			lastName,
-			email,
-			phoneNumber,
-			nTrucks,
-		} = req.body;
+		const { firstName, lastName, email, phoneNumber, nTrucks } = req.body;
 
 		const { public_id, secure_url } = req.file || {};
 

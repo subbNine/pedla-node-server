@@ -6,6 +6,7 @@ const GeoEnt = require("./geo-location");
 const TruckEnt = require("./truck");
 const TruckAndDriverEnt = require("./truck-driver");
 const OrderEnt = require("./order");
+const PushDeviceEnt = require("./push-device");
 
 module.exports = {
 	UserEnt,
@@ -16,4 +17,5 @@ module.exports = {
 	TruckEnt,
 	TruckAndDriverEnt,
 	OrderEnt,
+	PushDeviceEnt,
 };

@@ -8,6 +8,7 @@ const GeoMapper = require("./geo-location");
 const TruckMapper = require("./truck");
 const TruckAndDriverMapper = require("./truck-driver");
 const OrderMapper = require("./order");
+const PushDeviceMapper = require("./push-device");
 
 module.exports = {
 	userMapper: new UserMapper(dbModels),
@@ -18,4 +19,5 @@ module.exports = {
 	truckMapper: new TruckMapper(dbModels),
 	truckAndDriverMapper: new TruckAndDriverMapper(dbModels),
 	orderMapper: new OrderMapper(dbModels),
+	pushDeviceMapper: new PushDeviceMapper(dbModels),
 };

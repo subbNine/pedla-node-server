@@ -8,6 +8,7 @@ const {
 	user: userController,
 	geoLocation: geoLocationController,
 	orderController,
+	notificationController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
 const { validateBody } = require("../../middlewares/validator-helpers");
@@ -175,6 +176,26 @@ router.post(
 	"/order/:orderId/complete",
 	shield(permissions.PERM002),
 	catchAsync(orderController.completeOrder)
+);
+
+/**
+ * @api {post} /api/user/driver/notification Send Push Notification From Driver's App
+ * @apiName postBuyersNotification
+ * @apiGroup Notification
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Send Push Notification From Driver's App. It is important to specify the platform as a user may have two
+ * mobile devices running a particular instance of the app
+ *
+ * @apiParam {String} title title of the message
+ * @apiParam {ID} receiverId The Id of the receiver
+ * @apiParam {String} message message body
+ * @apiParam {String} platform the platform which the message is sent from (android|ios)
+ */
+router.post(
+	"/notification",
+	catchAsync(notificationController.sendNotification)
 );
 
 module.exports = router;

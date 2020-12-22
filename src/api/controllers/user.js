@@ -6,6 +6,7 @@ const {
 	presence,
 	permissions,
 } = require("../../db/mongo/enums").user;
+const { eventEmitter, eventTypes } = require("../../events");
 
 module.exports = class User extends BaseController {
 	constructor() {
@@ -100,7 +101,14 @@ module.exports = class User extends BaseController {
 		const userDto = new UserDto();
 
 		const { user } = req._App;
-		const { firstName, lastName, address, phoneNumber } = req.body;
+		const {
+			firstName,
+			lastName,
+			address,
+			phoneNumber,
+			platform,
+			deviceToken,
+		} = req.body;
 
 		userDto.address = address;
 		userDto.firstName = firstName;
@@ -109,6 +117,14 @@ module.exports = class User extends BaseController {
 		userDto.id = user.id;
 
 		const result = await userService.updateProfile(userDto);
+
+		if (deviceToken) {
+			eventEmitter.emit(eventTypes.updatePushDevice, {
+				platform,
+				deviceToken,
+				user: user.id,
+			});
+		}
 
 		return this.response(result, res);
 	}

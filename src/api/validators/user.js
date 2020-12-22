@@ -11,6 +11,8 @@ module.exports.postProfileUpdate = Joi.object().keys({
 	firstName: Joi.string(),
 	lastName: Joi.string(),
 	phoneNumber: Joi.string(),
+	platform: Joi.string(),
+	deviceToken: Joi.string(),
 });
 
 module.exports.postProduct = Joi.object().keys({
@@ -100,4 +102,11 @@ module.exports.search = Joi.object().keys({
 
 module.exports.rating = Joi.object().keys({
 	rating: Joi.number().min(1).max(5),
+});
+
+module.exports.notification = Joi.object().keys({
+	title: Joi.string(),
+	receiverId: mongoIdVal.string().mongoId(),
+	message: Joi.string(),
+	platform: Joi.string(),
 });

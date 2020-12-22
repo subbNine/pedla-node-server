@@ -27,4 +27,5 @@ module.exports = {
 	orderReason: (payload) => JoiValidator(payload, usersSchema.orderReason),
 	search: (payload) => JoiValidator(payload, usersSchema.search),
 	postRating: (payload) => JoiValidator(payload, usersSchema.rating),
+	notification: (payload) => JoiValidator(payload, usersSchema.notification),
 };

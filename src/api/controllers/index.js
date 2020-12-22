@@ -7,6 +7,7 @@ const User = require("./user");
 const Truck = require("./truck");
 const TruckAndDriver = require("./truck-driver");
 const OrderController = require("./order");
+const notificationController = require("./notification");
 
 module.exports = {
 	auth: new Auth(),
@@ -18,4 +19,5 @@ module.exports = {
 	truck: new Truck(),
 	truckAndDriver: new TruckAndDriver(),
 	orderController: new OrderController(),
+	notificationController: new notificationController(),
 };

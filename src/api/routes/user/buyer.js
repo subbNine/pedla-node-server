@@ -8,6 +8,7 @@ const {
 	user: userController,
 	geoLocation: geoLocationController,
 	orderController,
+	notificationController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
 const { validateBody } = require("../../middlewares/validator-helpers");
@@ -24,6 +25,12 @@ router.use(shield(permissions.PERM000));
  * @apiName postBuyerProfileUpdate
  * @apiGroup Profile Management
  *
+ * @apiParam {String} platform platform which the app is running on (android|ios)
+ * @apiParam {String} deviceToken device token which will be used for push notification
+ * @apiParam {String} firstName user's first name
+ * @apiParam {String} email user's email
+ * @apiParam {String} address user's address
+ * @apiParam {String} phoneNumber user's phoneNumber
  * @apiVersion 1.0.0
  *
  * @apiDescription update buyer's profile
@@ -270,18 +277,38 @@ router.post(
  *
  * @apiDescription Search for driver
  *
- * @apiParam productId id of the product
- * @apiParam quantity quantity of the product
- * @apiParam [page] page number pagination
- * @apiParam [limit] limit page limit
- * @apiParam lat latitude of the search user
- * @apiParam lon longitude of the search user
+ * @apiParam {ID} productId id of the product
+ * @apiParam {Number} quantity quantity of the product
+ * @apiParam {Number} [page] page number pagination
+ * @apiParam {Number} [limit] limit page limit
+ * @apiParam {Number} lat latitude of the search user
+ * @apiParam {Number} lon longitude of the search user
  *
  */
 router.post(
 	"/search",
 	validateBody(validationSchemas.search),
 	catchAsync(userController.searchForProductDrivers)
+);
+
+/**
+ * @api {post} /api/user/buyer/notification Send Push Notification From Buyer's App
+ * @apiName postBuyersNotification
+ * @apiGroup Notification
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Send Push Notification From Buyer's App. It is important to specify the platform as a user may have two
+ * mobile devices running a particular instance of the app
+ *
+ * @apiParam {String} title title of the message
+ * @apiParam {ID} receiverId the id of the receiver
+ * @apiParam {String} message message body
+ * @apiParam {String} platform the platform which the message is sent from (android|ios)
+ */
+router.post(
+	"/notification",
+	catchAsync(notificationController.sendNotification)
 );
 
 module.exports = router;

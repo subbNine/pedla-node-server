@@ -11,6 +11,7 @@ const {
 	truck: truckController,
 	truckAndDriver: truckAndDriverController,
 	orderController,
+	notificationController,
 } = require("../../controllers");
 const fileUpload = require("../../middlewares/file-upload");
 
@@ -341,6 +342,26 @@ router.get(
 	"/order/:orderId",
 	shield(permissions.PERM002),
 	catchAsync(orderController.getOrderById)
+);
+
+/**
+ * @api {post} /api/user/peddler/notification Send Push Notification From Peddler's App
+ * @apiName postBuyersNotification
+ * @apiGroup Notification
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Send Push Notification From Peddler's App. It is important to specify the platform as a user may have two
+ * mobile devices running a particular instance of the app
+ *
+ * @apiParam {String} title title of the message
+ * @apiParam {ID} receiverId The id of the receiver
+ * @apiParam {String} message message body
+ * @apiParam {String} platform the platform which the message is sent from (android|ios)
+ */
+router.post(
+	"/notification",
+	catchAsync(notificationController.sendNotification)
 );
 
 module.exports = router;

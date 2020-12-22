@@ -15,6 +15,7 @@ const {
 	SMS_SENDER,
 	EMAIL_SENDER,
 	EMAIL_API_KEY,
+	FCM_SERVER_KEY,
 } = process.env;
 
 const dbConf = {
@@ -65,3 +66,4 @@ module.exports.SMS_API_KEY = SMS_API_KEY;
 module.exports.SMS_SENDER = SMS_SENDER;
 module.exports.EMAIL_SENDER = EMAIL_SENDER;
 module.exports.EMAIL_API_KEY = EMAIL_API_KEY;
+module.exports.FCM_SERVER_KEY = FCM_SERVER_KEY;

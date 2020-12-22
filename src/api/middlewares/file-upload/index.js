@@ -15,12 +15,7 @@ const storage = cloudinaryStorage({
 		cloud_name: CLOUDINARY_CLOUD_NAME,
 	},
 	filename: (_req, file, cb) => {
-		cb(
-			null,
-			`${Date.now()}${generateNumbers(5)}.${extractExtensionFromFileName(
-				file.originalname
-			)}`
-		);
+		cb(null, `${Date.now()}${generateNumbers(5)}}`);
 	},
 	destination: "peddler_app",
 });

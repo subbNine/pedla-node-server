@@ -9,4 +9,6 @@ module.exports = {
 	buyerCreated: "buyer-created",
 	driverCreated: "driver-created",
 	driverUpdated: "driver-updated",
+	updatePushDevice: "update-push-device",
+	sendNotification: "send-notification",
 };

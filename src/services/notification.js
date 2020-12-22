@@ -1,20 +1,40 @@
-const { UserEnt } = require("../entities/domain");
-const { utils, error } = require("../lib");
+const { utils } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 
-const AppError = error.AppError;
-const errorCodes = error.errorCodes;
-const errMessages = error.messages;
-const { Result, generateJwtToken } = utils;
+const { Result } = utils;
 
 module.exports = class Notification {
 	constructor({ mappers }) {
 		this.mappers = mappers;
 	}
 
-	sendNotification() {}
+	async sendNotification(notificationObject) {
+		const { pushDeviceMapper } = this.mappers;
 
-	updateNotification() {}
+		const pushDeviceFilter = { user: notificationObject.receiverId };
+		if (notificationObject.platform) {
+			pushDeviceFilter.platform = notificationObject.platform;
+		}
 
-	getNotifications() {}
+		const pushDevices = await pushDeviceMapper.findPushDevices(
+			pushDeviceFilter
+		);
+
+		if (pushDevices) {
+			const deviceTokens = pushDevices.map(
+				(pushDevice) => pushDevice.deviceToken
+			);
+
+			eventEmitter.emit(
+				eventTypes.sendNotification,
+				Object.assign({}, notificationObject, { deviceTokens })
+			);
+		}
+
+		return Result.ok(true);
+	}
+
+	// updateNotification() {}
+
+	// getNotifications() {}
 };

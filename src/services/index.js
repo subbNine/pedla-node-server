@@ -11,6 +11,7 @@ const GeoLocation = require("./geo-location");
 const Truck = require("./truck");
 const TruckAndDriver = require("./truck-driver");
 const OrderService = require("./order");
+const PushDeviceService = require("./push-device");
 
 module.exports = {
 	auth: new Auth({ mappers }),
@@ -24,4 +25,5 @@ module.exports = {
 	truck: new Truck({ mappers }),
 	truckAndDriver: new TruckAndDriver({ mappers }),
 	orderService: new OrderService({ mappers }),
+	pushDeviceService: new PushDeviceService({ mappers }),
 };
