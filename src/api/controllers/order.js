@@ -24,7 +24,7 @@ module.exports = class Order extends BaseController {
 		orderDto.status = status && {
 			$in: status
 				? status
-						.split(/,|\s+?|+/)
+						.split(/,|\s+?|\+/)
 						.map((status) => ("" + status).toUpperCase().trim())
 				: Object.values(orderStatus),
 		};
