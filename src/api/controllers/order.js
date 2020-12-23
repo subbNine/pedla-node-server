@@ -15,8 +15,6 @@ module.exports = class Order extends BaseController {
 
 		const orderDto = new OrderDto();
 
-		orderStatus;
-
 		if (user.isDriver()) {
 			orderDto.driver.id = user.id;
 		}
@@ -25,7 +23,9 @@ module.exports = class Order extends BaseController {
 		}
 		orderDto.status = status && {
 			$in: status
-				? status.split(",").map((status) => ("" + status).toUpperCase().trim())
+				? status
+						.split(/,|\s+?|+/)
+						.map((status) => ("" + status).toUpperCase().trim())
 				: Object.values(orderStatus),
 		};
 
