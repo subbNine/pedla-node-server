@@ -319,7 +319,7 @@ module.exports = class User {
 				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
-			return Result.ok([]);
+			return Result.ok(null);
 		}
 	}
 

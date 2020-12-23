@@ -11,7 +11,7 @@ module.exports = class Order extends BaseController {
 
 	async getOrders(req, res, next) {
 		const { user } = req._App;
-		const { status } = req.query;
+		const { status, limit, page } = req.query;
 
 		const orderDto = new OrderDto();
 
@@ -25,13 +25,21 @@ module.exports = class Order extends BaseController {
 		}
 		orderDto.status = status && {
 			$in: status
-				? status.split("+").map((status) => ("" + status).toUpperCase().trim())
+				? status.split(",").map((status) => ("" + status).toUpperCase().trim())
 				: Object.values(orderStatus),
 		};
 
-		const result = await orderService.findOrders(orderDto);
+		if (!user.isAdmin()) {
+			const result = await orderService.findOrders(orderDto);
 
-		this.response(result, res);
+			this.response(result, res);
+		} else {
+			const result = await orderService.findOrdersPaginated(orderDto, {
+				pagination: { limit, page },
+			});
+
+			this.response(result, res);
+		}
 	}
 
 	async getOrderById(req, res, next) {

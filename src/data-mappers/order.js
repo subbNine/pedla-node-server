@@ -16,13 +16,26 @@ module.exports = class OrderMapper extends BaseMapper {
 		this.models = models;
 	}
 
-	async findOrders(filter) {
+	async findOrders(filter, options) {
 		const { Order } = this.models;
-		const docs = await Order.find(filter)
+		const query = Order.find(filter)
 			.sort("-createdAt")
 			.populate({ path: "productId", populate: { path: "productId" } })
 			.populate("driverId")
 			.populate("buyerId");
+
+		const { pagination } = options || {};
+
+		const { limit = 0, page = 0 } = pagination || {};
+
+		if (limit && page) {
+			query.limit(+limit);
+
+			query.skip(+limit * +page);
+		}
+
+		const docs = await query;
+
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
@@ -65,6 +78,11 @@ module.exports = class OrderMapper extends BaseMapper {
 			percAcceptance: percAcceptance ? percAcceptance.toFixed(2) : 0,
 			percCancelled: percCancelled ? percCancelled.toFixed(2) : 0,
 		};
+	}
+
+	async countDocs(filter) {
+		const { Order } = this.models;
+		return await Order.countDocuments(filter);
 	}
 
 	async findOrder(filter) {

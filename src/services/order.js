@@ -51,6 +51,57 @@ module.exports = class Order {
 		}
 	}
 
+	async findOrdersPaginated(orderFilterDto, options) {
+		const { orderMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const $and = [];
+
+		if (orderFilterDto.driver.id) {
+			$and.push({ driverId: orderFilterDto.driver.id });
+		} else {
+			if (orderFilterDto.buyer.id) {
+				$and.push({ buyerId: orderFilterDto.buyer.id });
+			}
+		}
+
+		if (orderFilterDto.status) {
+			$and.push({ status: orderFilterDto.status });
+		}
+
+		const search = {};
+
+		if ($and && $and.length) {
+			search.$and = $and;
+		}
+
+		const totalDocs = await orderMapper.countDocs(search);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundOrders = await orderMapper.findOrders(search, {
+			pagination: { limit: limit || 30, page: page ? page - 1 : 0 },
+		});
+
+		if (foundOrders) {
+			const results = [];
+
+			for (const eachOrder of foundOrders) {
+				await this.loadPeddlerCode(eachOrder);
+				results.push(eachOrder.repr());
+			}
+
+			return Result.ok({
+				data: results,
+				pagination: { totalPages, currentPage: page || 1, totalDocs },
+			});
+		} else {
+			return Result.ok(null);
+		}
+	}
+
 	async loadPeddlerCode(order) {
 		const { userMapper } = this.mappers;
 

@@ -12,6 +12,8 @@ module.exports = {
 			notification: {
 				title,
 				body: messageBody,
+				click_action: "FLUTTER_NOTIFICATION_CLICK",
+				icon: ""
 			},
 			tokens: deviceTokens,
 		};
