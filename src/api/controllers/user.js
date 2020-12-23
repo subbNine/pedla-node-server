@@ -110,10 +110,22 @@ module.exports = class User extends BaseController {
 			deviceToken,
 		} = req.body;
 
-		userDto.address = address;
-		userDto.firstName = firstName;
-		userDto.lastName = lastName;
-		userDto.phoneNumber = phoneNumber;
+		if (address) {
+			userDto.address = address;
+		}
+
+		if (firstName) {
+			userDto.firstName = firstName;
+		}
+
+		if (lastName) {
+			userDto.lastName = lastName;
+		}
+
+		if (phoneNumber) {
+			userDto.phoneNumber = phoneNumber;
+		}
+
 		userDto.id = user.id;
 
 		const result = await userService.updateProfile(userDto);
