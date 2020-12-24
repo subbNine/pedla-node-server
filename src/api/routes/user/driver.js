@@ -13,6 +13,7 @@ const {
 const { permissions } = require("../../../db/mongo/enums/user");
 const { validateBody } = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
+const fileUpload = require("../../middlewares/file-upload");
 
 const router = Router();
 
@@ -25,11 +26,23 @@ router.use(shield(permissions.PERM000));
  * @apiName postDriverProfileUpdate
  * @apiGroup Profile Management
  *
+ * @apiParam {String} platform platform which the app is running on (android|ios)
+ * @apiParam {String} deviceToken device token which will be used for push notification
+ * @apiParam {String} firstName user's first name
+ * @apiParam {String} email user's email
+ * @apiParam {String} address user's address
+ * @apiParam {String} phoneNumber user's phoneNumber
+ * @apiParam {File} avatarImg profile image of the user
+ *
  * @apiVersion 1.0.0
  *
  * @apiDescription update driver's profile
  */
-router.post("/profile", catchAsync(userController.updateProfile));
+router.post(
+	"/profile",
+	fileUpload.single("avatarImg"),
+	catchAsync(userController.updateProfile)
+);
 
 /**
  * @api {post} /api/user/driver/online Set Driver's Presence to online

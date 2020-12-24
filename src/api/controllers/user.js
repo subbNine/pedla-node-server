@@ -126,6 +126,17 @@ module.exports = class User extends BaseController {
 			userDto.phoneNumber = phoneNumber;
 		}
 
+		const { public_id, secure_url } = req.file || {};
+
+		if (public_id && secure_url) {
+			const avatarImg = {
+				imgId: public_id,
+				uri: secure_url,
+			};
+
+			userDto.avatarImg = avatarImg;
+		}
+
 		userDto.id = user.id;
 
 		const result = await userService.updateProfile(userDto);

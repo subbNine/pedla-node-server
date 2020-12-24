@@ -30,11 +30,22 @@ router.use(shield(perms.PERM000));
  * @apiName postProfileUpdate
  * @apiGroup Profile Management
  *
+ * @apiParam {String} platform platform which the app is running on (android|ios)
+ * @apiParam {String} deviceToken device token which will be used for push notification
+ * @apiParam {String} firstName user's first name
+ * @apiParam {String} email user's email
+ * @apiParam {String} address user's address
+ * @apiParam {String} phoneNumber user's phoneNumber
+ * @apiParam {File} avatarImg profile image of the user
  * @apiVersion 1.0.0
  *
  * @apiDescription update peddler's profile
  */
-router.post("/profile", catchAsync(userController.updateProfile));
+router.post(
+	"/profile",
+	fileUpload.single("avatarImg"),
+	catchAsync(userController.updateProfile)
+);
 
 /**
  * @api {post} /api/user/peddler/online Set Peddler's Presence to online

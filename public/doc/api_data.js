@@ -2071,6 +2071,13 @@ define({ "api": [
             "optional": false,
             "field": "phoneNumber",
             "description": "<p>user's phoneNumber</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "avatarImg",
+            "description": "<p>profile image of the user</p>"
           }
         ]
       }
@@ -2086,6 +2093,61 @@ define({ "api": [
     "title": "Update driver's profile",
     "name": "postDriverProfileUpdate",
     "group": "Profile_Management",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>platform which the app is running on (android|ios)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deviceToken",
+            "description": "<p>device token which will be used for push notification</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "firstName",
+            "description": "<p>user's first name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>user's email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "address",
+            "description": "<p>user's address</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>user's phoneNumber</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "avatarImg",
+            "description": "<p>profile image of the user</p>"
+          }
+        ]
+      }
+    },
     "version": "1.0.0",
     "description": "<p>update driver's profile</p>",
     "filename": "src/api/routes/user/driver.js",
@@ -2097,6 +2159,61 @@ define({ "api": [
     "title": "Update peddler's profile",
     "name": "postProfileUpdate",
     "group": "Profile_Management",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "platform",
+            "description": "<p>platform which the app is running on (android|ios)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deviceToken",
+            "description": "<p>device token which will be used for push notification</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "firstName",
+            "description": "<p>user's first name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>user's email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "address",
+            "description": "<p>user's address</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phoneNumber",
+            "description": "<p>user's phoneNumber</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "avatarImg",
+            "description": "<p>profile image of the user</p>"
+          }
+        ]
+      }
+    },
     "version": "1.0.0",
     "description": "<p>update peddler's profile</p>",
     "filename": "src/api/routes/user/peddler.js",
