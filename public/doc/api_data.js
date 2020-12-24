@@ -25,6 +25,30 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/user/admin/orders/count?status=pending+accepted",
+    "title": "Retrieve number of orders",
+    "name": "getAdminOrdersCount",
+    "group": "Admin_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Return number of orders based on status (pending|accepted|completed|cancelled) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>order status. multiple order status should be seperated with a &quot;+&quot; symbol</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Order"
+  },
+  {
+    "type": "get",
     "url": "/api/user/admin/products",
     "title": "Fetch added products",
     "name": "getProducts",
@@ -221,6 +245,68 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/user/admin/users?types=admin+peddler+driver+buyer&&page=1&&limit=10",
+    "title": "get users",
+    "name": "getAdminUsers",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "types",
+            "description": "<p>types of user (ADMIN|DRIVER|BUYER|PEDDLER) to retrieve defaults to all types of user in the system</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>page limit</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get users by types. Seperate multiple types using comma(,) or plus(+)</p>",
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/users?types=admin+peddler+driver+buyer",
+    "title": "Get Number of users by types",
+    "name": "getAdminUsersCount",
+    "group": "Admin_-_Users",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "types",
+            "description": "<p>types of user (ADMIN|DRIVER|BUYER|PEDDLER) to retrieve defaults to all types of user in the system</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get number of users by types. Seperate multiple types using comma(,) or plus(+)</p>",
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Users"
+  },
+  {
+    "type": "get",
     "url": "/api/user/admin/peddlers?vstatus=uncategorized",
     "title": "get peddlers",
     "name": "getPeddlers",
@@ -267,44 +353,6 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/api/routes/user/admin.js",
-    "groupTitle": "Admin_-_Users"
-  },
-  {
-    "type": "get",
-    "url": "/api/user/admin/users?types=admin,peddler,driver,buyer&&page=1&&limit=10",
-    "title": "get users",
-    "name": "getUsers",
-    "group": "Admin_-_Users",
-    "version": "1.0.0",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "types",
-            "description": "<p>types of user (ADMIN|DRIVER|BUYER|PEDDLER) to retrieve defaults to all types of user in the system</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "page",
-            "description": "<p>page number</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "limit",
-            "description": "<p>page limit</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Get peddlers by verification status</p>",
     "filename": "src/api/routes/user/admin.js",
     "groupTitle": "Admin_-_Users"
   },
