@@ -28,4 +28,6 @@ module.exports = {
 	search: (payload) => JoiValidator(payload, usersSchema.search),
 	postRating: (payload) => JoiValidator(payload, usersSchema.rating),
 	notification: (payload) => JoiValidator(payload, usersSchema.notification),
+	profileUpdate: (payload) =>
+		JoiValidator(payload, usersSchema.postProfileUpdate),
 };

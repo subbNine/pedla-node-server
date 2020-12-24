@@ -13,6 +13,7 @@ module.exports.postProfileUpdate = Joi.object().keys({
 	phoneNumber: Joi.string(),
 	platform: Joi.string(),
 	deviceToken: Joi.string(),
+	avatarUrl: Joi.string(),
 });
 
 module.exports.postProduct = Joi.object().keys({

@@ -13,7 +13,6 @@ const {
 const { permissions } = require("../../../db/mongo/enums/user");
 const { validateBody } = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
-const fileUpload = require("../../middlewares/file-upload");
 
 const router = Router();
 
@@ -32,7 +31,7 @@ router.use(shield(permissions.PERM000));
  * @apiParam {String} email user's email
  * @apiParam {String} address user's address
  * @apiParam {String} phoneNumber user's phoneNumber
- * @apiParam {File} avatarImg profile image of the user
+ * @apiParam {String} avatarUrl profile image url of the user
  *
  * @apiVersion 1.0.0
  *
@@ -40,7 +39,7 @@ router.use(shield(permissions.PERM000));
  */
 router.post(
 	"/profile",
-	fileUpload.single("avatarImg"),
+	validateBody(validationSchemas.profileUpdate),
 	catchAsync(userController.updateProfile)
 );
 
