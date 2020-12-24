@@ -1692,7 +1692,7 @@
             "type": "File",
             "optional": false,
             "field": "file",
-            "description": "<p>File to upload all soughts of file can be uploaded</p>"
+            "description": "<p>File to upload, all soughts of file can be uploaded</p>"
           }
         ]
       }

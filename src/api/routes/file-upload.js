@@ -15,7 +15,7 @@ router.use(shield(permissions.PERM002));
  * @apiName postFileSingle
  * @apiGroup File Management
  *
- * @apiParam {File} file File to upload all soughts of file can be uploaded
+ * @apiParam {File} file File to upload, all soughts of file can be uploaded
  * @apiVersion 1.0.0
  *
  * @apiDescription Endpoint to upload single file. This endpoint will return
