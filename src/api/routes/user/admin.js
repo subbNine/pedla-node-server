@@ -138,8 +138,8 @@ router.put(
 router.get("/peddlers", catchAsync(userController.getPeddlers));
 
 /**
- * @api {get} /api/user/admin/users?types=admin,peddler,driver,buyer&&page=1&&limit=10 get users
- * @apiName getUsers
+ * @api {get} /api/user/admin/users?types=admin+peddler+driver+buyer&&page=1&&limit=10 get users
+ * @apiName getAdminUsers
  * @apiGroup Admin - Users
  *
  * @apiVersion 1.0.0
@@ -148,10 +148,24 @@ router.get("/peddlers", catchAsync(userController.getPeddlers));
  * @apiParam {Number} [page] page number
  * @apiParam {Number} [limit] page limit
  *
- * @apiDescription Get peddlers by verification status
+ * @apiDescription Get users by types. Seperate multiple types using comma(,) or plus(+)
  *
  */
 router.get("/users", catchAsync(userController.getUsers));
+
+/**
+ * @api {get} /api/user/admin/users?types=admin+peddler+driver+buyer Get Number of users by types
+ * @apiName getAdminUsersCount
+ * @apiGroup Admin - Users
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} types types of user (ADMIN|DRIVER|BUYER|PEDDLER) to retrieve defaults to all types of user in the system
+ *
+ * @apiDescription Get number of users by types. Seperate multiple types using comma(,) or plus(+)
+ *
+ */
+router.get("/users/count", catchAsync(userController.countUsers));
 
 /**
  * @api {get} /api/user/admin/orders?status=pending+accepted Retrieve orders

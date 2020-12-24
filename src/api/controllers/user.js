@@ -248,12 +248,28 @@ module.exports = class User extends BaseController {
 		const { types, limit, page } = req.query;
 
 		const listOfUserTypes = types
-			? types.split(",").map((userType) => ("" + userType).toUpperCase().trim())
+			? types
+					.split(/,|\s+|\+/)
+					.map((userType) => ("" + userType).toUpperCase().trim())
 			: Object.values(userTypes);
 
 		const result = await userService.getUsers(listOfUserTypes, {
 			pagination: { limit, page },
 		});
+
+		this.response(result, res);
+	}
+
+	async countUsers(req, res, next) {
+		const { types } = req.query;
+
+		const listOfUserTypes = types
+			? types
+					.split(/,|\s+|\+/)
+					.map((userType) => ("" + userType).toUpperCase().trim())
+			: Object.values(userTypes);
+
+		const result = await userService.nUsers(listOfUserTypes);
 
 		this.response(result, res);
 	}

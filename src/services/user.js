@@ -323,6 +323,20 @@ module.exports = class User {
 		}
 	}
 
+	async nUsers(listOfUserTypes) {
+		const { userMapper } = this.mappers;
+
+		const filter = { type: { $in: listOfUserTypes } };
+
+		const nUsers = await userMapper.countDocs(filter);
+
+		if (nUsers) {
+			return Result.ok(nUsers);
+		} else {
+			return Result.ok(0);
+		}
+	}
+
 	async searchForProductDrivers(
 		{ productId, quantity, geo },
 		{ pagination: { page, limit } }
