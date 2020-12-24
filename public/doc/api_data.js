@@ -1680,6 +1680,30 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/file/single",
+    "title": "Upload Single File",
+    "name": "postFileSingle",
+    "group": "File_Management",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>File to upload all soughts of file can be uploaded</p>"
+          }
+        ]
+      }
+    },
+    "version": "1.0.0",
+    "description": "<p>Endpoint to upload single file. This endpoint will return the url that can be used to retreive the file</p>",
+    "filename": "src/api/routes/file-upload.js",
+    "groupTitle": "File_Management"
+  },
+  {
+    "type": "post",
     "url": "/api/user/peddler/geo-location",
     "title": "Geo-location Update for peddlers",
     "name": "postPeddlerGeoLocation",
@@ -2074,10 +2098,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "File",
+            "type": "String",
             "optional": false,
-            "field": "avatarImg",
-            "description": "<p>profile image of the user</p>"
+            "field": "avatarUrl",
+            "description": "<p>profile image url of the user</p>"
           }
         ]
       }
@@ -2140,10 +2164,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "File",
+            "type": "String",
             "optional": false,
-            "field": "avatarImg",
-            "description": "<p>profile image of the user</p>"
+            "field": "avatarUrl",
+            "description": "<p>profile image url of the user</p>"
           }
         ]
       }
@@ -2206,10 +2230,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "File",
+            "type": "String",
             "optional": false,
-            "field": "avatarImg",
-            "description": "<p>profile image of the user</p>"
+            "field": "avatarUrl",
+            "description": "<p>profile image url of the user</p>"
           }
         ]
       }
