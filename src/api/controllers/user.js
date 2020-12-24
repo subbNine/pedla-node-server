@@ -7,6 +7,7 @@ const {
 	permissions,
 } = require("../../db/mongo/enums").user;
 const { eventEmitter, eventTypes } = require("../../events");
+const { Result } = require("../../lib/utils");
 
 module.exports = class User extends BaseController {
 	constructor() {
@@ -97,6 +98,17 @@ module.exports = class User extends BaseController {
 		return this.response(result, res);
 	}
 
+	async uploadFile(req, res, next) {
+		const { secure_url } = req.file || {};
+
+		let file;
+		if (secure_url) {
+			file = secure_url;
+		}
+
+		return this.response(Result.ok({ url: file }), res);
+	}
+
 	async updateProfile(req, res, next) {
 		const userDto = new UserDto();
 
@@ -108,6 +120,7 @@ module.exports = class User extends BaseController {
 			phoneNumber,
 			platform,
 			deviceToken,
+			avatarUrl,
 		} = req.body;
 
 		if (address) {
@@ -126,12 +139,10 @@ module.exports = class User extends BaseController {
 			userDto.phoneNumber = phoneNumber;
 		}
 
-		const { public_id, secure_url } = req.file || {};
-
-		if (public_id && secure_url) {
+		if (avatarUrl) {
 			const avatarImg = {
-				imgId: public_id,
-				uri: secure_url,
+				imgId: "" + Date.now(),
+				uri: avatarUrl,
 			};
 
 			userDto.avatarImg = avatarImg;
