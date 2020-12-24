@@ -9,6 +9,24 @@ module.exports = class Order extends BaseController {
 		this._bindAll(this);
 	}
 
+	async countOrders(req, res, next) {
+		const { status } = req.query;
+
+		const orderDto = new OrderDto();
+
+		orderDto.status = {
+			$in: status
+				? status
+						.split(/,|\s+|\+/)
+						.map((status) => ("" + status).toUpperCase().trim())
+				: Object.values(orderStatus),
+		};
+
+		const result = await orderService.nOrders(orderDto);
+
+		this.response(result, res);
+	}
+
 	async getOrders(req, res, next) {
 		const { user } = req._App;
 		const { status, limit, page } = req.query;
@@ -21,7 +39,7 @@ module.exports = class Order extends BaseController {
 		if (user.isBuyer()) {
 			orderDto.buyer.id = user.id;
 		}
-		orderDto.status = status && {
+		orderDto.status = {
 			$in: status
 				? status
 						.split(/,|\s+|\+/)

@@ -166,4 +166,17 @@ router.get("/users", catchAsync(userController.getUsers));
  */
 router.get("/orders", catchAsync(orderController.getOrders));
 
+/**
+ * @api {get} /api/user/admin/orders/count?status=pending+accepted Retrieve number of orders
+ * @apiName getAdminOrdersCount
+ * @apiGroup Admin - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Return number of orders based on status (pending|accepted|completed|cancelled) passed in the status query params.
+ * To return results with more than one status, seperate the status passed in the query with a plus symbol
+ * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
+ */
+router.get("/orders/count", catchAsync(orderController.countOrders));
+
 module.exports = router;

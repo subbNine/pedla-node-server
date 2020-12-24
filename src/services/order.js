@@ -14,6 +14,22 @@ module.exports = class Order {
 		this.mappers = mappers;
 	}
 
+	async nOrders(orderFilterDto) {
+		const { orderMapper } = this.mappers;
+
+		const search = {
+			status: orderFilterDto.status,
+		};
+
+		const numberOfOrders = await orderMapper.countDocs(search);
+
+		if (numberOfOrders) {
+			return Result.ok(numberOfOrders);
+		} else {
+			return Result.ok(0);
+		}
+	}
+
 	async findOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
