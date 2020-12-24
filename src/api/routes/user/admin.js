@@ -154,7 +154,7 @@ router.get("/peddlers", catchAsync(userController.getPeddlers));
 router.get("/users", catchAsync(userController.getUsers));
 
 /**
- * @api {get} /api/user/admin/users?types=admin+peddler+driver+buyer Get Number of users by types
+ * @api {get} /api/user/admin/users/count?types=admin+peddler+driver+buyer Get Number of users by types
  * @apiName getAdminUsersCount
  * @apiGroup Admin - Users
  *

@@ -283,7 +283,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/user/admin/users?types=admin+peddler+driver+buyer",
+    "url": "/api/user/admin/users/count?types=admin+peddler+driver+buyer",
     "title": "Get Number of users by types",
     "name": "getAdminUsersCount",
     "group": "Admin_-_Users",
