@@ -37,11 +37,7 @@ router.use(shield(permissions.PERM000));
  *
  * @apiDescription update driver's profile
  */
-router.post(
-	"/profile",
-	validateBody(validationSchemas.profileUpdate),
-	catchAsync(userController.updateProfile)
-);
+router.post("/profile", catchAsync(userController.updateProfile));
 
 /**
  * @api {post} /api/user/driver/online Set Driver's Presence to online

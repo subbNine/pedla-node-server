@@ -41,11 +41,7 @@ router.use(shield(perms.PERM000));
  *
  * @apiDescription update peddler's profile
  */
-router.post(
-	"/profile",
-	validateBody(validationSchemas.profileUpdate),
-	catchAsync(userController.updateProfile)
-);
+router.post("/profile", catchAsync(userController.updateProfile));
 
 /**
  * @api {post} /api/user/peddler/online Set Peddler's Presence to online

@@ -36,11 +36,7 @@ router.use(shield(permissions.PERM000));
  *
  * @apiDescription update buyer's profile
  */
-router.post(
-	"/profile",
-	validateBody(validationSchemas.profileUpdate),
-	catchAsync(userController.updateProfile)
-);
+router.post("/profile", catchAsync(userController.updateProfile));
 
 /**
  * @api {post} /api/user/buyer/online Set Buyer's Presence to online
