@@ -12,12 +12,36 @@ module.exports = {
 			notification: {
 				title,
 				body: messageBody,
-				click_action: "FLUTTER_NOTIFICATION_CLICK",
-				icon: ""
+				// imageUrl: "",
 			},
 			tokens: deviceTokens,
+			android: {
+				notification: {
+					click_action: "FLUTTER_NOTIFICATION_CLICK",
+				},
+			},
+			apns: {
+				payload: {
+					aps: {
+						category: "FLUTTER_NOTIFICATION_CLICK",
+					},
+				},
+			},
 		};
 
-		admin.messaging().sendMulticast(messageObject);
+		admin
+			.messaging()
+			.sendMulticast(messageObject)
+			.then((data) => {
+				const { responses, successCount, failureCount } = data;
+
+				for (const response of responses) {
+					const { success, error } = response;
+
+					if (!success) {
+						console.log(error);
+					}
+				}
+			});
 	},
 };

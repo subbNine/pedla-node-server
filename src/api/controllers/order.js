@@ -160,7 +160,7 @@ module.exports = class Order extends BaseController {
 
 		orderDto.id = orderId;
 
-		const result = await orderService.rejectOrderDelivery(orderDto);
+		const result = await orderService.rejectOrderDelivery(orderDto, user);
 
 		this.response(result, res);
 	}
@@ -199,12 +199,14 @@ module.exports = class Order extends BaseController {
 		const { orderId } = req.params;
 		const { reason } = req.body;
 
+		const { user } = req._App;
+
 		const orderDto = new OrderDto();
 
 		orderDto.id = orderId;
 		orderDto.cancelledReason = reason;
 
-		const result = await orderService.cancelOrder(orderDto);
+		const result = await orderService.cancelOrder(orderDto, user);
 
 		this.response(result, res);
 	}

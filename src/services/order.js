@@ -3,6 +3,7 @@ const { utils, error } = require("../lib");
 const {
 	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
+const { notification } = require("./");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -194,7 +195,7 @@ module.exports = class Order {
 			return Result.ok({ id: updatedOrder.repr().id });
 		}
 
-		return Result.ok(true);
+		return Result.ok(null);
 	}
 
 	async confirmOrderDelivery(order) {
@@ -214,10 +215,10 @@ module.exports = class Order {
 			return Result.ok({ id: updatedOrder.repr().id });
 		}
 
-		return Result.ok(true);
+		return Result.ok(null);
 	}
 
-	async rejectOrderDelivery(order) {
+	async rejectOrderDelivery(order, user) {
 		const { orderMapper } = this.mappers;
 
 		const orderEnt = new OrderEnt(order);
@@ -229,12 +230,25 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			this._deductOrderedQuantityFromProduct(updatedOrder);
+			const notificationObject = {
+				title: "Order Rejected",
+				message: "The order has been Rejected",
+			};
+
+			if (user.isDriver()) {
+				notificationObject.receiverId = updatedOrder.buyer.id;
+			} else {
+				if (user.isBuyer()) {
+					notificationObject.receiverId = updatedOrder.driver.id;
+				}
+			}
+
+			notification.sendNotification(notificationObject);
 
 			return Result.ok({ id: updatedOrder.repr().id });
+		} else {
+			return Result.ok(null);
 		}
-
-		return Result.ok(true);
 	}
 
 	async startOrderDelivery(order) {
@@ -267,10 +281,18 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok({ id: updatedOrder.repr().id });
-		}
+			const notificationObject = {
+				title: "Delivery Started",
+				receiverId: updatedOrder.buyer.id,
+				message: "Your order is on it's way",
+			};
 
-		return Result.ok(true);
+			notification.sendNotification(notificationObject);
+
+			return Result.ok({ id: updatedOrder.repr().id });
+		} else {
+			return Result.ok(null);
+		}
 	}
 
 	async acceptOrder(order) {
@@ -285,13 +307,21 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok({ id: updatedOrder.repr().id });
-		}
+			const notificationObject = {
+				title: "Order Accepted",
+				receiverId: updatedOrder.buyer.id,
+				message: "Your order has been accepted",
+			};
 
-		return Result.ok(true);
+			notification.sendNotification(notificationObject);
+
+			return Result.ok({ id: updatedOrder.repr().id });
+		} else {
+			return Result.ok(null);
+		}
 	}
 
-	async cancelOrder(order) {
+	async cancelOrder(order, user) {
 		const { orderMapper } = this.mappers;
 
 		const orderEnt = new OrderEnt(order);
@@ -301,7 +331,27 @@ module.exports = class Order {
 			{ _id: order.id, status: orderStatus.PENDING },
 			orderEnt
 		);
-		return Result.ok({ id: updatedOrder.repr().id });
+
+		if (updatedOrder) {
+			const notificationObject = {
+				title: "Order Accepted",
+				message: "Your order has been accepted",
+			};
+
+			if (user.isDriver()) {
+				notificationObject.receiverId = updatedOrder.buyer.id;
+			} else {
+				if (user.isBuyer()) {
+					notificationObject.receiverId = updatedOrder.driver.id;
+				}
+			}
+
+			notification.sendNotification(notificationObject);
+
+			return Result.ok({ id: updatedOrder.repr().id });
+		} else {
+			return Result.ok(null);
+		}
 	}
 
 	async rateTransaction(order) {
