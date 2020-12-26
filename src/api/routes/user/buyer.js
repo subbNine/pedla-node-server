@@ -141,7 +141,6 @@ router.get(
 router.post(
 	"/order",
 	shield(permissions.PERM002),
-	validateBody(validationSchemas.postOrder),
 	catchAsync(orderController.createOrder)
 );
 
