@@ -3,7 +3,7 @@ const { utils, error } = require("../lib");
 const {
 	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
-const { notification } = require("./");
+const { notification } = require("./index");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
