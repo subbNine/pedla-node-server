@@ -58,7 +58,7 @@ module.exports = class Order {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
-				await this.loadPeddlerCode(eachOrder);
+				await this._loadPeddlerCode(eachOrder);
 				results.push(eachOrder.repr());
 			}
 
@@ -106,7 +106,7 @@ module.exports = class Order {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
-				await this.loadPeddlerCode(eachOrder);
+				await this._loadPeddlerCode(eachOrder);
 				results.push(eachOrder.repr());
 			}
 
@@ -119,7 +119,7 @@ module.exports = class Order {
 		}
 	}
 
-	async loadPeddlerCode(order) {
+	async _loadPeddlerCode(order) {
 		const { userMapper } = this.mappers;
 
 		const driver = await userMapper.findUser(
@@ -144,7 +144,7 @@ module.exports = class Order {
 		const foundOrder = await orderMapper.findOrder(orderDto);
 
 		if (foundOrder) {
-			await this.loadPeddlerCode(foundOrder);
+			await this._loadPeddlerCode(foundOrder);
 			return Result.ok(foundOrder.repr());
 		} else {
 			return Result.ok(null);
