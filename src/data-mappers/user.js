@@ -246,7 +246,7 @@ module.exports = class UserMapper extends BaseMapper {
 	}
 
 	async searchForProductDrivers({ productId, quantity, geo }, options) {
-		const { PeddlerProduct, TruckAndDriver } = this.models;
+		const { PeddlerProduct, TruckAndDriver, User } = this.models;
 
 		const { pagination } = options || {};
 		const { page, limit } = pagination || {};
@@ -301,7 +301,7 @@ module.exports = class UserMapper extends BaseMapper {
 				if (drivers && drivers.length) {
 					for (const driver of drivers) {
 						//#
-						const truckAndDriver = await TruckAndDriver.findOne({
+						const truckAndDriverQuery = TruckAndDriver.findOne({
 							driverId: driver._id,
 						})
 							.populate({
@@ -315,15 +315,25 @@ module.exports = class UserMapper extends BaseMapper {
 							})
 							.sort("-createdAt");
 
+						const peddlerQuery = User.findOne({ _id: driver.peddler });
+
+						const [truckAndDriver, peddler] = await Promise.all([
+							truckAndDriverQuery,
+							peddlerQuery,
+						]);
+
 						const foundDriverProduct =
 							truckAndDriver &&
 							truckAndDriver.truckId &&
 							truckAndDriver.truckId.productId;
+
 						if (isEqualIds(foundDriverProduct, product)) {
 							const driverEnt = this._toEntity(driver, UserEnt, {
 								streetAddress: "address",
 								_id: "id",
 							});
+
+							driverEnt.peddlerCode = peddler.peddlerCode;
 
 							const productTypeEnt = this._toEntity(
 								foundDriverProduct.productId,
