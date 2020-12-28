@@ -28,7 +28,7 @@ module.exports = class OrderMapper extends BaseMapper {
 
 		const { limit = 0, page = 0 } = pagination || {};
 
-		if (limit && page) {
+		if (limit) {
 			query.limit(+limit);
 
 			query.skip(+limit * +page);
