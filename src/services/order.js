@@ -19,7 +19,7 @@ module.exports = class Order {
 		const { orderMapper } = this.mappers;
 
 		const search = {
-			status: orderFilterDto.status,
+			status: { $in: orderFilterDto.status },
 		};
 
 		const numberOfOrders = await orderMapper.countDocs(search);
@@ -45,7 +45,7 @@ module.exports = class Order {
 		}
 
 		if (orderFilterDto.status) {
-			$and.push({ status: orderFilterDto.status });
+			$and.push({ status: { $in: orderFilterDto.status } });
 		}
 
 		const search = {
@@ -85,7 +85,7 @@ module.exports = class Order {
 		}
 
 		if (orderFilterDto.status) {
-			$and.push({ status: orderFilterDto.status });
+			$and.push({ status: { $in: orderFilterDto.status } });
 		}
 
 		const search = {};

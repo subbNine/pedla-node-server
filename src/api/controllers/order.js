@@ -14,13 +14,11 @@ module.exports = class Order extends BaseController {
 
 		const orderDto = new OrderDto();
 
-		orderDto.status = {
-			$in: status
-				? status
-						.split(/,|\s+|\+/)
-						.map((status) => ("" + status).toUpperCase().trim())
-				: Object.values(orderStatus),
-		};
+		orderDto.status = status
+			? status
+					.split(/,|\s+|\+/)
+					.map((status) => ("" + status).toUpperCase().trim())
+			: Object.values(orderStatus);
 
 		const result = await orderService.nOrders(orderDto);
 
@@ -39,13 +37,11 @@ module.exports = class Order extends BaseController {
 		if (user.isBuyer()) {
 			orderDto.buyer.id = user.id;
 		}
-		orderDto.status = {
-			$in: status
-				? status
-						.split(/,|\s+|\+/)
-						.map((status) => ("" + status).toUpperCase().trim())
-				: Object.values(orderStatus),
-		};
+		orderDto.status = status
+			? status
+					.split(/,|\s+|\+/)
+					.map((status) => ("" + status).toUpperCase().trim())
+			: Object.values(orderStatus);
 
 		if (!user.isAdmin()) {
 			const result = await orderService.findOrders(orderDto);
