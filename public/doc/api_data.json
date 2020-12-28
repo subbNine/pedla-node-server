@@ -50,7 +50,7 @@
   {
     "type": "get",
     "url": "/api/user/admin/orders/recent?status=pending+accepted&limit=30&page=1",
-    "title": "Retrieve number of orders",
+    "title": "Retrieve recent (today) orders",
     "name": "getAdminOrdersRecent",
     "group": "Admin_-_Order",
     "version": "1.0.0",

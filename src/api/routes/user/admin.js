@@ -194,7 +194,7 @@ router.get("/orders", catchAsync(orderController.getOrders));
 router.get("/orders/count", catchAsync(orderController.countOrders));
 
 /**
- * @api {get} /api/user/admin/orders/recent?status=pending+accepted&limit=30&page=1 Retrieve number of orders
+ * @api {get} /api/user/admin/orders/recent?status=pending+accepted&limit=30&page=1 Retrieve recent (today) orders
  * @apiName getAdminOrdersRecent
  * @apiGroup Admin - Order
  *
