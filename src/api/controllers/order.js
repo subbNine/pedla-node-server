@@ -25,6 +25,24 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
+	async todayOrders(req, res, next) {
+		const { status, limit, page } = req.query;
+
+		const orderDto = new OrderDto();
+
+		orderDto.status = status
+			? status
+					.split(/,|\s+|\+/)
+					.map((status) => ("" + status).toUpperCase().trim())
+			: Object.values(orderStatus);
+
+		const result = await orderService.todayOrdersPaginated(orderDto, {
+			pagination: { limit, page },
+		});
+
+		this.response(result, res);
+	}
+
 	async getOrders(req, res, next) {
 		const { user } = req._App;
 		const { status, limit, page } = req.query;

@@ -168,13 +168,13 @@ router.get("/users", catchAsync(userController.getUsers));
 router.get("/users/count", catchAsync(userController.countUsers));
 
 /**
- * @api {get} /api/user/admin/orders?status=pending+accepted Retrieve orders
+ * @api {get} /api/user/admin/orders?status=pending+accepted&limit=30&page=1 Retrieve orders
  * @apiName getAdminOrders
  * @apiGroup Admin - Order
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription Return orders based on status (pending|accepted|completed|cancelled) passed in the status query params.
+ * @apiDescription Return orders based on status (pending|accepted|completed|rejected) passed in the status query params.
  * To return results with more than one status, seperate the status passed in the query with a plus symbol
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
@@ -187,10 +187,23 @@ router.get("/orders", catchAsync(orderController.getOrders));
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription Return number of orders based on status (pending|accepted|completed|cancelled) passed in the status query params.
+ * @apiDescription Return number of orders based on status (pending|accepted|completed|rejected) passed in the status query params.
  * To return results with more than one status, seperate the status passed in the query with a plus symbol
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
 router.get("/orders/count", catchAsync(orderController.countOrders));
+
+/**
+ * @api {get} /api/user/admin/orders/recent?status=pending+accepted&limit=30&page=1 Retrieve number of orders
+ * @apiName getAdminOrdersRecent
+ * @apiGroup Admin - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Return recent (today's) orders based on status (pending|accepted|completed|rejected) passed in the status query params.
+ * To return results with more than one status, seperate the status passed in the query with a plus symbol
+ * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
+ */
+router.get("/orders/recent", catchAsync(orderController.todayOrders));
 
 module.exports = router;
