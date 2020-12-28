@@ -8,7 +8,7 @@ const { notification } = require("./index");
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
 const errMessages = error.messages;
-const { Result } = utils;
+const { Result, computeStartOfDay } = utils;
 
 module.exports = class Order {
 	constructor({ mappers }) {
@@ -99,7 +99,52 @@ module.exports = class Order {
 		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
 
 		const foundOrders = await orderMapper.findOrders(search, {
-			pagination: { limit: limit || 30, page: page ? page - 1 : 0 },
+			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
+		});
+
+		if (foundOrders) {
+			const results = [];
+
+			for (const eachOrder of foundOrders) {
+				await this._loadPeddlerCode(eachOrder);
+				results.push(eachOrder.repr());
+			}
+
+			return Result.ok({
+				data: results,
+				pagination: { totalPages, currentPage: page || 1, totalDocs },
+			});
+		} else {
+			return Result.ok(null);
+		}
+	}
+
+	async todayOrdersPaginated(orderFilterDto, options) {
+		const { orderMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const startOfDay = computeStartOfDay();
+
+		const $and = [{ createdAt: { $gte: startOfDay } }];
+
+		if (orderFilterDto.status) {
+			$and.push({ status: { $in: orderFilterDto.status } });
+		}
+
+		const filter = {};
+
+		if ($and && $and.length) {
+			filter.$and = $and;
+		}
+
+		const totalDocs = await orderMapper.countDocs(filter);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundOrders = await orderMapper.findOrders(filter, {
+			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
 		if (foundOrders) {

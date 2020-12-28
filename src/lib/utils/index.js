@@ -7,6 +7,7 @@ const Result = require("./result");
 const generateJwtToken = require("./generate-jwt-token");
 const generateOtpToken = require("./generate-otp-token");
 const generateOtpSecret = require("./generate-otp-secret");
+const computeStartOfDay = require("./compute-start-of-day");
 
 module.exports = {
 	isObjectEmpty,
@@ -18,4 +19,5 @@ module.exports = {
 	generateJwtToken,
 	generateOtpToken,
 	generateOtpSecret,
+	computeStartOfDay,
 };
