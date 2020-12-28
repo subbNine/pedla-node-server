@@ -1,12 +1,12 @@
 define({ "api": [
   {
     "type": "get",
-    "url": "/api/user/admin/orders?status=pending+accepted",
+    "url": "/api/user/admin/orders?status=pending+accepted&limit=30&page=1",
     "title": "Retrieve orders",
     "name": "getAdminOrders",
     "group": "Admin_-_Order",
     "version": "1.0.0",
-    "description": "<p>Return orders based on status (pending|accepted|completed|cancelled) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "description": "<p>Return orders based on status (pending|accepted|completed|rejected) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -30,7 +30,31 @@ define({ "api": [
     "name": "getAdminOrdersCount",
     "group": "Admin_-_Order",
     "version": "1.0.0",
-    "description": "<p>Return number of orders based on status (pending|accepted|completed|cancelled) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "description": "<p>Return number of orders based on status (pending|accepted|completed|rejected) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>order status. multiple order status should be seperated with a &quot;+&quot; symbol</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Order"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/orders/recent?status=pending+accepted&limit=30&page=1",
+    "title": "Retrieve number of orders",
+    "name": "getAdminOrdersRecent",
+    "group": "Admin_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Return recent (today's) orders based on status (pending|accepted|completed|rejected) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
     "parameter": {
       "fields": {
         "Parameter": [
