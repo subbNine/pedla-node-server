@@ -204,6 +204,6 @@ router.get("/orders/count", catchAsync(orderController.countOrders));
  * To return results with more than one status, seperate the status passed in the query with a plus symbol
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
-router.get("/orders/recent", catchAsync(orderController.todayOrders));
+router.get("/orders/recent", catchAsync(orderController.recentOrders));
 
 module.exports = router;

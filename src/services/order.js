@@ -119,7 +119,7 @@ module.exports = class Order {
 		}
 	}
 
-	async todayOrdersPaginated(orderFilterDto, options) {
+	async recentOrdersPaginated(orderFilterDto, options) {
 		const { orderMapper } = this.mappers;
 
 		const { pagination } = options || {};

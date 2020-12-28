@@ -25,7 +25,7 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
-	async todayOrders(req, res, next) {
+	async recentOrders(req, res, next) {
 		const { status, limit, page } = req.query;
 
 		const orderDto = new OrderDto();
@@ -36,7 +36,7 @@ module.exports = class Order extends BaseController {
 					.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
-		const result = await orderService.todayOrdersPaginated(orderDto, {
+		const result = await orderService.recentOrdersPaginated(orderDto, {
 			pagination: { limit, page },
 		});
 
