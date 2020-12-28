@@ -382,12 +382,12 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/api/user/admin/verify-peddler/:peddlerId",
-    "title": "Verify peddler",
-    "name": "postPeddlerVerification",
+    "url": "/api/user/admin/reject-peddler/:peddlerId",
+    "title": "reject peddler",
+    "name": "postPeddlerRejection",
     "group": "Admin_-_Users",
     "version": "1.0.0",
-    "description": "<p>verify peddler profile</p>",
+    "description": "<p>reject peddler profile</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -419,12 +419,12 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/api/user/admin/reject-peddler/:peddlerId",
-    "title": "reject peddler",
+    "url": "/api/user/admin/verify-peddler/:peddlerId",
+    "title": "Verify peddler",
     "name": "postPeddlerVerification",
     "group": "Admin_-_Users",
     "version": "1.0.0",
-    "description": "<p>reject peddler profile</p>",
+    "description": "<p>verify peddler profile</p>",
     "parameter": {
       "fields": {
         "Parameter": [

@@ -104,7 +104,7 @@ router.put(
 
 /**
  * @api {put} /api/user/admin/reject-peddler/:peddlerId reject peddler
- * @apiName postPeddlerVerification
+ * @apiName postPeddlerRejection
  * @apiGroup Admin - Users
  *
  * @apiVersion 1.0.0
