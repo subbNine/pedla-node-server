@@ -8,10 +8,5 @@ const errors = require("../../errors");
  * @param {function} next - next callback
  */
 module.exports = function errorMiddleware(err, req, res, next) {
-	console.log(err)
-	err.statusCode =
-		err.statusCode || errors.errorCodes.InternalServerError.statusCode;
-	err.message = err.message || "internal server error";
-	err.name = err.name || errors.errorCodes.InternalServerError.name;
 	return errors.error(err, res);
 };

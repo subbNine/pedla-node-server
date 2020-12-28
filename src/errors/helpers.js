@@ -9,15 +9,14 @@ function _sendDevError(err, res) {
 }
 
 function _sendProdError(err, res) {
-	logger.error(err);
 	if (err.isOperational) {
 		const { stack, ...rest } = err;
 
 		return res.status(err.statusCode).json(rest);
 	} else {
-		const errWithStack = { ...err, stack: err.stack };
+		console.error(err);
 		// CRITICAL: log error to centry / log rocket
-		logger.error("log error to centry / log rocket", errWithStack);
+		console.log("log error to centry / log rocket", err);
 
 		return res.status(errorCodes.InternalServerError.statusCode).json({
 			name: errorCodes.InternalServerError.name,
@@ -68,7 +67,7 @@ module.exports.error = function error(err, res) {
 	if (APP_ENV === "development") {
 		_sendDevError(err, res);
 	} else {
-		let error = { ...err };
+		let error = err;
 
 		/* Mongoose Errors */
 		if (error.name === "CastError") {
