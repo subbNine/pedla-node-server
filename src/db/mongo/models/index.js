@@ -11,6 +11,7 @@ const Truck = require("./truck");
 const TruckAndDriver = require("./truck-driver");
 const PushDevice = require("./push-device");
 const BlogPost = require("./blog-post");
+const Payment = require("./payment");
 
 module.exports = {
 	Country,
@@ -26,4 +27,5 @@ module.exports = {
 	TruckAndDriver,
 	PushDevice,
 	BlogPost,
+	Payment,
 };
