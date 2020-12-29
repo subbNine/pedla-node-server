@@ -36,13 +36,14 @@ module.exports = class Product extends BaseController {
 	}
 
 	async updateProduct(req, res, next) {
-		const { name, description } = req.body;
+		const { name, description, price } = req.body;
 		const { productId } = req.params;
 
 		const productDto = new UserDto();
 		productDto.id = productId;
 		productDto.name = name;
 		productDto.description = description;
+		productDto.price = +price;
 
 		const result = await productService.updateProduct(productDto);
 
@@ -74,9 +75,7 @@ module.exports = class Product extends BaseController {
 			productDtoList.push(peddlerProductDto);
 		}
 
-		const result = await peddlerProductService.createProducts(
-			productDtoList
-		);
+		const result = await peddlerProductService.createProducts(productDtoList);
 
 		this.response(result, res);
 	}
@@ -89,9 +88,7 @@ module.exports = class Product extends BaseController {
 
 		peddlerProductDto.peddler = peddlerId || user.id;
 
-		const result = await peddlerProductService.findProducts(
-			peddlerProductDto
-		);
+		const result = await peddlerProductService.findProducts(peddlerProductDto);
 
 		this.response(result, res);
 	}
@@ -121,9 +118,7 @@ module.exports = class Product extends BaseController {
 			peddlerProductDto.quantity = quantity;
 		}
 
-		const result = await peddlerProductService.updateProduct(
-			peddlerProductDto
-		);
+		const result = await peddlerProductService.updateProduct(peddlerProductDto);
 
 		this.response(result, res);
 	}

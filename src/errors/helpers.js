@@ -18,10 +18,12 @@ function _sendProdError(err, res) {
 		// CRITICAL: log error to centry / log rocket
 		console.log("log error to centry / log rocket", err);
 
-		return res.status(errorCodes.InternalServerError.statusCode).json({
-			name: errorCodes.InternalServerError.name,
-			message: "Sorry an unexpected error has occured",
-		});
+		if (res) {
+			return res.status(errorCodes.InternalServerError.statusCode).json({
+				name: errorCodes.InternalServerError.name,
+				message: "Sorry an unexpected error has occured",
+			});
+		}
 	}
 }
 

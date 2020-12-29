@@ -2,6 +2,7 @@ module.exports = class Product {
 	id;
 	name;
 	description;
+	price;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -16,6 +17,7 @@ module.exports = class Product {
 			id: this.id || null,
 			name: this.name || null,
 			description: this.description || null,
+			price: this.price || null,
 		};
 	}
 };
