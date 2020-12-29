@@ -7,8 +7,9 @@ const {
 } = require("../entities/domain");
 const isType = require("../lib/utils/is-type");
 const {
-	order: { orderStatus },
+	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
+const { Types } = require("mongoose");
 
 module.exports = class OrderMapper extends BaseMapper {
 	constructor(models) {
@@ -49,34 +50,70 @@ module.exports = class OrderMapper extends BaseMapper {
 	async driverOrderStats(driverId) {
 		const { Order } = this.models;
 		const nCancelledOrdersPromise = Order.countDocuments({
-			$and: [{ driverId: driverId }, { status: orderStatus.CANCELLED }],
+			$and: [
+				{ driverId: driverId },
+				{ deliveryStatus: deliveryStatus.REJECTED },
+			],
 		});
 
 		const nCompleteOrdersPromise = Order.countDocuments({
-			$and: [{ driverId: driverId }, { status: orderStatus.COMPLETE }],
+			$and: [
+				{ driverId: driverId },
+				{ deliveryStatus: deliveryStatus.DELIVERED },
+			],
 		});
 
 		const nAllOrdersPromise = Order.countDocuments({
 			driverId: driverId,
 		});
 
+		const totalDriverRatingPromise = Order.aggregate([
+			{
+				$match: {
+					driverId: Types.ObjectId(driverId),
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					totalRating: {
+						$sum: "$rating",
+					},
+				},
+			},
+		]);
+
 		// const
 
-		const [nCompleteOrders, nCancelledOrders, nAllOrders] = await Promise.all([
+		const [
+			nCompleteOrders,
+			nCancelledOrders,
+			nAllOrders,
+			totalDriverRatingArr,
+		] = await Promise.all([
 			nCompleteOrdersPromise,
 			nCancelledOrdersPromise,
 			nAllOrdersPromise,
+			totalDriverRatingPromise,
 		]);
 
 		const percAcceptance = ((+nCompleteOrders || 0) / (+nAllOrders || 1)) * 100;
 		const percCancelled = ((+nCancelledOrders || 0) / (+nAllOrders || 1)) * 100;
 		const totalOrdersRating = nAllOrders * 5;
 
+		const totalDriverRating =
+			totalDriverRatingArr && totalDriverRatingArr.length
+				? totalDriverRatingArr[0].totalRating
+				: 0;
+
+		const averageRating = (5 * +totalDriverRating) / totalOrdersRating;
+
 		return {
 			nCancelled: +nCancelledOrders || 0,
 			nComplete: +nCompleteOrders || 0,
-			percAcceptance: percAcceptance ? percAcceptance.toFixed(2) : 0,
-			percCancelled: percCancelled ? percCancelled.toFixed(2) : 0,
+			percAcceptance: percAcceptance ? +percAcceptance.toFixed(2) : 0,
+			percCancelled: percCancelled ? +percCancelled.toFixed(2) : 0,
+			rating: averageRating ? +averageRating.toFixed(1) : 0,
 		};
 	}
 
