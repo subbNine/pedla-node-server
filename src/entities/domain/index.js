@@ -7,6 +7,7 @@ const TruckEnt = require("./truck");
 const TruckAndDriverEnt = require("./truck-driver");
 const OrderEnt = require("./order");
 const PushDeviceEnt = require("./push-device");
+const BlogPostEnt = require("./blog-post");
 
 module.exports = {
 	UserEnt,
@@ -18,4 +19,5 @@ module.exports = {
 	TruckAndDriverEnt,
 	OrderEnt,
 	PushDeviceEnt,
+	BlogPostEnt,
 };

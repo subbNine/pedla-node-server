@@ -1,12 +1,14 @@
 const { Router } = require("express");
 
 const shield = require("../../middlewares/shield");
+const fileUpload = require("../../middlewares/file-upload");
 const { bounceNonAdmins } = require("../../middlewares/access-control");
 const { catchAsync } = require("../../../errors");
 const {
 	product: productController,
 	user: userController,
 	orderController,
+	blogPostController,
 } = require("../../controllers");
 
 const {
@@ -205,5 +207,71 @@ router.get("/orders/count", catchAsync(orderController.countOrders));
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
 router.get("/orders/recent", catchAsync(orderController.recentOrders));
+
+/**
+ * @api {post} /api/user/admin/post Create Post
+ * @apiName postAdminBlogPost
+ * @apiGroup Admin - Posts
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint to create feeds for each product. The product Id is used to categorize feeds
+ *
+ * @apiParam {String} title
+ * @apiParam {String} body
+ * @apiParam {File} blogPostImg
+ * @apiParam {ID} productId Id of the product that the post is made for
+ */
+router.post(
+	"/post",
+	fileUpload.single("blogPostImg"),
+	catchAsync(blogPostController.createPost)
+);
+
+/**
+ * @api {put} /api/user/admin/post Update Post
+ * @apiName putAdminBlogPost
+ * @apiGroup Admin - Posts
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint to update feeds for each product. The product Id is used to categorize feeds
+ *
+ * @apiParam {String} title
+ * @apiParam {String} body
+ * @apiParam {File} blogPostImg
+ * @apiParam {ID} productId Id of the product that the post is made for
+ * @apiParam {ID} postId the Id of the post you want to update
+ */
+router.put(
+	"/post/:postId",
+	fileUpload.single("blogPostImg"),
+	catchAsync(blogPostController.updatePost)
+);
+
+/**
+ * @api {delete} /api/user/admin/posts Delete Posts
+ * @apiName deletAdminBlogPosts
+ * @apiGroup Admin - Post
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint to delete feeds for each product. The product Id is used to categorize feeds
+ *
+ * @apiParam {ID[]} ids array of feeds ids you deleted from the database
+ */
+router.delete("/posts", catchAsync(blogPostController.deletePosts));
+
+/**
+ * @api {get} /api/user/admin/posts Get Posts
+ * @apiName getAdminBlogPosts
+ * @apiGroup Admin - Post
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint to get feeds for products. The product Id is used to categorize feeds
+ *
+ */
+router.get("/posts", catchAsync(blogPostController.getPosts));
 
 module.exports = router;

@@ -6,6 +6,7 @@ const GeoDto = require("./geo-location");
 const TruckDto = require("./truck");
 const TruckAndDriverDto = require("./truck-driver");
 const OrderDto = require("./order");
+const BlogPostDto = require("./blog-post");
 
 module.exports = {
 	UserDto,
@@ -16,4 +17,5 @@ module.exports = {
 	TruckDto,
 	TruckAndDriverDto,
 	OrderDto,
+	BlogPostDto,
 };

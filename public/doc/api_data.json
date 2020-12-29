@@ -72,6 +72,138 @@
     "groupTitle": "Admin_-_Order"
   },
   {
+    "type": "delete",
+    "url": "/api/user/admin/posts",
+    "title": "Delete Posts",
+    "name": "deletAdminBlogPosts",
+    "group": "Admin_-_Post",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to delete feeds for each product. The product Id is used to categorize feeds</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID[]",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>array of feeds ids you deleted from the database</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Post"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/posts",
+    "title": "Get Posts",
+    "name": "getAdminBlogPosts",
+    "group": "Admin_-_Post",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get feeds for products. The product Id is used to categorize feeds</p>",
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Post"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/admin/post",
+    "title": "Create Post",
+    "name": "postAdminBlogPost",
+    "group": "Admin_-_Posts",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to create feeds for each product. The product Id is used to categorize feeds</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "body",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "blogPostImg",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "productId",
+            "description": "<p>Id of the product that the post is made for</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Posts"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/post",
+    "title": "Update Post",
+    "name": "putAdminBlogPost",
+    "group": "Admin_-_Posts",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to update feeds for each product. The product Id is used to categorize feeds</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "body",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "blogPostImg",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "productId",
+            "description": "<p>Id of the product that the post is made for</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "postId",
+            "description": "<p>the Id of the post you want to update</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Posts"
+  },
+  {
     "type": "get",
     "url": "/api/user/admin/products",
     "title": "Fetch added products",

@@ -4,9 +4,11 @@ module.exports = function isType(expectedTypeName = "", inputObj) {
 	switch (_expectedTypeName) {
 		case "array":
 			matchedType =
-				typeof inputObj === "object" && Array.isArray(inputObj)
-					? true
-					: false;
+				typeof inputObj === "object" && Array.isArray(inputObj) ? true : false;
+			break;
+		case "object":
+			matchedType =
+				typeof inputObj === "object" && !Array.isArray(inputObj) ? true : false;
 			break;
 		default:
 			matchedType = typeof inputObj === _expectedTypeName;
