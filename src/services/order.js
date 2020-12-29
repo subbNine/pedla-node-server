@@ -15,6 +15,58 @@ module.exports = class Order {
 		this.mappers = mappers;
 	}
 
+	async ordersStats() {
+		const { orderMapper } = this.mappers;
+
+		const pendingOrdersFilter = {
+			status: orderStatus.PENDING,
+		};
+
+		const pendingOrdersQuery = orderMapper.countDocs(pendingOrdersFilter);
+
+		const ordersInProgressFilter = {
+			status: orderStatus.INPROGRESS,
+		};
+
+		const ordersInProgressQuery = orderMapper.countDocs(ordersInProgressFilter);
+
+		const cancelledOrdersFilter = {
+			deliveryStatus: deliveryStatus.REJECTED,
+		};
+
+		const cancelledOrdersQuery = orderMapper.countDocs(cancelledOrdersFilter);
+
+		const completedOrdersFilter = {
+			deliveryStatus: deliveryStatus.DELIVERED,
+		};
+
+		const completedOrdersQuery = orderMapper.countDocs(completedOrdersFilter);
+
+		const allOrdersQuery = orderMapper.countDocs({});
+
+		const [
+			cancelledOrders,
+			completedOrders,
+			allOrders,
+			pendingOrders,
+			ordersInProgress,
+		] = await Promise.all([
+			cancelledOrdersQuery,
+			completedOrdersQuery,
+			allOrdersQuery,
+			pendingOrdersQuery,
+			ordersInProgressQuery,
+		]);
+
+		return Result.ok({
+			cancelledOrders,
+			completedOrders,
+			allOrders,
+			pendingOrders,
+			ordersInProgress,
+		});
+	}
+
 	async nOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 

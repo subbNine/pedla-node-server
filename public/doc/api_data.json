@@ -72,6 +72,17 @@
     "groupTitle": "Admin_-_Order"
   },
   {
+    "type": "get",
+    "url": "/api/user/admin/orders/stats",
+    "title": "Retrieve orders Stats",
+    "name": "getAdminOrdersStats",
+    "group": "Admin_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Return stats for orders in the system</p>",
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Admin_-_Order"
+  },
+  {
     "type": "delete",
     "url": "/api/user/admin/posts",
     "title": "Delete Posts",

@@ -25,6 +25,12 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
+	async ordersStats(req, res, next) {
+		const result = await orderService.ordersStats();
+
+		this.response(result, res);
+	}
+
 	async recentOrders(req, res, next) {
 		const { status, limit, page } = req.query;
 
