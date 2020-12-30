@@ -311,6 +311,7 @@ module.exports = class User {
 
 		const foundUsers = await userMapper.findUsers(filter, {
 			pagination: { limit, page: page ? page - 1 : 0 },
+			populate: (query) => query.populate("peddler"),
 		});
 
 		if (foundUsers) {

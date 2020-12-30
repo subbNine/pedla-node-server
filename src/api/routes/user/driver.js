@@ -16,6 +16,8 @@ const validationSchemas = require("../../validators");
 
 const router = Router();
 
+router.get("/products", catchAsync(productController.getProducts));
+
 router.use(bounceNonDrivers);
 
 router.use(shield(permissions.PERM000));
@@ -60,12 +62,6 @@ router.post("/online", catchAsync(userController.setOnline));
  * @apiDescription Set driver's presence status to offline
  */
 router.post("/offline", catchAsync(userController.setOffline));
-
-router.get(
-	"/products",
-	shield(permissions.PERM001),
-	catchAsync(productController.getProducts)
-);
 
 router.get(
 	"/peddler-products/:peddlerId",

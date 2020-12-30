@@ -80,7 +80,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));
 
-		const { pagination } = options || {};
+		const { pagination, populate } = options || {};
 
 		const { limit = 0, page = 0 } = pagination || {};
 
@@ -88,6 +88,10 @@ module.exports = class UserMapper extends BaseMapper {
 			query.limit(+limit);
 
 			query.skip(+limit * +page);
+		}
+
+		if (populate && typeof populate === "function") {
+			populate(query);
 		}
 
 		const docs = await query;
@@ -98,6 +102,11 @@ module.exports = class UserMapper extends BaseMapper {
 				const entObj = doc.toObject();
 				if (doc.avatarImg && doc.avatarImg.uri) {
 					entObj.avatarImg = doc.avatarImg.uri;
+				}
+				if (doc.peddler && doc.peddler.id) {
+					entObj.peddler = this._toEntity(entObj.peddler, UserEnt, {
+						_id: "id",
+					});
 				}
 				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
 			}

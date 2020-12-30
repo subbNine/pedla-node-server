@@ -69,7 +69,10 @@ module.exports = class User {
 		objectRepr.presence = this.presence || null;
 		objectRepr.peddlerCode = this.peddlerCode || null;
 		objectRepr.nTrucks = this.nTrucks || null;
-		objectRepr.peddler = this.peddler || null;
+		objectRepr.peddler =
+			(this.peddler && this.peddler.repr
+				? this.peddler.repr()
+				: this.peddler) || null;
 		objectRepr.driverStats = this.driverStats || null;
 
 		if (this.isPeddler()) {

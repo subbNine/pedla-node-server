@@ -16,6 +16,8 @@ const {
 	EMAIL_SENDER,
 	EMAIL_API_KEY,
 	FCM_SERVER_KEY,
+	PAYMENT_SK_TEST,
+	PAYMENT_PK_TEST,
 } = process.env;
 
 const dbConf = {
@@ -67,3 +69,5 @@ module.exports.SMS_SENDER = SMS_SENDER;
 module.exports.EMAIL_SENDER = EMAIL_SENDER;
 module.exports.EMAIL_API_KEY = EMAIL_API_KEY;
 module.exports.FCM_SERVER_KEY = FCM_SERVER_KEY;
+module.exports.PAYMENT_SK_TEST = PAYMENT_SK_TEST;
+module.exports.PAYMENT_PK_TEST = PAYMENT_PK_TEST;

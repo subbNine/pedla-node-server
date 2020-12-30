@@ -16,9 +16,9 @@ const validationSchemas = require("../../validators");
 
 const router = Router();
 
-router.use(bounceNonBuyers);
+router.get("/products", catchAsync(productController.getProducts));
 
-router.use(shield(permissions.PERM000));
+router.use(bounceNonBuyers);
 
 /**
  * @api {post} /api/user/buyer/profile Update buyer's profile
@@ -59,12 +59,6 @@ router.post("/online", catchAsync(userController.setOnline));
  * @apiDescription Set buyer's presence status to offline
  */
 router.post("/offline", catchAsync(userController.setOffline));
-
-router.get(
-	"/products",
-	shield(permissions.PERM001),
-	catchAsync(productController.getProducts)
-);
 
 router.get(
 	"/peddler-products/:peddlerId",
