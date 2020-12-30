@@ -113,7 +113,12 @@ module.exports = class Payment {
 	async createPayment(order, { accessCode, reference }) {
 		const { paymentMapper } = this.mappers;
 
-		const payment = { orderId: order.id, paymentMethod: order.paymentMethod };
+		const payment = {
+			orderId: order.id,
+			buyerId: order.buyer.id,
+			driverId: order.driver.id,
+			paymentMethod: order.paymentMethod,
+		};
 
 		if (accessCode) {
 			payment.gatewayAccessCode = accessCode;
