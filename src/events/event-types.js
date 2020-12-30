@@ -11,4 +11,5 @@ module.exports = {
 	driverUpdated: "driver-updated",
 	updatePushDevice: "update-push-device",
 	sendNotification: "send-notification",
+	paymentInitialized: "payment-initialized",
 };

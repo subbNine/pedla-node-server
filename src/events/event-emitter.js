@@ -9,6 +9,7 @@ const {
 	sendDriverInfo,
 	updatePushDevice,
 	sendPushNotification,
+	paymentInitialized,
 } = require("./handlers");
 
 const eventEmitter = new EventEmitter();
@@ -32,5 +33,7 @@ eventEmitter.on(eventTypes.peddlerRejected, notifyPeddlerRejection);
 eventEmitter.on(eventTypes.buyerCreated, createAndSendOtp);
 
 eventEmitter.on(eventTypes.driverCreated, sendDriverInfo);
+
+eventEmitter.on(eventTypes.paymentInitialized, paymentInitialized);
 
 module.exports = eventEmitter;

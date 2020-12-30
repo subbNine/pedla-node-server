@@ -7,6 +7,7 @@ const TruckDto = require("./truck");
 const TruckAndDriverDto = require("./truck-driver");
 const OrderDto = require("./order");
 const BlogPostDto = require("./blog-post");
+const PaymentDto = require("./payment");
 
 module.exports = {
 	UserDto,
@@ -18,4 +19,5 @@ module.exports = {
 	TruckAndDriverDto,
 	OrderDto,
 	BlogPostDto,
+	PaymentDto,
 };

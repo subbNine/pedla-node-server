@@ -1,9 +1,9 @@
 const { OrderEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const {
-	order: { orderStatus, deliveryStatus },
+	order: { orderStatus, deliveryStatus, paymentMethod },
 } = require("../db/mongo/enums");
-const { notification } = require("./index");
+const { notification, payment } = require("./index");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -252,7 +252,19 @@ module.exports = class Order {
 		const { orderMapper } = this.mappers;
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
-		return Result.ok({ id: newOrder.repr().id });
+
+		let paymentResp;
+
+		if (order.paymentMethod === paymentMethod.paystack) {
+			paymentResp = await payment.initPaystackPayment(newOrder);
+		} else {
+			paymentResp = await payment.createPayment({ order }, {});
+		}
+
+		return Result.ok({
+			id: newOrder.repr().id,
+			payment: paymentResp,
+		});
 	}
 
 	async _isExistingOrderInProgress(driverId) {

@@ -5,6 +5,7 @@ const notifyPeddlerRejection = require("./notify-peddler-rejection");
 const sendDriverInfo = require("./send-driver-info");
 const updatePushDevice = require("./update-push-device");
 const sendPushNotification = require("./send-notification");
+const paymentInitialized = require("./payment-initialized");
 
 module.exports = {
 	createAndSendOtp,
@@ -14,4 +15,5 @@ module.exports = {
 	sendDriverInfo,
 	updatePushDevice,
 	sendPushNotification,
+	paymentInitialized,
 };

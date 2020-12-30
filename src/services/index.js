@@ -13,6 +13,7 @@ const TruckAndDriver = require("./truck-driver");
 const OrderService = require("./order");
 const PushDeviceService = require("./push-device");
 const BlogPost = require("./blog-post");
+const Payment = require("./payment");
 
 module.exports = {
 	auth: new Auth({ mappers }),
@@ -28,4 +29,5 @@ module.exports = {
 	orderService: new OrderService({ mappers }),
 	pushDeviceService: new PushDeviceService({ mappers }),
 	blogPost: new BlogPost({ mappers }),
+	payment: new Payment({ mappers }),
 };

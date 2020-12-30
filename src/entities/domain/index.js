@@ -8,6 +8,7 @@ const TruckAndDriverEnt = require("./truck-driver");
 const OrderEnt = require("./order");
 const PushDeviceEnt = require("./push-device");
 const BlogPostEnt = require("./blog-post");
+const PaymentEnt = require("./payment");
 
 module.exports = {
 	UserEnt,
@@ -20,4 +21,5 @@ module.exports = {
 	OrderEnt,
 	PushDeviceEnt,
 	BlogPostEnt,
+	PaymentEnt,
 };
