@@ -29,7 +29,7 @@ let schema = new Schema({
 	deliveryAddress: String,
 	deliveryDate: Date,
 	creditPaymentDate: Date,
-	paymentMethod: String,
+	paymentMethod: { type: String, lowercase: true },
 	priceCategory: String,
 	deliveryStatus: {
 		type: String,

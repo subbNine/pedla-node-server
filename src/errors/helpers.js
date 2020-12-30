@@ -11,7 +11,7 @@ function _sendDevError(err, res) {
 function _sendProdError(err, res) {
 	if (err.isOperational) {
 		const { stack, ...rest } = err;
-
+		console.log(err);
 		return res.status(err.statusCode).json(rest);
 	} else {
 		console.error(err);

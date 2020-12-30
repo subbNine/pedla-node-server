@@ -199,7 +199,11 @@ module.exports = class OrderMapper extends BaseMapper {
 			let driverEnt;
 			let buyerEnt;
 			let peddlerProductEnt;
-			if (doc.driverId && doc.driverId._id) {
+			if (
+				doc.driverId &&
+				!Types.ObjectId.isValid(doc.driverId) &&
+				doc.driverId._id
+			) {
 				driverEnt = this._toEntity(doc.driverId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",
@@ -211,7 +215,11 @@ module.exports = class OrderMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.buyerId && doc.buyerId._id) {
+			if (
+				doc.buyerId &&
+				!Types.ObjectId.isValid(doc.buyerId) &&
+				doc.buyerId._id
+			) {
 				buyerEnt = this._toEntity(doc.buyerId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",
@@ -223,7 +231,11 @@ module.exports = class OrderMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.productId && doc.productId._id) {
+			if (
+				doc.productId &&
+				!Types.ObjectId.isValid(doc.productId) &&
+				doc.productId._id
+			) {
 				const entObj = doc.productId;
 
 				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {

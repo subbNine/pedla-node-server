@@ -1,6 +1,6 @@
 module.exports = {
 	fluterWave: "fluter-wave",
-	paystack: "pay-stack",
+	paystack: "paystack",
 	cashOnDelivery: "cash-on-delivery",
 	transfer: "transfer",
 };

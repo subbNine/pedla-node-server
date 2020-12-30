@@ -2,7 +2,7 @@ const paymentGateway = require("../gateways/payment");
 const { utils } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 
-const { formatNumber } = utils;
+const { formatNumber, Result } = utils;
 
 module.exports = class Payment {
 	constructor({ mappers }) {

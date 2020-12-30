@@ -3,7 +3,8 @@ const { utils, error } = require("../lib");
 const {
 	order: { orderStatus, deliveryStatus, paymentMethod },
 } = require("../db/mongo/enums");
-const { notification, payment } = require("./index");
+const { notification } = require("../index.js");
+const Payment = require("./payment");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -250,6 +251,7 @@ module.exports = class Order {
 
 	async createOrder(order) {
 		const { orderMapper } = this.mappers;
+		const payment = new Payment({ mappers: this.mappers });
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 
