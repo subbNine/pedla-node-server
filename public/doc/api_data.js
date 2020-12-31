@@ -2048,7 +2048,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/user/buyer/payment/verify",
+    "url": "/api/user/buyer/payment/verify/:paymentRef",
     "title": "Check if payment has been verified",
     "name": "getPaymentVerified",
     "group": "Payment",
