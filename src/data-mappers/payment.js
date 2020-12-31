@@ -6,6 +6,7 @@ const {
 	PeddlerProductEnt,
 	ProductEnt,
 } = require("../entities/domain");
+const { Types } = require("mongoose");
 
 module.exports = class PaymentMapper extends BaseMapper {
 	constructor(models) {
@@ -13,17 +14,31 @@ module.exports = class PaymentMapper extends BaseMapper {
 		this.models = models;
 	}
 
-	async findPayment(filter) {
+	async findPayment(filter, options) {
 		const { Payment } = this.models;
 
-		const doc = await Payment.findOne(this.toPaymentPersistence(filter))
-			.populate("orderId.driverId")
-			.populate("orderId.buyerId")
-			.populate({ path: "productId", populate: { path: "productId" } });
+		const { populateFn } = options || {};
 
+		const q = Payment.findOne(this.toPaymentPersistence(filter));
+
+		if (typeof populateFn === "function") {
+			populateFn(q);
+		}
+
+		const doc = await q;
 		if (doc) {
 			const docObj = doc.toObject();
-			const order = this.toOrderEntity(docObj.orderId);
+
+			let order;
+			if (
+				docObj.orderId &&
+				!Types.ObjectId.isValid(docObj.orderId) &&
+				docObj.orderId._id
+			) {
+				order = this.toOrderEntity(docObj.orderId);
+			} else {
+				order = docObj.orderId;
+			}
 
 			const result = this.toPaymentEntity(Object.assign(docObj, { order }));
 
@@ -31,18 +46,33 @@ module.exports = class PaymentMapper extends BaseMapper {
 		}
 	}
 
-	async findPayments(filterEnt) {
+	async findPayments(filterEnt, options) {
 		const { Payment } = this.models;
 
-		const docs = await Payment.find(this.toPaymentPersistence(filterEnt))
-			// .populate("orderId")
-			.populate("orderId");
+		const { populateFn } = options || {};
+
+		const q = Payment.find(this.toPaymentPersistence(filterEnt));
+
+		if (typeof populateFn === "function") {
+			populateFn(q);
+		}
 
 		const results = [];
+		const docs = await q;
 		if (docs) {
 			for (const doc of docs) {
 				const docObj = doc.toObject();
-				const order = this.toOrderEntity(docObj.orderId);
+				let order;
+				if (
+					docObj.orderId &&
+					!Types.ObjectId.isValid(docObj.orderId) &&
+					docObj.orderId._id
+				) {
+					order = this.toOrderEntity(docObj.orderId);
+				} else {
+					order = docObj.orderId;
+				}
+
 				results.push(this.toPaymentEntity(Object.assign(docObj, { order })));
 			}
 
@@ -62,12 +92,12 @@ module.exports = class PaymentMapper extends BaseMapper {
 		}
 	}
 
-	async updatePaymentById(id, orderPaymentEnt) {
+	async updatePayment(filter, orderPaymentEnt) {
 		const { Payment } = this.models;
 
 		const update = this.toPaymentPersistence(orderPaymentEnt);
 
-		const doc = await Payment.findByIdAndUpdate(id, update, {
+		const doc = await Payment.findOneAndUpdate(filter, update, {
 			new: true,
 		}).populate("orderId");
 
@@ -90,15 +120,21 @@ module.exports = class PaymentMapper extends BaseMapper {
 		return this._toEntity(doc, PaymentEnt, {
 			_id: "id",
 			orderId: "order",
+			gatewayReference: "reference",
+			gatewayAccessCode: "accessCode",
 		});
 	}
 
-	toOrderEnt(doc) {
+	toOrderEntity(doc) {
 		if (doc) {
 			let driverEnt;
 			let buyerEnt;
 			let peddlerProductEnt;
-			if (doc.driverId && doc.driverId._id) {
+			if (
+				doc.driverId &&
+				!Types.ObjectId.isValid(doc.driverId) &&
+				doc.driverId._id
+			) {
 				driverEnt = this._toEntity(doc.driverId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",
@@ -110,7 +146,11 @@ module.exports = class PaymentMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.buyerId && doc.buyerId._id) {
+			if (
+				doc.buyerId &&
+				!Types.ObjectId.isValid(doc.buyerId) &&
+				doc.buyerId._id
+			) {
 				buyerEnt = this._toEntity(doc.buyerId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",
@@ -122,7 +162,11 @@ module.exports = class PaymentMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.productId && doc.productId._id) {
+			if (
+				doc.productId &&
+				!Types.ObjectId.isValid(doc.productId) &&
+				doc.productId._id
+			) {
 				const entObj = doc.productId;
 
 				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {

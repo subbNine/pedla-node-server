@@ -305,4 +305,20 @@ router.post(
 	catchAsync(notificationController.sendNotification)
 );
 
+/**
+ * @api {get} /api/user/buyer/payment/verify/:paymentRef Check if payment has been verified
+ * @apiName getPaymentVerified
+ * @apiGroup Payment
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Check if payment has been verified
+ *
+ * @apiParam {String} paymentRef payment reference received from transaction initialization
+ */
+router.get(
+	"/payment/verify/:paymentRef",
+	catchAsync(orderController.verifyPayment)
+);
+
 module.exports = router;

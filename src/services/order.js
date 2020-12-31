@@ -111,7 +111,10 @@ module.exports = class Order {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
-				await this._loadPeddlerCode(eachOrder);
+				await Promise.all([
+					this._loadPeddlerCode(eachOrder),
+					this._loadPayment(eachOrder),
+				]);
 				results.push(eachOrder.repr());
 			}
 
@@ -159,7 +162,10 @@ module.exports = class Order {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
-				await this._loadPeddlerCode(eachOrder);
+				await Promise.all([
+					this._loadPeddlerCode(eachOrder),
+					this._loadPayment(eachOrder),
+				]);
 				results.push(eachOrder.repr());
 			}
 
@@ -204,7 +210,10 @@ module.exports = class Order {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
-				await this._loadPeddlerCode(eachOrder);
+				await Promise.all([
+					this._loadPeddlerCode(eachOrder),
+					this._loadPayment(eachOrder),
+				]);
 				results.push(eachOrder.repr());
 			}
 
@@ -236,13 +245,28 @@ module.exports = class Order {
 		return order;
 	}
 
+	async _loadPayment(order) {
+		const { paymentMapper } = this.mappers;
+
+		const payment = await paymentMapper.findPayment({ orderId: order.id });
+
+		if (payment) {
+			order.payment = payment;
+		}
+
+		return order;
+	}
+
 	async findOrder(orderDto) {
 		const { orderMapper } = this.mappers;
 
 		const foundOrder = await orderMapper.findOrder(orderDto);
 
 		if (foundOrder) {
-			await this._loadPeddlerCode(foundOrder);
+			await Promise.all([
+				this._loadPeddlerCode(foundOrder),
+				this._loadPayment(foundOrder),
+			]);
 			return Result.ok(foundOrder.repr());
 		} else {
 			return Result.ok(null);
@@ -341,20 +365,20 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			const notificationObject = {
-				title: "Order Rejected",
-				message: "The order has been Rejected",
-			};
+			// const notificationObject = {
+			// 	title: "Order Rejected",
+			// 	message: "The order has been Rejected",
+			// };
 
-			if (user.isDriver()) {
-				notificationObject.receiverId = updatedOrder.buyer.id;
-			} else {
-				if (user.isBuyer()) {
-					notificationObject.receiverId = updatedOrder.driver.id;
-				}
-			}
+			// if (user.isDriver()) {
+			// 	notificationObject.receiverId = updatedOrder.buyer.id;
+			// } else {
+			// 	if (user.isBuyer()) {
+			// 		notificationObject.receiverId = updatedOrder.driver.id;
+			// 	}
+			// }
 
-			notification.sendNotification(notificationObject);
+			// notification.sendNotification(notificationObject);
 
 			return Result.ok({ id: updatedOrder.repr().id });
 		} else {
@@ -392,13 +416,13 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			const notificationObject = {
-				title: "Delivery Started",
-				receiverId: updatedOrder.buyer.id,
-				message: "Your order is on it's way",
-			};
+			// const notificationObject = {
+			// 	title: "Delivery Started",
+			// 	receiverId: updatedOrder.buyer.id,
+			// 	message: "Your order is on it's way",
+			// };
 
-			notification.sendNotification(notificationObject);
+			// notification.sendNotification(notificationObject);
 
 			return Result.ok({ id: updatedOrder.repr().id });
 		} else {
@@ -418,13 +442,13 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			const notificationObject = {
-				title: "Order Accepted",
-				receiverId: updatedOrder.buyer.id,
-				message: "Your order has been accepted",
-			};
+			// const notificationObject = {
+			// 	title: "Order Accepted",
+			// 	receiverId: updatedOrder.buyer.id,
+			// 	message: "Your order has been accepted",
+			// };
 
-			notification.sendNotification(notificationObject);
+			// notification.sendNotification(notificationObject);
 
 			return Result.ok({ id: updatedOrder.repr().id });
 		} else {
@@ -444,20 +468,20 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			const notificationObject = {
-				title: "Order Accepted",
-				message: "Your order has been accepted",
-			};
+			// const notificationObject = {
+			// 	title: "Order Accepted",
+			// 	message: "Your order has been accepted",
+			// };
 
-			if (user.isDriver()) {
-				notificationObject.receiverId = updatedOrder.buyer.id;
-			} else {
-				if (user.isBuyer()) {
-					notificationObject.receiverId = updatedOrder.driver.id;
-				}
-			}
+			// if (user.isDriver()) {
+			// 	notificationObject.receiverId = updatedOrder.buyer.id;
+			// } else {
+			// 	if (user.isBuyer()) {
+			// 		notificationObject.receiverId = updatedOrder.driver.id;
+			// 	}
+			// }
 
-			notification.sendNotification(notificationObject);
+			// notification.sendNotification(notificationObject);
 
 			return Result.ok({ id: updatedOrder.repr().id });
 		} else {

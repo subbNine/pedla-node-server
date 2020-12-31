@@ -59,6 +59,10 @@ module.exports = {
 		statusCode: 404,
 		name: "PhoneConflictError",
 	},
+	PaymentError: {
+		statusCode: 400,
+		name: "PaymentError",
+	},
 	ExpiredOtp: { statusCode: 400, name: "ExpiredOtp" },
 	IncorrectOtp: { statusCode: 400, name: "IncorrectOtp" },
 	OtpNotIssued: { statusCode: 400, name: "OtpNotIssued" },

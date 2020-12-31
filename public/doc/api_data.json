@@ -1556,6 +1556,17 @@
   },
   {
     "type": "get",
+    "url": "/api/posts",
+    "title": "Get Posts",
+    "name": "getUserBlogPosts",
+    "group": "Buyer_And_Seller_-_Post",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get feeds for products. The product Id is used to categorize feeds</p>",
+    "filename": "src/api/routes/non-protected-routes.js",
+    "groupTitle": "Buyer_And_Seller_-_Post"
+  },
+  {
+    "type": "get",
     "url": "/api/user/driver/orders?status=pending+accepted",
     "title": "Retrieve orders",
     "name": "getDriverOrders",
@@ -2034,6 +2045,30 @@
     },
     "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Notification"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/buyer/payment/verify",
+    "title": "Check if payment has been verified",
+    "name": "getPaymentVerified",
+    "group": "Payment",
+    "version": "1.0.0",
+    "description": "<p>Check if payment has been verified</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "paymentRef",
+            "description": "<p>payment reference received from transaction initialization</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Payment"
   },
   {
     "type": "get",

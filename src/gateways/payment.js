@@ -18,8 +18,9 @@ const requestPromisified = (options, params) =>
 				reject(error);
 			});
 
-		req.write(params);
-
+		if (params) {
+			req.write(params);
+		}
 		req.end();
 	});
 
@@ -43,6 +44,22 @@ class PaymentGateway {
 		};
 
 		const resp = await requestPromisified(options, jsonParams);
+
+		return resp;
+	}
+
+	async verifyTransaction(reference) {
+		const options = {
+			hostname: "api.paystack.co",
+			port: 443,
+			path: `/transaction/verify/:${reference}`,
+			method: "GET",
+			headers: {
+				Authorization: this.headers.Authorization,
+			},
+		};
+
+		const resp = await requestPromisified(options);
 
 		return resp;
 	}

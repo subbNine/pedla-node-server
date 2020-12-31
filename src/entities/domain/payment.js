@@ -17,7 +17,9 @@ module.exports = class Payment {
 	// object representation of the domain entity.
 	repr() {
 		const objectRepr = {
-			order: this.order,
+			order:
+				(this.order && this.order.repr ? this.order.repr() : this.order) ||
+				null,
 			id: this.id,
 			paymentMethod: this.paymentMethod,
 			gatewayAccessCode: this.gatewayAccessCode,

@@ -1,6 +1,6 @@
 const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
-const { orderService } = require("../../services");
+const { orderService, payment } = require("../../services");
 const { orderStatus } = require("../../db/mongo/enums/order");
 
 module.exports = class Order extends BaseController {
@@ -241,6 +241,14 @@ module.exports = class Order extends BaseController {
 		orderDto.rating = rating;
 
 		const result = await orderService.rateTransaction(orderDto);
+
+		this.response(result, res);
+	}
+
+	async verifyPayment(req, res, next) {
+		const { paymentRef } = req.params;
+
+		const result = await payment.verifyPayment(paymentRef);
 
 		this.response(result, res);
 	}

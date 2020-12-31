@@ -1,7 +1,10 @@
 const paymentGateway = require("../gateways/payment");
-const { utils } = require("../lib");
+const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
+const { paymentStatus } = require("../db/mongo/enums/order");
 
+const AppError = error.AppError;
+const errorCodes = error.errorCodes;
 const { formatNumber, Result } = utils;
 
 module.exports = class Payment {
@@ -131,5 +134,38 @@ module.exports = class Payment {
 		const paymentRecord = await paymentMapper.createPayment(payment);
 
 		return Result.ok(paymentRecord.repr());
+	}
+
+	async verifyPayment(ref) {
+		const { paymentMapper } = this.mappers;
+
+		const paymentResp = await paymentGateway.verifyTransaction(ref);
+
+		const paymentRespData = {};
+
+		if (paymentResp && paymentResp.status) {
+			paymentRespData.status = paymentResp.status;
+			paymentRespData.data = { status: paymentResp.data.status };
+			paymentRespData.data.amount = paymentResp.datadata.dataamount;
+			paymentRespData.data.currency = paymentResp.data.currency;
+			paymentRespData.data.message = paymentResp.data.gateway_response;
+
+			if (paymentRespData.data.status === "success") {
+				paymentMapper.updatePayment(
+					{ gatewayReference: ref },
+					{ status: paymentStatus.PAID }
+				);
+			}
+
+			return Result.ok(paymentRespData);
+		} else {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.PaymentError.name,
+					statusCode: errorCodes.PaymentError.statusCode,
+					message: paymentResp.message,
+				})
+			);
+		}
 	}
 };
