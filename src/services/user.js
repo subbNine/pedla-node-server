@@ -354,6 +354,7 @@ module.exports = class User {
 		);
 
 		if (users) {
+			
 			return Result.ok(users);
 		}
 		return Result.ok([]);

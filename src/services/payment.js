@@ -1,7 +1,7 @@
 const paymentGateway = require("../gateways/payment");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
-const { paymentStatus } = require("../db/mongo/enums/order");
+const { paymentStatus, paymentMethod } = require("../db/mongo/enums/order");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -136,7 +136,7 @@ module.exports = class Payment {
 		return Result.ok(paymentRecord.repr());
 	}
 
-	async verifyPayment(ref) {
+	async verifyPaystackPayment(ref) {
 		const { paymentMapper } = this.mappers;
 
 		const paymentResp = await paymentGateway.verifyTransaction(ref);
@@ -167,5 +167,79 @@ module.exports = class Payment {
 				})
 			);
 		}
+	}
+
+	async updloadProofOfPayment(payment) {
+		const { paymentMapper } = this.mappers;
+
+		const updated = await paymentMapper.updatePayment(
+			{ orderId: payment.orderId },
+			payment
+		);
+
+		return Result.ok(updated);
+	}
+
+	async getUnVerifiedPayments({ pagination: { page, limit } }) {
+		const { paymentMapper } = this.mappers;
+
+		const notPaid = { status: paymentStatus.NOTPAID };
+
+		const notInitializedViaPaystackChannel = {
+			paymentMethod: { $ne: paymentMethod.paystack },
+		};
+
+		const popUploaded = { proofOfPayment: { $exists: true } };
+
+		const unVerifiedPaymentQueryObj = {
+			$and: [notPaid, notInitializedViaPaystackChannel, popUploaded],
+		};
+
+		const totalDocsQuery = paymentMapper.countDocs(unVerifiedPaymentQueryObj);
+
+		const unverifiedPaymentsQuery = paymentMapper.findPayments(
+			unVerifiedPaymentQueryObj,
+			{
+				pagination: { page: page ? +page - 1 : 0, limit: +limit || 30 },
+				populateFn: (q) =>
+					q
+						.populate({ path: "orderId", populate: { path: "productId" } })
+						.populate({ path: "buyerId" })
+						.populate({ path: "driverId" }),
+			}
+		);
+
+		const [totalDocs, unverifiedPayments] = await Promise.all([
+			totalDocsQuery,
+			unverifiedPaymentsQuery,
+		]);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		if (unverifiedPayments) {
+			const results = [];
+
+			for (const eachPayment of unverifiedPayments) {
+				results.push(eachPayment.repr());
+			}
+
+			return Result.ok({
+				data: results,
+				pagination: { totalPages, currentPage: +page || 1, totalDocs },
+			});
+		} else {
+			return Result.ok(null);
+		}
+	}
+
+	async verifyTransferPayment(paymentId) {
+		const { paymentMapper } = this.mappers;
+
+		const verified = await paymentMapper.updatePayment(
+			{ _id: paymentId },
+			{ status: paymentStatus.PAID }
+		);
+
+		return Result.ok(verified);
 	}
 };

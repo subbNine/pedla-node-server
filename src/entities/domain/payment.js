@@ -1,3 +1,5 @@
+const { isType } = require("../../lib/utils");
+
 module.exports = class Payment {
 	order;
 	id;
@@ -5,6 +7,7 @@ module.exports = class Payment {
 	gatewayAccessCode;
 	gatewayReference;
 	status;
+	proofOfPayment;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -25,6 +28,10 @@ module.exports = class Payment {
 			gatewayAccessCode: this.gatewayAccessCode,
 			gatewayReference: this.gatewayReference,
 			status: this.status,
+			proofOfPayment:
+				(isType("object", this.proofOfPayment) && this.proofOfPayment.uri) ||
+				this.proofOfPayment ||
+				null,
 		};
 
 		return objectRepr;

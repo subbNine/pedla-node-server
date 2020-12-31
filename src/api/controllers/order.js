@@ -245,10 +245,44 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
-	async verifyPayment(req, res, next) {
+	async verifyPaystackPayment(req, res, next) {
 		const { paymentRef } = req.params;
 
-		const result = await payment.verifyPayment(paymentRef);
+		const result = await payment.verifyPaystackPayment(paymentRef);
+
+		this.response(result, res);
+	}
+
+	async uploadProofOfPayment(req, res, next) {
+		const { orderId, imgUrl } = req.body;
+
+		const paymentObj = {
+			orderId,
+			proofOfPayment: {
+				imgId: Date.now(),
+				uri: imgUrl,
+			},
+		};
+
+		const result = await payment.updloadProofOfPayment(paymentObj);
+
+		this.response(result, res);
+	}
+
+	async verifyTransferPayment(req, res, next) {
+		const { paymentId } = req.params;
+
+		const result = await payment.verifyTransferPayment(paymentId);
+
+		this.response(result, res);
+	}
+
+	async getUnverifiedPayments(req, res, next) {
+		const { page, limit } = req.query;
+
+		const result = await payment.getUnVerifiedPayments({
+			pagination: { limit, page },
+		});
 
 		this.response(result, res);
 	}

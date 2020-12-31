@@ -8,7 +8,10 @@ const {
 	ProductEnt,
 } = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
-const { types } = require("../db/mongo/enums").user;
+const {
+	user: { types },
+	order: { deliveryStatus },
+} = require("../db/mongo/enums");
 const { Types } = require("mongoose");
 
 module.exports = class UserMapper extends BaseMapper {
@@ -41,7 +44,9 @@ module.exports = class UserMapper extends BaseMapper {
 			if (result.avatarImg && result.avatarImg.uri) {
 				entObj.avatarImg = result.avatarImg.uri;
 			}
-			return this._toEntity(entObj, UserEnt, this._toEntityTransform);
+			const userEnt = this._toEntity(entObj, UserEnt, this._toEntityTransform);
+
+			return userEnt;
 		}
 	}
 
@@ -107,6 +112,7 @@ module.exports = class UserMapper extends BaseMapper {
 					entObj.peddler = this._toEntity(entObj.peddler, UserEnt, {
 						_id: "id",
 					});
+					entObj.driverStats = await this.driverOrderStats(entObj.id);
 				}
 				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
 			}
@@ -250,8 +256,87 @@ module.exports = class UserMapper extends BaseMapper {
 		const doc = await User.findOne(matchEmailOrUserName);
 
 		if (doc && !isObjectEmpty(matchEmailOrUserName)) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			const userEnt = this._toEntity(
+				doc.toObject(),
+				UserEnt,
+				this._toEntityTransform
+			);
+
+			if (userEnt.isDriver()) {
+				userEnt.driverStats = await this.driverOrderStats(userEnt.id);
+			}
+			return userEnt;
 		}
+	}
+
+	async driverOrderStats(driverId) {
+		const { Order } = this.models;
+		const nCancelledOrdersPromise = Order.countDocuments({
+			$and: [
+				{ driverId: driverId },
+				{ deliveryStatus: deliveryStatus.REJECTED },
+			],
+		});
+
+		const nCompleteOrdersPromise = Order.countDocuments({
+			$and: [
+				{ driverId: driverId },
+				{ deliveryStatus: deliveryStatus.DELIVERED },
+			],
+		});
+
+		const nAllOrdersPromise = Order.countDocuments({
+			driverId: driverId,
+		});
+
+		const totalDriverRatingPromise = Order.aggregate([
+			{
+				$match: {
+					driverId: Types.ObjectId(driverId),
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					totalRating: {
+						$sum: "$rating",
+					},
+				},
+			},
+		]);
+
+		// const
+
+		const [
+			nCompleteOrders,
+			nCancelledOrders,
+			nAllOrders,
+			totalDriverRatingArr,
+		] = await Promise.all([
+			nCompleteOrdersPromise,
+			nCancelledOrdersPromise,
+			nAllOrdersPromise,
+			totalDriverRatingPromise,
+		]);
+
+		const percAcceptance = ((+nCompleteOrders || 0) / (+nAllOrders || 1)) * 100;
+		const percCancelled = ((+nCancelledOrders || 0) / (+nAllOrders || 1)) * 100;
+		const totalOrdersRating = nAllOrders * 5;
+
+		const totalDriverRating =
+			totalDriverRatingArr && totalDriverRatingArr.length
+				? totalDriverRatingArr[0].totalRating
+				: 0;
+
+		const averageRating = (5 * +totalDriverRating) / totalOrdersRating;
+
+		return {
+			nCancelled: +nCancelledOrders || 0,
+			nComplete: +nCompleteOrders || 0,
+			percAcceptance: percAcceptance ? +percAcceptance.toFixed(2) : 0,
+			percCancelled: percCancelled ? +percCancelled.toFixed(2) : 0,
+			rating: averageRating ? +averageRating.toFixed(1) : 0,
+		};
 	}
 
 	async searchForProductDrivers({ productId, quantity, geo }, options) {
@@ -326,9 +411,12 @@ module.exports = class UserMapper extends BaseMapper {
 
 						const peddlerQuery = User.findOne({ _id: driver.peddler });
 
-						const [truckAndDriver, peddler] = await Promise.all([
+						const driverStatsQuery = this.driverOrderStats(driver._id);
+
+						const [truckAndDriver, peddler, driverStats] = await Promise.all([
 							truckAndDriverQuery,
 							peddlerQuery,
+							driverStatsQuery,
 						]);
 
 						const foundDriverProduct =
@@ -361,6 +449,9 @@ module.exports = class UserMapper extends BaseMapper {
 									productId: "product",
 								}
 							);
+
+							driverEnt.driverStats = driverStats;
+
 							driversList.push(
 								Object.assign(
 									{},

@@ -171,7 +171,7 @@ module.exports = class Order {
 
 			return Result.ok({
 				data: results,
-				pagination: { totalPages, currentPage: page || 1, totalDocs },
+				pagination: { totalPages, currentPage: +page || 1, totalDocs },
 			});
 		} else {
 			return Result.ok(null);

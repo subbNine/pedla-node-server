@@ -46,15 +46,27 @@ module.exports = class PaymentMapper extends BaseMapper {
 		}
 	}
 
-	async findPayments(filterEnt, options) {
+	async countDocs(filter) {
+		const { Payment } = this.models;
+		return await Payment.countDocuments(filter);
+	}
+
+	async findPayments(filter, options) {
 		const { Payment } = this.models;
 
-		const { populateFn } = options || {};
+		const { populateFn, pagination } = options || {};
+		const { limit = 0, page = 0 } = pagination || {};
 
-		const q = Payment.find(this.toPaymentPersistence(filterEnt));
+		const q = Payment.find(filter);
 
 		if (typeof populateFn === "function") {
 			populateFn(q);
+		}
+
+		if (limit) {
+			q.limit(+limit);
+
+			q.skip(+limit * +page);
 		}
 
 		const results = [];
@@ -95,9 +107,9 @@ module.exports = class PaymentMapper extends BaseMapper {
 	async updatePayment(filter, orderPaymentEnt) {
 		const { Payment } = this.models;
 
-		const update = this.toPaymentPersistence(orderPaymentEnt);
+		const updates = this.toPaymentPersistence(orderPaymentEnt);
 
-		const doc = await Payment.findOneAndUpdate(filter, update, {
+		const doc = await Payment.findOneAndUpdate(filter, updates, {
 			new: true,
 		}).populate("orderId");
 

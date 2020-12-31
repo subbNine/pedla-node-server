@@ -285,4 +285,34 @@ router.delete("/posts", catchAsync(blogPostController.deletePosts));
  */
 router.get("/posts", catchAsync(blogPostController.getPosts));
 
+/**
+ * @api {put} /api/user/admin/payment/verify/:paymentId Verify payment
+ * @apiName putPaymentVerify
+ * @apiGroup Payment
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This enpoint will verify transactions by transfer
+ *
+ * @apiParam {ID} paymentId Id of the payment you want to verify
+ */
+router.put(
+	"/payment/verify/:paymentId",
+	catchAsync(orderController.verifyTransferPayment)
+);
+
+/**
+ * @api {get} /api/user/admin/payments?page=1&limit=30 Get unverified Payments
+ * @apiName getAdminPayments
+ * @apiGroup Payment
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This enpoint will retrieve payments that have been made by transfer bu has not been verified
+ *
+ * @apiParam {Number} page page number
+ * @apiParam {Number} limit page limit
+ */
+router.get("/payments", catchAsync(orderController.getUnverifiedPayments));
+
 module.exports = router;

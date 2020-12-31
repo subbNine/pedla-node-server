@@ -2048,6 +2048,37 @@
   },
   {
     "type": "get",
+    "url": "/api/user/admin/payments?page=1&limit=30",
+    "title": "Get unverified Payments",
+    "name": "getAdminPayments",
+    "group": "Payment",
+    "version": "1.0.0",
+    "description": "<p>This enpoint will retrieve payments that have been made by transfer bu has not been verified</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "limit",
+            "description": "<p>page limit</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Payment"
+  },
+  {
+    "type": "get",
     "url": "/api/user/buyer/payment/verify/:paymentRef",
     "title": "Check if payment has been verified",
     "name": "getPaymentVerified",
@@ -2068,6 +2099,61 @@
       }
     },
     "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Payment"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/buyer/payment/proof",
+    "title": "Upload proof of payment",
+    "name": "postPaymentProof",
+    "group": "Payment",
+    "version": "1.0.0",
+    "description": "<p>Endpoint Upload proof of payment</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "orderId",
+            "description": "<p>id of the order you want to upload proof of payment for</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "imgUrl",
+            "description": "<p>the url of the proof of payment image</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/buyer.js",
+    "groupTitle": "Payment"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/payment/verify/:paymentId",
+    "title": "Verify payment",
+    "name": "putPaymentVerify",
+    "group": "Payment",
+    "version": "1.0.0",
+    "description": "<p>This enpoint will verify transactions by transfer</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "paymentId",
+            "description": "<p>Id of the payment you want to verify</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
     "groupTitle": "Payment"
   },
   {

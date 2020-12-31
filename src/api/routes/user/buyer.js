@@ -318,7 +318,20 @@ router.post(
  */
 router.get(
 	"/payment/verify/:paymentRef",
-	catchAsync(orderController.verifyPayment)
+	catchAsync(orderController.verifyPaystackPayment)
 );
+
+/**
+ * @api {post} /api/user/buyer/payment/proof Upload proof of payment
+ * @apiName postPaymentProof
+ * @apiGroup Payment
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint Upload proof of payment
+ * @apiParam {ID} orderId id of the order you want to upload proof of payment for
+ * @apiParam {String} imgUrl the url of the proof of payment image
+ */
+router.post("/payment/proof", catchAsync(orderController.uploadProofOfPayment));
 
 module.exports = router;

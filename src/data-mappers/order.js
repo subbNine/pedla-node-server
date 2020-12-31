@@ -40,7 +40,11 @@ module.exports = class OrderMapper extends BaseMapper {
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(this.toOrderEnt(doc.toObject()));
+				const orderEnt = this.toOrderEnt(doc.toObject());
+				orderEnt.driver.driverStats = await this.driverOrderStats(
+					orderEnt.driver.id
+				);
+				results.push(orderEnt);
 			}
 
 			return results;
@@ -144,7 +148,12 @@ module.exports = class OrderMapper extends BaseMapper {
 			.populate("buyerId");
 
 		if (doc) {
-			return this.toOrderEnt(doc.toObject());
+			const orderEnt = this.toOrderEnt(doc.toObject());
+			orderEnt.driver.driverStats = await this.driverOrderStats(
+				orderEnt.driver.id
+			);
+
+			return orderEnt;
 		}
 	}
 
