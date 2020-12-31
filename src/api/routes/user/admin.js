@@ -269,7 +269,7 @@ router.put(
  *
  * @apiDescription Endpoint to delete feeds for each product. The product Id is used to categorize feeds
  *
- * @apiParam {ID[]} ids array of feeds ids you deleted from the database
+ * @apiParam {ID[]} ids body param. array of feeds ids you want deleted from the database
  */
 router.delete("/posts", catchAsync(blogPostController.deletePosts));
 

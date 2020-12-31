@@ -98,7 +98,7 @@ define({ "api": [
             "type": "ID[]",
             "optional": false,
             "field": "ids",
-            "description": "<p>array of feeds ids you deleted from the database</p>"
+            "description": "<p>body param. array of feeds ids you want deleted from the database</p>"
           }
         ]
       }
