@@ -169,15 +169,21 @@ module.exports = class Payment {
 		}
 	}
 
-	async updloadProofOfPayment(payment) {
+	async updloadProofOfPayment(payment, buyer) {
 		const { paymentMapper } = this.mappers;
 
 		const updated = await paymentMapper.updatePayment(
-			{ orderId: payment.orderId },
+			{ orderId: payment.orderId, buyerId: buyer.id },
 			payment
 		);
 
-		return Result.ok(updated);
+		if (updated) {
+			const obj = updated.repr();
+
+			return Result.ok({ ...obj, order: { id: obj.order.id } });
+		} else {
+			return Result.ok(null);
+		}
 	}
 
 	async getUnVerifiedPayments({ pagination: { page, limit } }) {
@@ -236,10 +242,12 @@ module.exports = class Payment {
 		const { paymentMapper } = this.mappers;
 
 		const verified = await paymentMapper.updatePayment(
-			{ _id: paymentId },
+			{ _id: paymentId, paymentMethod: { $ne: paymentMethod.paystack } },
 			{ status: paymentStatus.PAID }
 		);
 
-		return Result.ok(verified);
+		return Result.ok(
+			(verified && { ...verified, order: { id: verified.order.id } }) || null
+		);
 	}
 };

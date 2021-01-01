@@ -256,6 +256,8 @@ module.exports = class Order extends BaseController {
 	async uploadProofOfPayment(req, res, next) {
 		const { orderId, imgUrl } = req.body;
 
+		const { user } = req._App;
+
 		const paymentObj = {
 			orderId,
 			proofOfPayment: {
@@ -264,7 +266,7 @@ module.exports = class Order extends BaseController {
 			},
 		};
 
-		const result = await payment.updloadProofOfPayment(paymentObj);
+		const result = await payment.updloadProofOfPayment(paymentObj, user);
 
 		this.response(result, res);
 	}
