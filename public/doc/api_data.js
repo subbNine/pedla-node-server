@@ -730,6 +730,21 @@ define({ "api": [
             "optional": false,
             "field": "email",
             "description": "<p>Email address of peddler</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cacUrl",
+            "description": "<p>url of C.A.C document of corporate buyers</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "buyerType",
+            "defaultValue": "regular",
+            "description": "<p>type of buyer (corporate|regular)</p>"
           }
         ]
       }
@@ -1564,6 +1579,69 @@ define({ "api": [
     "description": "<p>Endpoint to get feeds for products. The product Id is used to categorize feeds</p>",
     "filename": "src/api/routes/non-protected-routes.js",
     "groupTitle": "Buyer_And_Seller_-_Post"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/admin/buyers/corporate?active=1&page=1&limit=30",
+    "title": "Get corporate buyers",
+    "name": "getAdminBuyers",
+    "group": "Corporate_Buyers",
+    "version": "1.0.0",
+    "description": "<p>Retrieve corporate buyers. By default all inactive corporate buyers will be retreived.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "limit",
+            "description": "<p>page limit</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "active",
+            "defaultValue": "0",
+            "description": "<p>controls whether to retreive active or inactive corporate buyers.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Corporate_Buyers"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/admin/buyer/:buyerId",
+    "title": "Activate corporate buyer",
+    "name": "putAdminBuyer",
+    "group": "Corporate_Buyers",
+    "version": "1.0.0",
+    "description": "<p>Activate Corporate Buyer</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "buyerId",
+            "description": "<p>the id of the buyer whose account you want to activate</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/admin.js",
+    "groupTitle": "Corporate_Buyers"
   },
   {
     "type": "get",

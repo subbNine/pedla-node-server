@@ -293,7 +293,7 @@ module.exports = class Order {
 		});
 	}
 
-	async _isExistingOrderInProgress(driverId) {
+	async _isOrderInProgress(driverId) {
 		const { orderMapper } = this.mappers;
 		return await orderMapper.findOrder({
 			$and: [{ driverId }, { status: orderStatus.INPROGRESS }],
@@ -392,11 +392,11 @@ module.exports = class Order {
 		const orderEnt = new OrderEnt(order);
 		orderEnt.status = orderStatus.INPROGRESS;
 
-		const isExistingOrderInProgress = await this._isExistingOrderInProgress(
+		const isOrderInProgress = await this._isOrderInProgress(
 			order.driver.id
 		);
 
-		if (isExistingOrderInProgress) {
+		if (isOrderInProgress) {
 			return Result.fail(
 				new AppError({
 					name: errorCodes.BadRequestError,
