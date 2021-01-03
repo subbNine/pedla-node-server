@@ -315,4 +315,32 @@ router.put(
  */
 router.get("/payments", catchAsync(orderController.getUnverifiedPayments));
 
+/**
+ * @api {get} /api/user/admin/buyers/corporate?active=1&page=1&limit=30 Get corporate buyers
+ * @apiName getAdminBuyers
+ * @apiGroup Corporate Buyers
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Retrieve corporate buyers. By default all inactive corporate buyers will be retreived.
+ *
+ * @apiParam {Number} page page number
+ * @apiParam {Number} limit page limit
+ * @apiParam {Number} [active=0] controls whether to retreive active or inactive corporate buyers.
+ */
+router.get("/buyers/corporate", catchAsync(userController.getCorporateBuyers));
+
+/**
+ * @api {put} /api/user/admin/buyer/:buyerId Activate corporate buyer
+ * @apiName putAdminBuyer
+ * @apiGroup Corporate Buyers
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Activate Corporate Buyer
+ *
+ * @apiParam {ID} buyerId the id of the buyer whose account you want to activate
+ */
+router.put("/buyer/:buyerId", catchAsync(userController.getCorporateBuyers));
+
 module.exports = router;

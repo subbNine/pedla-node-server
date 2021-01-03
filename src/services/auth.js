@@ -260,6 +260,13 @@ module.exports = class Auth {
 			);
 		} else {
 			const userEnt = new UserEnt(userDto);
+
+			if (userEnt.isCorporateBuyer()) {
+				userEnt.isActive = false;
+			} else {
+				userEnt.isActive = true;
+			}
+
 			const newUser = await userMapper.createUser(userEnt);
 
 			eventEmitter.emit(eventTypes.buyerCreated, newUser);

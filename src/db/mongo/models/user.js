@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const presaveHook = require("../helpers/presave-hook");
-const { permissions, types, presence } = require("../enums").user;
+const { permissions, types, presence, buyerTypes } = require("../enums").user;
 
 const Schema = mongoose.Schema;
 
@@ -31,6 +31,11 @@ let schema = new Schema({
 		imgId: String,
 		uri: String,
 	},
+	buyerType: { type: String, enum: Object.values(buyerTypes), uppercase: true },
+	corporateBuyerCacImg: {
+		imgId: String,
+		uri: String,
+	},
 	presence: {
 		type: String,
 		enum: Object.values(presence),
@@ -42,6 +47,7 @@ let schema = new Schema({
 	},
 	peddlerCode: String,
 	isActivePeddler: Boolean,
+	isActive: Boolean,
 	isDisabled: { type: Boolean, default: false },
 	isDeleted: { type: Boolean, default: false },
 });

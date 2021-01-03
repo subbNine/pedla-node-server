@@ -42,6 +42,29 @@ module.exports = class User extends BaseController {
 		return this.response(result, res);
 	}
 
+	async getCorporateBuyers(req, res, next) {
+		const { limit, page, active = 0 } = req.query;
+
+		const result = await userService.getCorporateBuyers({
+			isActive: +active,
+			pagination: { limit, page },
+		});
+
+		return this.response(result, res);
+	}
+
+	async activateCorporateBuyer(req, res, next) {
+		const userDto = new UserDto();
+
+		const { buyerId } = req.params;
+
+		userDto.id = buyerId;
+
+		const result = await userService.activateCorporateBuyer(userDto);
+
+		return this.response(result, res);
+	}
+
 	async verifyRegisteredPeddler(req, res, next) {
 		const userDto = new UserDto();
 

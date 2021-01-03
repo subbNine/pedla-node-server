@@ -1,7 +1,7 @@
 const { UserEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
-const { permissions, presence } = require("../db/mongo/enums/user");
+const { permissions, buyerTypes } = require("../db/mongo/enums/user");
 const asyncExec = require("../lib/utils/async-exec");
 
 const { Result, generateJwtToken } = utils;
@@ -40,6 +40,19 @@ module.exports = class User {
 		if (updatedUser) {
 			eventEmitter.emit(eventTypes.peddlerVerified, updatedUser);
 
+			const objRepr = updatedUser.repr();
+			return Result.ok({ ...objRepr });
+		}
+	}
+
+	async activateCorporateBuyer(userDto) {
+		const { userMapper } = this.mappers;
+		const userEnt = new UserEnt(userDto);
+
+		userEnt.isActive = true;
+		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+
+		if (updatedUser) {
 			const objRepr = updatedUser.repr();
 			return Result.ok({ ...objRepr });
 		}
@@ -297,6 +310,38 @@ module.exports = class User {
 		}
 	}
 
+	async getCorporateBuyers(options) {
+		const { userMapper } = this.mappers;
+
+		const { pagination, isActive } = options || {};
+		const { limit, page } = pagination || {};
+
+		const filter = {
+			$and: [
+				{ buyerType: buyerTypes.CORPORATE },
+				{ isActive: !!isActive },
+				{ corporateBuyerCacImg: { $exists: true } },
+			],
+		};
+
+		const totalDocs = await userMapper.countDocs(filter);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundUsers = await userMapper.findUsers(filter, {
+			pagination: { limit, page: page ? page - 1 : 0 },
+		});
+
+		if (foundUsers) {
+			return Result.ok({
+				data: foundUsers.map((eachUser) => eachUser.repr()),
+				pagination: { totalPages, currentPage: page, totalDocs },
+			});
+		} else {
+			return Result.ok(null);
+		}
+	}
+
 	async getUsers(listOfUserTypes, options) {
 		const { userMapper } = this.mappers;
 
@@ -354,7 +399,6 @@ module.exports = class User {
 		);
 
 		if (users) {
-			
 			return Result.ok(users);
 		}
 		return Result.ok([]);

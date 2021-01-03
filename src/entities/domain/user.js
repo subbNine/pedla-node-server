@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const isType = require("../../lib/utils/is-type");
 
-const { permissions, types } = require("../../db/mongo/enums").user;
+const { permissions, types, buyerTypes } = require("../../db/mongo/enums").user;
 
 module.exports = class User {
 	id;
@@ -21,10 +21,13 @@ module.exports = class User {
 	latlon;
 	peddlerCode;
 	isActivePeddler;
+	isActive;
 	nTrucks;
 	peddler;
 	truck;
 	driverStats;
+	corporateBuyerCacImg;
+	buyerType;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -74,6 +77,16 @@ module.exports = class User {
 				? this.peddler.repr()
 				: this.peddler) || null;
 		objectRepr.driverStats = this.driverStats || null;
+		objectRepr.cacUrl =
+			(isType("object", this.corporateBuyerCacImg) &&
+				this.corporateBuyerCacImg.uri) ||
+			this.corporateBuyerCacImg ||
+			null;
+		objectRepr.buyerType = ("" + this.buyerType).toLowerCase();
+
+		if (this.isBuyer()) {
+			objectRepr.isActive = this.isActive;
+		}
 
 		if (this.isPeddler()) {
 			objectRepr.pooImage =
@@ -122,6 +135,10 @@ module.exports = class User {
 
 	isBuyer() {
 		return this.type === types.BUYER;
+	}
+
+	isCorporateBuyer() {
+		return this.buyerType === buyerTypes.CORPORATE;
 	}
 
 	isAdmin() {

@@ -177,16 +177,14 @@ router.post(
  * @apiParam {String} address Address of the buyer
  * @apiParam {String} password Password of the buyer
  * @apiParam {String} email Email address of peddler
+ * @apiParam {String} cacUrl url of C.A.C document of corporate buyers
+ * @apiParam {String} [buyerType=regular] type of buyer (corporate|regular)
  *
  * @apiSuccess {String} token Authentication token
  * @apiSuccess {ID} id user id
  *
  * @apiUse EmailConflictError
  */
-router.post(
-	"/buyer",
-	validateBody(validationSchemas.buyerSignup),
-	catchAsync(authController.buyerSignUp)
-);
+router.post("/buyer", catchAsync(authController.buyerSignUp));
 
 module.exports = router;

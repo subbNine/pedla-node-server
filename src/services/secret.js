@@ -61,11 +61,8 @@ class Secrets {
 						userEnt.id,
 						userEnt
 					);
-					if (updatedUserEnt.isPeddler()) {
-						eventEmitter.emit(
-							eventTypes.alertOpsTeam,
-							updatedUserEnt
-						);
+					if (updatedUserEnt.isPeddler() || updatedUserEnt.isCorporateBuyer()) {
+						eventEmitter.emit(eventTypes.alertOpsTeam, updatedUserEnt);
 					}
 				}
 

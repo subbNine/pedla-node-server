@@ -19,6 +19,7 @@ module.exports.postProfileUpdate = Joi.object().keys({
 module.exports.postProduct = Joi.object().keys({
 	name: Joi.string(),
 	description: Joi.string(),
+	price: Joi.number(),
 });
 
 module.exports.userId = Joi.object().keys({

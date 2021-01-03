@@ -1,6 +1,7 @@
 const BaseController = require("./base");
 const { UserDto } = require("../../entities/dtos");
 const { auth: authService } = require("../../services");
+const { buyerTypes } = require("../../db/mongo/enums/user");
 const { types: userTypes } = require("../../db/mongo/enums").user;
 
 module.exports = class Auth extends BaseController {
@@ -106,6 +107,8 @@ module.exports = class Auth extends BaseController {
 			address,
 			phoneNumber,
 			password,
+			buyerType,
+			cacUrl,
 		} = req.body;
 
 		userDto.firstName = firstName;
@@ -115,7 +118,16 @@ module.exports = class Auth extends BaseController {
 		userDto.type = userTypes.BUYER;
 		userDto.password = password;
 		userDto.address = address;
+		userDto.buyerType = buyerType
+			? ("" + buyerType).toUpperCase().trim()
+			: buyerTypes.REGULAR;
 
+		if (cacUrl) {
+			userDto.corporateBuyerCacImg = {
+				imgId: Date.now(),
+				uri: cacUrl,
+			};
+		}
 		const result = await authService.buyerSignUp(userDto);
 
 		return this.response(result, res);
