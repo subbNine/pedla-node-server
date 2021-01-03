@@ -19,10 +19,10 @@ module.exports = class BlogPost extends BaseController {
 		blogPostDto.product = productId;
 
 		if (req.file) {
-			const { secure_url, public_Id } = req.file;
+			const { secure_url, public_id } = req.file;
 
 			if (secure_url && public_id) {
-				blogPostDto.image = { imgId: secure_url, uri: public_Id };
+				blogPostDto.image = { imgId: secure_url, uri: public_id };
 			}
 		} else {
 			if (isType("string", image)) {
