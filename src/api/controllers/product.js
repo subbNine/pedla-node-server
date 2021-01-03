@@ -12,11 +12,12 @@ module.exports = class Product extends BaseController {
 	}
 
 	async createProduct(req, res, next) {
-		const { name, description } = req.body;
+		const { name, description, price } = req.body;
 
 		const productDto = new ProductDto();
 		productDto.name = name;
 		productDto.description = description;
+		productDto.price = +price;
 
 		const result = await productService.createProduct(productDto);
 
