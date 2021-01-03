@@ -23,7 +23,10 @@ module.exports = class BlogPost {
 			body: this.body || null,
 			image: (this.image && this.image.uri) || null,
 			createdAt: this.createdAt || null,
-			product: this.product || null,
+			product:
+				(this.product && this.product.repr
+					? this.product.repr()
+					: this.product) || null,
 		};
 
 		return objectRepr;
