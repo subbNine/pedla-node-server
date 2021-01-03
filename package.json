@@ -21,6 +21,8 @@
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
+    "@sentry/node": "^5.29.2",
+    "@sentry/tracing": "^5.29.2",
     "africastalking": "^0.5.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

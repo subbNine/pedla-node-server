@@ -1,7 +1,14 @@
 const errorCodes = require("./eror_codes");
 const AppError = require("./app_error");
-const logger = require("../loaders/logger");
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
 const { APP_ENV } = require("../config");
+
+Sentry.init({
+	dsn:
+		"https://15eb77b294a34b0ba706701e99076341@o499149.ingest.sentry.io/5577371",
+	tracesSampleRate: 1.0,
+});
 
 function _sendDevError(err, res) {
 	const errWithStack = { ...err, stack: err.stack };
@@ -11,12 +18,11 @@ function _sendDevError(err, res) {
 function _sendProdError(err, res) {
 	if (err.isOperational) {
 		const { stack, ...rest } = err;
-		console.log(err);
 		return res.status(err.statusCode).json(rest);
 	} else {
 		console.error(err);
-		// CRITICAL: log error to centry / log rocket
-		console.log("log error to centry / log rocket", err);
+		// CRITICAL: log error to sentry
+		Sentry.captureException(err);
 
 		if (res) {
 			return res.status(errorCodes.InternalServerError.statusCode).json({

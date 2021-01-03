@@ -9,7 +9,7 @@ module.exports = {
 	incorrectUsername: "Username is incorrect",
 	incorrectCred: "Email or password is incorrect",
 	incorrectPasscode: "The passcode you entered is incorrect",
-	emailConflict: "A user already exists with this email",
+	emailConflict: "A user exists with this email",
 	phoneConflict: "A user already exists with this phone number",
 	otpNotIssued: "otp not issued",
 	expiredOtp: "Expired or Invalid Otp",
