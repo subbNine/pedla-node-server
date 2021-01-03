@@ -114,26 +114,52 @@ module.exports = class Order extends BaseController {
 
 		const orderDto = new OrderDto();
 
-		orderDto.driver.id = driverId;
-		orderDto.buyer.id = user.id;
-		orderDto.product.id = productId;
-		orderDto.quantity = +quantity;
-		orderDto.unitAmount = +unitAmount;
-		orderDto.amount = +amount;
-		orderDto.driverLatlon = {
-			type: "Point",
-			coordinates: [+driverLon, +driverLat],
-		};
-		orderDto.buyerLatlon = {
-			type: "Point",
-			coordinates: [+buyerLon, +buyerLat],
-		};
-		orderDto.deliveryAddress = deliveryAddress;
-		orderDto.deliveryDate = deliveryDate && new Date(deliveryDate);
-		orderDto.creditPaymentDate =
-			creditPaymentDate && new Date(creditPaymentDate);
-		orderDto.paymentMethod = paymentMethod;
-		orderDto.priceCategory = priceCategory;
+		if (driverId) {
+			orderDto.driver.id = driverId;
+		}
+		if (buyerId) {
+			orderDto.buyer.id = user.id;
+		}
+		if (productId) {
+			orderDto.product.id = productId;
+		}
+		if (quantity) {
+			orderDto.quantity = +quantity;
+		}
+		if (unitAmount) {
+			orderDto.unitAmount = +unitAmount;
+		}
+		if (amount) {
+			orderDto.amount = +amount;
+		}
+		if (driverLat && driverLon) {
+			orderDto.driverLatlon = {
+				type: "Point",
+				coordinates: [+driverLon, +driverLat],
+			};
+		}
+		if (buyerLat && buyerLon) {
+			orderDto.buyerLatlon = {
+				type: "Point",
+				coordinates: [+buyerLon, +buyerLat],
+			};
+		}
+		if (deliveryAddress) {
+			orderDto.deliveryAddress = deliveryAddress;
+		}
+		if (deliveryDate) {
+			orderDto.deliveryDate = deliveryDate && new Date(deliveryDate);
+		}
+		if (creditPaymentDate) {
+			orderDto.creditPaymentDate =
+				creditPaymentDate && new Date(creditPaymentDate);
+		}
+		if (paymentMethod) {
+			orderDto.paymentMethod = ("" + paymentMethod).toLowerCase();
+		}
+		if (priceCategory) {
+			orderDto.priceCategory = priceCategory;
+		}
 
 		const result = await orderService.createOrder(orderDto);
 
