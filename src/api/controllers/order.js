@@ -114,12 +114,12 @@ module.exports = class Order extends BaseController {
 
 		const orderDto = new OrderDto();
 
+		orderDto.buyer.id = user.id;
+
 		if (driverId) {
 			orderDto.driver.id = driverId;
 		}
-		if (buyerId) {
-			orderDto.buyer.id = user.id;
-		}
+
 		if (productId) {
 			orderDto.product.id = productId;
 		}
