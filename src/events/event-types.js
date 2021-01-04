@@ -1,6 +1,7 @@
 module.exports = {
 	peddlerProfileCreated: "peddler-profile-created",
 	createAndSendOtp: "create-otp",
+	sendPasswordResetCode: "send-password-reset-code",
 	otpVerified: "otp-verified",
 	loggedIn: "logged-in",
 	alertOpsTeam: "alert-ops-team",

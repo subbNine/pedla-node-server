@@ -5,7 +5,9 @@ module.exports = {
 	phoneNotAvailable: "Phone number not available",
 	emailIsRequired: "Email is required",
 	incorrectPassword: "Password is incorrect",
-	incorrectEmail: "Email is incorrect",
+	incorrectEmail:
+		"The email address you entered is not associated with any account. Double-check your email address and try again",
+
 	incorrectUsername: "Username is incorrect",
 	incorrectCred: "Email or password is incorrect",
 	incorrectPasscode: "The passcode you entered is incorrect",

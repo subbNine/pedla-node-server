@@ -27,15 +27,15 @@ module.exports = {
 	ValidationError: { statusCode: 422, name: "ValidationError" },
 
 	IncorrectEmailError: {
-		statusCode: 400,
+		statusCode: 401,
 		name: "IncorrectEmailError",
 	},
 	IncorrectUsernameError: {
-		statusCode: 400,
+		statusCode: 401,
 		name: "IncorrectUsernameError",
 	},
 	IncorrectPasswordError: {
-		statusCode: 400,
+		statusCode: 401,
 		name: "IncorrectPasswordError",
 	},
 	NameConflictError: { statusCode: 409, name: "NameConflictError" },

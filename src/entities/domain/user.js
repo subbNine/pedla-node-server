@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const isType = require("../../lib/utils/is-type");
 
 const { permissions, types, buyerTypes } = require("../../db/mongo/enums").user;
@@ -28,6 +29,8 @@ module.exports = class User {
 	driverStats;
 	corporateBuyerCacImg;
 	buyerType;
+	passwordResetToken;
+	passwordResetExpires;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -53,6 +56,11 @@ module.exports = class User {
 		return false;
 	}
 
+	generatePasswordReset() {
+		this.passwordResetToken = crypto.randomBytes(20).toString("hex");
+		this.passwordResetExpires = Date.now() + 3600000; //expires in an hour
+	}
+
 	// object representation of the domain entity.
 	repr() {
 		const objectRepr = {};
@@ -70,7 +78,12 @@ module.exports = class User {
 			this.avatarImg ||
 			null;
 		objectRepr.presence = this.presence || null;
-		
+		objectRepr.isActive = this.isActive || false;
+
+		if (this.passwordResetToken) {
+			objectRepr.passwordResetToken = this.passwordResetToken;
+		}
+
 		if (this.isPeddler()) {
 			objectRepr.peddlerCode = this.peddlerCode || null;
 			objectRepr.nTrucks = this.nTrucks || null;
@@ -91,10 +104,6 @@ module.exports = class User {
 				this.corporateBuyerCacImg ||
 				null;
 			objectRepr.buyerType = ("" + this.buyerType).toLowerCase();
-		}
-
-		if (this.isBuyer()) {
-			objectRepr.isActive = this.isActive;
 		}
 
 		if (this.isPeddler()) {
