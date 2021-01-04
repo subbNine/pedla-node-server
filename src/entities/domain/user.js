@@ -70,19 +70,28 @@ module.exports = class User {
 			this.avatarImg ||
 			null;
 		objectRepr.presence = this.presence || null;
-		objectRepr.peddlerCode = this.peddlerCode || null;
-		objectRepr.nTrucks = this.nTrucks || null;
-		objectRepr.peddler =
-			(this.peddler && this.peddler.repr
-				? this.peddler.repr()
-				: this.peddler) || null;
-		objectRepr.driverStats = this.driverStats || null;
-		objectRepr.cacUrl =
-			(isType("object", this.corporateBuyerCacImg) &&
-				this.corporateBuyerCacImg.uri) ||
-			this.corporateBuyerCacImg ||
-			null;
-		objectRepr.buyerType = ("" + this.buyerType).toLowerCase();
+		
+		if (this.isPeddler()) {
+			objectRepr.peddlerCode = this.peddlerCode || null;
+			objectRepr.nTrucks = this.nTrucks || null;
+		}
+
+		if (this.isDriver()) {
+			objectRepr.peddler =
+				(this.peddler && this.peddler.repr
+					? this.peddler.repr()
+					: this.peddler) || null;
+			objectRepr.driverStats = this.driverStats || null;
+		}
+
+		if (this.isBuyer()) {
+			objectRepr.cacUrl =
+				(isType("object", this.corporateBuyerCacImg) &&
+					this.corporateBuyerCacImg.uri) ||
+				this.corporateBuyerCacImg ||
+				null;
+			objectRepr.buyerType = ("" + this.buyerType).toLowerCase();
+		}
 
 		if (this.isBuyer()) {
 			objectRepr.isActive = this.isActive;
@@ -102,13 +111,15 @@ module.exports = class User {
 			objectRepr.truck = this.truck || null;
 		}
 
-		if (this.latlon) {
-			objectRepr.latlon = {
-				lon: this.latlon.coordinates[0],
-				lat: this.latlon.coordinates[1],
-			};
-		} else {
-			objectRepr.latlon = this.latlon;
+		if (!this.isPeddler()) {
+			if (this.latlon) {
+				objectRepr.latlon = {
+					lon: this.latlon.coordinates[0],
+					lat: this.latlon.coordinates[1],
+				};
+			} else {
+				objectRepr.latlon = this.latlon;
+			}
 		}
 
 		return objectRepr;

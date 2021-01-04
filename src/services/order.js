@@ -112,7 +112,7 @@ module.exports = class Order {
 
 			for (const eachOrder of foundOrders) {
 				await Promise.all([
-					this._loadPeddlerCode(eachOrder),
+					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
 				results.push(eachOrder.repr());
@@ -163,7 +163,7 @@ module.exports = class Order {
 
 			for (const eachOrder of foundOrders) {
 				await Promise.all([
-					this._loadPeddlerCode(eachOrder),
+					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
 				results.push(eachOrder.repr());
@@ -211,7 +211,7 @@ module.exports = class Order {
 
 			for (const eachOrder of foundOrders) {
 				await Promise.all([
-					this._loadPeddlerCode(eachOrder),
+					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
 				results.push(eachOrder.repr());
@@ -226,19 +226,15 @@ module.exports = class Order {
 		}
 	}
 
-	async _loadPeddlerCode(order) {
+	async _loadPeddlerInfo(order) {
 		const { userMapper } = this.mappers;
 
-		const driver = await userMapper.findUser(
-			{ _id: order.driver.id },
-			(doc) => {
-				doc.populate("peddler");
-			}
-		);
+		const peddler = await userMapper.findUser({ _id: order.driver.peddler });
 
-		if (driver && driver.peddler) {
+		if (peddler && peddler.peddlerCode) {
 			if (order.driver) {
-				order.driver.peddlerCode = driver.peddler.peddlerCode;
+				order.driver.peddlerCode = peddler.peddlerCode;
+				order.driver.peddler = peddler
 			}
 		}
 
@@ -264,7 +260,7 @@ module.exports = class Order {
 
 		if (foundOrder) {
 			await Promise.all([
-				this._loadPeddlerCode(foundOrder),
+				this._loadPeddlerInfo(foundOrder),
 				this._loadPayment(foundOrder),
 			]);
 			return Result.ok(foundOrder.repr());
@@ -392,9 +388,7 @@ module.exports = class Order {
 		const orderEnt = new OrderEnt(order);
 		orderEnt.status = orderStatus.INPROGRESS;
 
-		const isOrderInProgress = await this._isOrderInProgress(
-			order.driver.id
-		);
+		const isOrderInProgress = await this._isOrderInProgress(order.driver.id);
 
 		if (isOrderInProgress) {
 			return Result.fail(
