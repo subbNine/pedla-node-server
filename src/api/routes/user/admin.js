@@ -341,6 +341,6 @@ router.get("/buyers/corporate", catchAsync(userController.getCorporateBuyers));
  *
  * @apiParam {ID} buyerId the id of the buyer whose account you want to activate
  */
-router.put("/buyer/:buyerId", catchAsync(userController.getCorporateBuyers));
+router.put("/buyer/:buyerId", catchAsync(userController.activateCorporateBuyer));
 
 module.exports = router;
