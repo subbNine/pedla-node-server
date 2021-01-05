@@ -278,4 +278,41 @@ module.exports = class Auth {
 			return Result.ok({ ...objRepr });
 		}
 	}
+
+	async initPasswordRecovery(email) {
+		const { userMapper } = this.mappers;
+
+		const userEnt = await userMapper.findUser({ email });
+
+		if (userEnt) {
+			const passwordResetToken = userEnt.passwordResetToken;
+			const passwordResetExpires = userEnt.passwordResetExpires;
+
+			const tokenIsValid =
+				passwordResetToken &&
+				passwordResetExpires &&
+				new Date(passwordResetExpires).getTime() > Date.now();
+
+			if (!tokenIsValid) {
+				userEnt.generatePasswordReset();
+			}
+			// userMapper.updateUserById(userEnt.id, userEnt);
+
+			eventEmitter.emit(eventTypes.sendPasswordResetCode, userEnt);
+
+			return Result.ok({
+				id: userEnt.id,
+				passwordResetToken: userEnt.passwordResetToken,
+				passwordResetExpires: new Date(userEnt.passwordResetExpires),
+			});
+		} else {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.IncorrectEmailError.name,
+					message: errMessages.incorrectEmail,
+					statusCode: errorCodes.IncorrectEmailError.statusCode,
+				})
+			);
+		}
+	}
 };

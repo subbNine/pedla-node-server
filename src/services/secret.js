@@ -24,20 +24,20 @@ class Secrets {
 		return foundSecret;
 	}
 
-	async initSecretsStore(userId) {
+	async initSecretsStore(userId, options) {
 		const { secretMapper } = this.mappers;
 
 		const foundSecret = await this._findSecretByUserId(userId);
 
 		// a user can have only one secrets record
 		if (foundSecret) {
-			foundSecret.generateOtpToken();
+			foundSecret.generateOtpToken(options);
 			return Result.ok(foundSecret);
 		} else {
 			const secretEnt = new SecretEnt();
 			secretEnt.user.id = userId;
 			await secretEnt.generateOtpSecret();
-			secretEnt.generateOtpToken();
+			secretEnt.generateOtpToken(options);
 
 			return Result.ok(await secretMapper.createSecret(secretEnt));
 		}

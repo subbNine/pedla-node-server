@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const serviceAccount = require("../config/pedla-app-firebase-adminsdk-40onl-5780471780.json");
+const errors = require("../errors");
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
@@ -40,8 +41,10 @@ module.exports = {
 
 					if (!success) {
 						console.log(error);
+						errors.error(error);
 					}
 				}
-			});
+			})
+			.catch((error) => errors.error(error));
 	},
 };

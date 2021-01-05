@@ -6,6 +6,7 @@ const sendDriverInfo = require("./send-driver-info");
 const updatePushDevice = require("./update-push-device");
 const sendPushNotification = require("./send-notification");
 const paymentInitialized = require("./payment-initialized");
+const sendPasswordResetCode = require("./send-password-reset-code");
 
 module.exports = {
 	createAndSendOtp,
@@ -16,4 +17,5 @@ module.exports = {
 	updatePushDevice,
 	sendPushNotification,
 	paymentInitialized,
+	sendPasswordResetCode,
 };

@@ -31,6 +31,7 @@ module.exports = class User {
 	buyerType;
 	passwordResetToken;
 	passwordResetExpires;
+	passwordResetCode;
 
 	constructor(fields = {}) {
 		for (let key in fields) {

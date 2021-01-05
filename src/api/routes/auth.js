@@ -187,4 +187,21 @@ router.post(
  */
 router.post("/buyer", catchAsync(authController.buyerSignUp));
 
+/**
+ * @api {post} /api/auth/password-recovery/init Initialize Password Recovery
+ * @apiName postAuthPasswordRecoveryInit
+ * @apiGroup Authentication
+ *
+ * @apiVersion 1.0.0
+ * 
+ * @apiParam {String} email email of the user that wants to reset passwaord
+ *
+ * @apiDescription Initialize Password Recovery
+ *
+ */
+router.post(
+	"/password-recovery/init",
+	catchAsync(authController.initPasswordRecovery)
+);
+
 module.exports = router;

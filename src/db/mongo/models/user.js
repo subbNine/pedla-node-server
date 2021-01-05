@@ -51,8 +51,8 @@ let schema = new Schema({
 	isDisabled: { type: Boolean, default: false },
 	isDeleted: { type: Boolean, default: false },
 	passwordResetToken: String,
+	passwordResetCode: String,
 	passwordResetExpires: Date,
-	isPasswordResetOtpVerified: Boolean,
 });
 
 schema.index({ latlon: "2dsphere" });

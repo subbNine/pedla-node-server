@@ -403,32 +403,4 @@ module.exports = class User {
 		}
 		return Result.ok([]);
 	}
-
-	async initPasswordRecovery(email) {
-		const { userMapper } = this.mappers;
-
-		const userEnt = await userMapper.findUser({ email });
-
-		if (userEnt) {
-			userEnt().generatePasswordReset();
-
-			userMapper.updateUserById(userEnt.id, userEnt);
-
-			eventEmitter.emit(eventTypes.createAndSendOtp, userEnt);
-
-			return Result.ok({
-				id: userEnt.id,
-				passwordResetToken: userEnt.passwordResetToken,
-				passwordResetExpires: userEnt.passwordResetExpires,
-			});
-		} else {
-			return Result.fail(
-				new AppError({
-					name: errorCodes.IncorrectEmailError.name,
-					message: errMessages.incorrectEmail,
-					statusCode: errorCodes.IncorrectEmailError.statusCode,
-				})
-			);
-		}
-	}
 };

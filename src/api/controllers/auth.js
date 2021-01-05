@@ -132,4 +132,12 @@ module.exports = class Auth extends BaseController {
 
 		return this.response(result, res);
 	}
+
+	async initPasswordRecovery(req, res, next) {
+		const { email } = req.body;
+
+		const result = await authService.initPasswordRecovery(email);
+
+		this.response(result, res);
+	}
 };

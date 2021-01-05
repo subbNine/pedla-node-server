@@ -25,10 +25,10 @@ module.exports = class Otp {
 		};
 	}
 
-	generateOtpToken(step) {
+	generateOtpToken(options) {
 		const otpSecret = this.otpSecret;
 		if (otpSecret) {
-			const otpToken = generateOtpToken(otpSecret, step);
+			const otpToken = generateOtpToken(otpSecret, options);
 			this.otpToken = otpToken;
 		} else {
 			throw new Error(
