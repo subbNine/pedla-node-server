@@ -101,8 +101,8 @@ module.exports = class Payment {
 
 		const paymentRespData = {
 			accessCode: paymentResp.data.access_code,
-			authorizationUrl: "https://checkout.paystack.com/0peioxfhpn",
-			reference: "7PVGX8MEk85tgeEpVDtD",
+			authorizationUrl: paymentResp.data.authorization_url,
+			reference: paymentResp.data.reference,
 		};
 
 		eventEmitter.emit(eventTypes.paymentInitialized, {
