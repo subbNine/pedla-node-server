@@ -84,7 +84,7 @@ module.exports.postOrder = Joi.object().keys({
 	buyerLon: Joi.number(),
 	deliveryAddress: Joi.string(),
 	deliveryDate: Joi.string(),
-	creditPaymentDate: Joi.string(),
+	creditPaymentDate: Joi.string().allow(null).allow(""),
 	paymentMethod: Joi.string(),
 	priceCategory: Joi.string(),
 });
@@ -96,9 +96,9 @@ module.exports.orderReason = Joi.object().keys({
 module.exports.search = Joi.object().keys({
 	lat: Joi.number().required(),
 	lon: Joi.number().required(),
-	quantity: Joi.number(),
-	page: Joi.number(),
-	limit: Joi.number(),
+	quantity: Joi.number().allow(null),
+	page: Joi.number().allow(null),
+	limit: Joi.number().allow(null),
 	productId: mongoIdVal.string().mongoId().required(),
 });
 
