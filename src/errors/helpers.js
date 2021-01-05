@@ -17,7 +17,8 @@ function _sendDevError(err, res) {
 
 function _sendProdError(err, res) {
 	if (err.isOperational) {
-		const { stack, ...rest } = err;
+		const { stack, inputParams, ...rest } = err;
+		Sentry.captureException(err);
 		return res.status(err.statusCode).json(rest);
 	} else {
 		console.error(err);
