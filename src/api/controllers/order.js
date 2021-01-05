@@ -2,6 +2,7 @@ const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
 const { orderService, payment } = require("../../services");
 const { orderStatus } = require("../../db/mongo/enums/order");
+const { isValidDateTime } = require("../../lib/utils");
 
 module.exports = class Order extends BaseController {
 	constructor() {
@@ -150,7 +151,7 @@ module.exports = class Order extends BaseController {
 		if (deliveryDate) {
 			orderDto.deliveryDate = deliveryDate && new Date(deliveryDate);
 		}
-		if (creditPaymentDate) {
+		if (creditPaymentDate && isValidDateTime(creditPaymentDate)) {
 			orderDto.creditPaymentDate =
 				creditPaymentDate && new Date(creditPaymentDate);
 		}

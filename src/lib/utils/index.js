@@ -9,6 +9,7 @@ const generateOtpToken = require("./generate-otp-token");
 const generateOtpSecret = require("./generate-otp-secret");
 const computeStartOfDay = require("./compute-start-of-day");
 const formatNumber = require("./format-number");
+const isValidDateTime = require("./is-valid-datetime");
 
 module.exports = {
 	isObjectEmpty,
@@ -22,4 +23,5 @@ module.exports = {
 	generateOtpSecret,
 	computeStartOfDay,
 	formatNumber,
+	isValidDateTime,
 };
