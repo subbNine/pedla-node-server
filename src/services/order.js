@@ -234,7 +234,7 @@ module.exports = class Order {
 		if (peddler && peddler.peddlerCode) {
 			if (order.driver) {
 				order.driver.peddlerCode = peddler.peddlerCode;
-				order.driver.peddler = peddler
+				order.driver.peddler = peddler;
 			}
 		}
 
@@ -275,17 +275,11 @@ module.exports = class Order {
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 
-		let paymentResp;
-
-		if (order.paymentMethod === paymentMethod.paystack) {
-			paymentResp = await payment.initPaystackPayment(newOrder);
-		} else {
-			paymentResp = await payment.createPayment({ order }, {});
-		}
+		const paymentResp = await payment.initPayment(newOrder);
 
 		return Result.ok({
 			id: newOrder.repr().id,
-			payment: paymentResp,
+			payment: paymentResp.getValue(),
 		});
 	}
 

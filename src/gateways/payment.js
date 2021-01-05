@@ -1,6 +1,7 @@
 const https = require("https");
 
 const { PAYMENT_SK_TEST } = require("../config");
+const errors = require("../errors");
 
 const requestPromisified = (options, params) =>
 	new Promise((resolve, reject) => {
@@ -43,7 +44,13 @@ class PaymentGateway {
 			headers: this.headers,
 		};
 
-		const resp = await requestPromisified(options, jsonParams);
+		let resp;
+
+		try {
+			resp = await requestPromisified(options, jsonParams);
+		} catch (err) {
+			errors.error(err);
+		}
 
 		return resp;
 	}

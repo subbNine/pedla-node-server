@@ -12,7 +12,7 @@ module.exports = class Payment {
 		this.mappers = mappers;
 	}
 
-	async initPaystackPayment(order) {
+	async _initPaystackPayment(order) {
 		const { peddlerProductMapper, userMapper } = this.mappers;
 
 		const peddlerProductId = order.product.id;
@@ -36,8 +36,9 @@ module.exports = class Payment {
 		]);
 
 		const productType = peddlerProduct.product.name;
-		const driverEmail = driver.email;
+		const driverPhone = driver.phoneNumber;
 		const buyerEmail = buyer.email;
+		const buyerPhone = buyer.phoneNumber;
 		const driverName = `${driver.firstName} ${driver.lastName}`;
 		const buyerName = `${buyer.firstName} ${buyer.lastName}`;
 		const peddlerCode = driver.peddler.peddlerCode;
@@ -56,7 +57,6 @@ module.exports = class Payment {
 							variable_name: "productType",
 							value: productType,
 						},
-						,
 						{
 							display_name: "Product Unit Price ",
 							variable_name: "unitAmount",
@@ -83,14 +83,19 @@ module.exports = class Payment {
 							value: buyerEmail,
 						},
 						{
+							display_name: "Buyer's Phone Number",
+							variable_name: "buyerPhone",
+							value: buyerPhone,
+						},
+						{
 							display_name: "Driver's Name",
 							variable_name: "driverName",
 							value: driverName,
 						},
 						{
-							display_name: "Driver's Email",
-							variable_name: "driverEmail",
-							value: driverEmail,
+							display_name: "Driver's Phone Number",
+							variable_name: "driverPhone",
+							value: driverPhone,
 						},
 					],
 				],
@@ -110,10 +115,21 @@ module.exports = class Payment {
 			payment: paymentRespData,
 		});
 
-		return paymentRespData;
+		return Result.ok(paymentRespData);
 	}
 
-	async createPayment(order, { accessCode, reference }) {
+	async initPayment(order, options) {
+		let paymentResp;
+		if (order.paymentMethod === paymentMethod.paystack) {
+			paymentResp = await this._initPaystackPayment(order, options);
+		} else {
+			paymentResp = await this.createPayment(order, options);
+		}
+
+		return paymentResp;
+	}
+
+	async createPayment(order, { accessCode, reference } = {}) {
 		const { paymentMapper } = this.mappers;
 
 		const payment = {
