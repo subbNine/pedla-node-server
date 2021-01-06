@@ -103,7 +103,6 @@ module.exports = class Order extends BaseController {
 			driverLon,
 			buyerLat,
 			buyerLon,
-			amount,
 			deliveryAddress,
 			deliveryDate,
 			creditPaymentDate,
@@ -130,8 +129,8 @@ module.exports = class Order extends BaseController {
 		if (unitAmount) {
 			orderDto.unitAmount = +unitAmount;
 		}
-		if (amount) {
-			orderDto.amount = +amount || quantity * unitAmount;
+		if (quantity && unitAmount) {
+			orderDto.amount = +quantity * +unitAmount;
 		}
 		if (driverLat && driverLon) {
 			orderDto.driverLatlon = {
