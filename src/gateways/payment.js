@@ -59,7 +59,7 @@ class PaymentGateway {
 		const options = {
 			hostname: "api.paystack.co",
 			port: 443,
-			path: `/transaction/verify/:${reference}`,
+			path: `/transaction/verify/${reference}`,
 			method: "GET",
 			headers: {
 				Authorization: this.headers.Authorization,

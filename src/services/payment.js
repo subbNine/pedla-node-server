@@ -171,6 +171,14 @@ module.exports = class Payment {
 					{ gatewayReference: ref },
 					{ status: paymentStatus.PAID }
 				);
+			} else {
+				return Result.fail(
+					new AppError({
+						name: errorCodes.PaymentError.name,
+						statusCode: errorCodes.PaymentError.statusCode,
+						message: paymentRespData.data.message,
+					})
+				);
 			}
 
 			return Result.ok(paymentRespData);
