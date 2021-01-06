@@ -1,6 +1,3 @@
-const Sentry = require("@sentry/node");
-const Tracing = require("@sentry/tracing");
-
 const paymentGateway = require("../gateways/payment");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
@@ -106,8 +103,6 @@ module.exports = class Payment {
 		};
 
 		const paymentResp = await paymentGateway.initialize(params);
-
-		Sentry.captureMessage(JSON.stringify({ paymentResp, params }));
 
 		const paymentRespData = {
 			accessCode: paymentResp.data.access_code,
