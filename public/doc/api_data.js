@@ -680,6 +680,30 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/auth/password-recovery/init",
+    "title": "Initialize Password Recovery",
+    "name": "postAuthPasswordRecoveryInit",
+    "group": "Authentication",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>email of the user that wants to reset passwaord</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Initialize Password Recovery</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication"
+  },
+  {
+    "type": "post",
     "url": "/api/auth/buyer",
     "title": "Buyer's Signup endpoint",
     "name": "postBuyer",
@@ -2158,11 +2182,11 @@ define({ "api": [
   {
     "type": "get",
     "url": "/api/user/buyer/payment/verify/:paymentRef",
-    "title": "Check if payment has been verified",
+    "title": "Verify paystack Transaction",
     "name": "getPaymentVerified",
     "group": "Payment",
     "version": "1.0.0",
-    "description": "<p>Check if payment has been verified</p>",
+    "description": "<p>Verify paystack transaction</p>",
     "parameter": {
       "fields": {
         "Parameter": [

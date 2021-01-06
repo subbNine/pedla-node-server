@@ -307,13 +307,13 @@ router.post(
 );
 
 /**
- * @api {get} /api/user/buyer/payment/verify/:paymentRef Check if payment has been verified
+ * @api {get} /api/user/buyer/payment/verify/:paymentRef Verify paystack Transaction
  * @apiName getPaymentVerified
  * @apiGroup Payment
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription Check if payment has been verified
+ * @apiDescription Verify paystack transaction
  *
  * @apiParam {String} paymentRef payment reference received from transaction initialization
  */
