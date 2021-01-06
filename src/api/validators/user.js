@@ -76,7 +76,7 @@ module.exports.postOrder = Joi.object().keys({
 	quantity: Joi.number().required(),
 	unitAmount: Joi.number().required(),
 	rating: Joi.number(),
-	amount: Joi.number(),
+	amount: Joi.number().allow(null).allow(""),
 	status: Joi.string(),
 	driverLat: Joi.number(),
 	driverLon: Joi.number(),

@@ -131,7 +131,7 @@ module.exports = class Order extends BaseController {
 			orderDto.unitAmount = +unitAmount;
 		}
 		if (amount) {
-			orderDto.amount = +amount;
+			orderDto.amount = +amount || quantity * unitAmount;
 		}
 		if (driverLat && driverLon) {
 			orderDto.driverLatlon = {
