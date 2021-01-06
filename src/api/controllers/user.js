@@ -43,7 +43,7 @@ module.exports = class User extends BaseController {
 	}
 
 	async getCorporateBuyers(req, res, next) {
-		const { limit, page, active = 0 } = req.query;
+		const { limit, page, active } = req.query;
 
 		const result = await userService.getCorporateBuyers({
 			isActive: +active,

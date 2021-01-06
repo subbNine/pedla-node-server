@@ -319,10 +319,13 @@ module.exports = class User {
 		const filter = {
 			$and: [
 				{ buyerType: buyerTypes.CORPORATE },
-				{ isActive: !!isActive },
 				{ corporateBuyerCacImg: { $exists: true } },
 			],
 		};
+
+		if (+isActive === 0 || +isActive === 1) {
+			filter.$and.push({ isActive: !!isActive });
+		}
 
 		const totalDocs = await userMapper.countDocs(filter);
 
