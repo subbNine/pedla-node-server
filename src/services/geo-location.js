@@ -80,22 +80,23 @@ module.exports = class GeoLoc {
 
 				const usersRepr = [];
 
-				for (const nearestPeddler of nearestPeddlers) {
-					await Promise.all([
-						userService.getDriverOrderStats(nearestPeddler),
-						userService.findDriver(nearestPeddler),
-					]);
+				if (nearestPeddlers) {
+					for (const nearestPeddler of nearestPeddlers) {
+						await Promise.all([
+							userService.getDriverOrderStats(nearestPeddler),
+							userService.findDriver(nearestPeddler),
+						]);
 
-					nearestPeddler.peddlerCode = nearestPeddler.peddler.peddlerCode;
-					nearestPeddler.peddler = null;
+						nearestPeddler.peddlerCode = nearestPeddler.peddler.peddlerCode;
+						nearestPeddler.peddler = null;
 
-					usersRepr.push(nearestPeddler.repr());
+						usersRepr.push(nearestPeddler.repr());
+					}
+
+					return Result.ok(usersRepr);
 				}
-
-				return Result.ok(usersRepr);
-			} else {
-				return Result.ok([]);
 			}
+			return Result.ok([]);
 		}
 	}
 
