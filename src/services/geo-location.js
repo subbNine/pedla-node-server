@@ -91,7 +91,9 @@ module.exports = class GeoLoc {
 						nearestPeddler.peddlerCode = nearestPeddler.peddler.peddlerCode;
 						nearestPeddler.peddler = null;
 
-						usersRepr.push(nearestPeddler.repr());
+						if (nearestPeddler.truck) {
+							usersRepr.push(nearestPeddler.repr());
+						}
 					}
 
 					return Result.ok(usersRepr);
