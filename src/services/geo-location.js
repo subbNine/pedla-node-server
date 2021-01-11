@@ -1,7 +1,7 @@
 const { GeoEnt } = require("../entities/domain");
 const { utils } = require("../lib");
 const { types: userTypes, presence } = require("../db/mongo/enums").user;
-const { user: userService } = require("./index");
+const UserService = require("./user");
 
 const { Result } = utils;
 
@@ -12,6 +12,7 @@ module.exports = class GeoLoc {
 
 	async findNearestOnlinePeddler(geoDto) {
 		const { geoMapper } = this.mappers;
+		const userService = new UserService({ mappers: this.mappers });
 
 		const geoEnt = new GeoEnt(geoDto);
 		const lat = geoEnt.getLat();
