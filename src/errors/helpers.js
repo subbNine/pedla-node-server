@@ -12,14 +12,18 @@ Sentry.init({
 
 function _sendDevError(err, res) {
 	const errWithStack = { ...err, stack: err.stack };
-	return res.status(err.statusCode).json(errWithStack);
+	return res
+		.status(err.statusCode || errorCodes.InternalServerError.statusCode)
+		.json(errWithStack);
 }
 
 function _sendProdError(err, res) {
 	if (err.isOperational) {
 		const { stack, inputParams, ...rest } = err;
 		Sentry.captureException(err);
-		return res.status(err.statusCode).json(rest);
+		return res
+			.status(err.statusCode || errorCodes.InternalServerError.statusCode)
+			.json(rest);
 	} else {
 		console.error(err);
 		// CRITICAL: log error to sentry
