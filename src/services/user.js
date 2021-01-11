@@ -116,7 +116,11 @@ module.exports = class User {
 	async getDriverOrderStats(driverEnt) {
 		const { orderMapper } = this.mappers;
 
-		return await orderMapper.driverOrderStats(driverEnt.id);
+		const stats = await orderMapper.driverOrderStats(driverEnt.id);
+
+		driverEnt.driverStats = stats;
+
+		return stats;
 	}
 
 	async loadPeddlerCode(user) {
@@ -142,11 +146,12 @@ module.exports = class User {
 
 		if (user) {
 			if (user.isDriver()) {
-				const driverStats = await this.getDriverOrderStats(user);
-				user.driverStats = driverStats;
+				await Promise.all([
+					this.getDriverOrderStats(user),
+					this.findDriver(user),
+				]);
+
 				user.peddlerCode = user.peddler.peddlerCode;
-				user.peddler = null;
-				await this.findDriver(user);
 			}
 		}
 

@@ -1,6 +1,7 @@
 const { GeoEnt } = require("../entities/domain");
 const { utils } = require("../lib");
 const { types: userTypes, presence } = require("../db/mongo/enums").user;
+const { user: userService } = require("./index");
 
 const { Result } = utils;
 
@@ -73,12 +74,25 @@ module.exports = class GeoLoc {
 			]);
 
 			if (peddlers && (peddlers[0] || peddlers[1])) {
-				return Result.ok(
-					(
-						(peddlers[0] && peddlers[0].length && peddlers[0]) ||
-						(peddlers[1] && peddlers[1].length && peddlers[1])
-					).map((eachUser) => eachUser.repr())
-				);
+				const nearestPeddlers =
+					(peddlers[0] && peddlers[0].length && peddlers[0]) ||
+					(peddlers[1] && peddlers[1].length && peddlers[1]);
+
+				const usersRepr = [];
+
+				for (const nearestPeddler of nearestPeddlers) {
+					await Promise.all([
+						userService.getDriverOrderStats(nearestPeddler),
+						userService.findDriver(nearestPeddler),
+					]);
+
+					nearestPeddler.peddlerCode = nearestPeddler.peddler.peddlerCode;
+					nearestPeddler.peddler = null;
+
+					usersRepr.push(nearestPeddler.repr());
+				}
+
+				return Result.ok(usersRepr);
 			} else {
 				return Result.ok([]);
 			}

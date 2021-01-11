@@ -23,7 +23,7 @@ module.exports = class GeoMapper extends BaseMapper {
 
 	async findUsersByGeoLocation(filter, limit) {
 		const { User } = this.models;
-		const query = User.find(filter);
+		const query = User.find(filter).populate("peddler");
 
 		if (limit && +limit) {
 			query.limit(+limit);
