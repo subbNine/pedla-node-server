@@ -450,13 +450,15 @@ module.exports = class UserMapper extends BaseMapper {
 								}
 							);
 
+							const peddlerProductRepr = peddlerProductEnt.repr();
 							driverEnt.driverStats = driverStats;
+							driverEnt.truck = { product: peddlerProductRepr };
 
 							driversList.push(
 								Object.assign(
 									{},
 									{ driver: driverEnt.repr() },
-									{ product: peddlerProductEnt.repr() }
+									{ product: peddlerProductRepr }
 								)
 							);
 						}
