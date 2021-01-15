@@ -16,6 +16,7 @@ module.exports = {
 	otpToken: (payload) => JoiValidator(payload, otpSchemas.otpToken),
 	postProduct: (payload) => JoiValidator(payload, usersSchema.postProduct),
 	productId: (payload) => JoiValidator(payload, usersSchema.productId),
+	peddlerId: (payload) => JoiValidator(payload, usersSchema.peddlerId),
 	postPeddlerProduct: (payload) =>
 		JoiValidator(payload, usersSchema.postPeddlerProduct),
 	postDriver: (payload) => JoiValidator(payload, usersSchema.postDriver),

@@ -100,7 +100,7 @@ router.put(
  */
 router.put(
 	"/verify-peddler/:peddlerId",
-	validateParams(validationSchemas.productId),
+	validateParams(validationSchemas.peddlerId),
 	catchAsync(userController.verifyRegisteredPeddler)
 );
 
@@ -119,7 +119,7 @@ router.put(
  */
 router.put(
 	"/reject-peddler/:peddlerId",
-	validateParams(validationSchemas.productId),
+	validateParams(validationSchemas.peddlerId),
 	catchAsync(userController.rejectRegisteredPeddler)
 );
 

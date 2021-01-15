@@ -30,6 +30,10 @@ module.exports.productId = Joi.object().keys({
 	productId: mongoIdVal.string().mongoId(),
 });
 
+module.exports.peddlerId = Joi.object().keys({
+	peddlerId: mongoIdVal.string().mongoId(),
+});
+
 module.exports.driverId = Joi.object().keys({
 	driverId: mongoIdVal.string().mongoId(),
 });
