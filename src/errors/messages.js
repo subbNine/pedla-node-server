@@ -30,6 +30,7 @@ module.exports = {
 	},
 	notAcceptableOrder:
 		"The order cannot be completed as the driver has a pending order",
+	wrongTokens: "incorrect or expired code",
 };
 
 function replacement(subjectArg, subjectNameArg) {
