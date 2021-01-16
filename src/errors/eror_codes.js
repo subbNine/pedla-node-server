@@ -68,4 +68,5 @@ module.exports = {
 	OtpNotIssued: { statusCode: 400, name: "OtpNotIssued" },
 	InvalidCodeError: { statusCode: 400, name: "InvalidCodeError" },
 	UnverifiedProfileError: { statusCode: 400, name: "UnverifiedProfileError" },
+	WrongTokensError: { statusCode: 401, name: "WrongTokensError" },
 };

@@ -133,10 +133,30 @@ module.exports = class Auth extends BaseController {
 		return this.response(result, res);
 	}
 
-	async initPasswordRecovery(req, res, next) {
+	async initPasswordReset(req, res, next) {
 		const { email } = req.body;
 
-		const result = await authService.initPasswordRecovery(email);
+		const result = await authService.initPasswordReset(email);
+
+		this.response(result, res);
+	}
+
+	async resetPassword(req, res, next) {
+		const { resetCode, password } = req.body;
+		const { resetToken } = req.params;
+
+		const result = await authService.resetPassword(password, {
+			passwordResetToken: resetToken,
+			passwordResetCode: resetCode,
+		});
+
+		this.response(result, res);
+	}
+
+	async sendResetCode(req, res, next) {
+		const { resetToken } = req.params;
+
+		const result = await authService.sendResetCode(resetToken);
 
 		this.response(result, res);
 	}

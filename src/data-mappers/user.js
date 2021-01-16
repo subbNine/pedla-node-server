@@ -173,8 +173,20 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await User.create(newUser);
 		if (doc) {
-			console.log({ doc });
 			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+		}
+	}
+
+	async updateUser(filter, updates) {
+		const { User } = this.models;
+
+		const doc = await User.findOne(filter);
+		if (doc) {
+			Object.assign(doc, updates);
+
+			const saved = await doc.save();
+
+			return this._toEntity(saved.toObject(), UserEnt, this._toEntityTransform);
 		}
 	}
 

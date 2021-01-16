@@ -279,7 +279,39 @@ module.exports = class Auth {
 		}
 	}
 
-	async initPasswordRecovery(email) {
+	async resetPassword(newPassword, { passwordResetToken, passwordResetCode }) {
+		const { userMapper } = this.mappers;
+
+		const userEnt = await userMapper.updateUser(
+			{
+				$and: [
+					{ passwordResetToken },
+					{ passwordResetCode },
+					{ passwordResetExpires: { $gt: new Date() } },
+				],
+			},
+			{
+				password: newPassword,
+				passwordResetCode: undefined,
+				passwordResetToken: undefined,
+				passwordResetExpires: undefined,
+			}
+		);
+
+		if (userEnt) {
+			return Result.ok(userEnt.repr());
+		} else {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.WrongTokensError.name,
+					message: errMessages.wrongTokens,
+					statusCode: errorCodes.WrongTokensError.statusCode,
+				})
+			);
+		}
+	}
+
+	async initPasswordReset(email) {
 		const { userMapper } = this.mappers;
 
 		const userEnt = await userMapper.findUser({ email });
@@ -288,12 +320,12 @@ module.exports = class Auth {
 			const passwordResetToken = userEnt.passwordResetToken;
 			const passwordResetExpires = userEnt.passwordResetExpires;
 
-			const tokenIsValid =
+			const isValidToken =
 				passwordResetToken &&
 				passwordResetExpires &&
 				new Date(passwordResetExpires).getTime() > Date.now();
 
-			if (!tokenIsValid) {
+			if (!isValidToken) {
 				userEnt.generatePasswordReset();
 			}
 			// userMapper.updateUserById(userEnt.id, userEnt);
@@ -302,8 +334,8 @@ module.exports = class Auth {
 
 			return Result.ok({
 				id: userEnt.id,
-				passwordResetToken: userEnt.passwordResetToken,
-				passwordResetExpires: new Date(userEnt.passwordResetExpires),
+				resetToken: userEnt.passwordResetToken,
+				resetExpires: new Date(userEnt.passwordResetExpires),
 			});
 		} else {
 			return Result.fail(
@@ -311,6 +343,44 @@ module.exports = class Auth {
 					name: errorCodes.IncorrectEmailError.name,
 					message: errMessages.incorrectEmail,
 					statusCode: errorCodes.IncorrectEmailError.statusCode,
+				})
+			);
+		}
+	}
+
+	async sendResetCode(passwordResetToken) {
+		const { userMapper } = this.mappers;
+
+		const userEnt = await userMapper.findUser({
+			$and: [{ passwordResetToken: { $exists: true } }, { passwordResetToken }],
+		});
+
+		if (userEnt) {
+			const passwordResetToken = userEnt.passwordResetToken;
+			const passwordResetExpires = userEnt.passwordResetExpires;
+
+			const isValidToken =
+				passwordResetToken &&
+				passwordResetExpires &&
+				new Date(passwordResetExpires).getTime() > Date.now();
+
+			if (!isValidToken) {
+				userEnt.generatePasswordReset();
+			}
+
+			eventEmitter.emit(eventTypes.sendPasswordResetCode, userEnt);
+
+			return Result.ok({
+				id: userEnt.id,
+				resetToken: userEnt.passwordResetToken,
+				resetExpires: new Date(userEnt.passwordResetExpires),
+			});
+		} else {
+			return Result.fail(
+				new AppError({
+					name: "InvalidToken",
+					message: "invalid token",
+					statusCode: 401,
 				})
 			);
 		}

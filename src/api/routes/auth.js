@@ -188,20 +188,55 @@ router.post(
 router.post("/buyer", catchAsync(authController.buyerSignUp));
 
 /**
- * @api {post} /api/auth/password-recovery/init Initialize Password Recovery
- * @apiName postAuthPasswordRecoveryInit
- * @apiGroup Authentication
+ * @api {post} /api/auth/password-reset/init Initialize Password Reset
+ * @apiName postAuthPasswordResetInit
+ * @apiGroup Authentication (Password Reset)
  *
  * @apiVersion 1.0.0
- * 
+ *
  * @apiParam {String} email email of the user that wants to reset passwaord
  *
- * @apiDescription Initialize Password Recovery
- *
+ * @apiDescription Initialize Password Reset
  */
 router.post(
-	"/password-recovery/init",
-	catchAsync(authController.initPasswordRecovery)
+	"/password-reset/init",
+	catchAsync(authController.initPasswordReset)
+);
+
+/**
+ * @api {post} /api/auth/password-reset/:resetToken Reset Password
+ * @apiName postAuthPasswordReset
+ * @apiGroup Authentication (Password Reset)
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} resetToken [url param] used to reset the password. This value is returned from
+ * calling the password reset intialization endpoint
+ * @apiParam {String} resetCode [body param] The password reset code sent to the user when the password-reset is initialized
+ * @apiParam {String} password [body param] new password of the user
+ *
+ * @apiDescription Reset Password
+ */
+router.post(
+	"/password-reset/:resetToken",
+	catchAsync(authController.resetPassword)
+);
+
+/**
+ * @api {get} /api/auth/password-reset/:resetToken Resend password reset code
+ * @apiName getAuthPasswordReset
+ * @apiGroup Authentication (Password Reset)
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} resetToken [url param] This value is returned from
+ * calling the password reset intialization endpoint
+ *
+ * @apiDescription Send Reset Code
+ */
+router.get(
+	"/password-reset/:resetToken",
+	catchAsync(authController.sendResetCode)
 );
 
 module.exports = router;
