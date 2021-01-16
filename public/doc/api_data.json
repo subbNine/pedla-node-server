@@ -598,6 +598,92 @@
     "groupTitle": "Admin_-_Users"
   },
   {
+    "type": "get",
+    "url": "/api/auth/password-reset/:resetToken",
+    "title": "Resend password reset code",
+    "name": "getAuthPasswordReset",
+    "group": "Authentication_(Password_Reset)",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "resetToken",
+            "description": "<p>[url param] This value is returned from calling the password reset intialization endpoint</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Send Reset Code</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication_(Password_Reset)"
+  },
+  {
+    "type": "post",
+    "url": "/api/auth/password-reset/:resetToken",
+    "title": "Reset Password",
+    "name": "postAuthPasswordReset",
+    "group": "Authentication_(Password_Reset)",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "resetToken",
+            "description": "<p>[url param] used to reset the password. This value is returned from calling the password reset intialization endpoint</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "resetCode",
+            "description": "<p>[body param] The password reset code sent to the user when the password-reset is initialized</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>[body param] new password of the user</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Reset Password</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication_(Password_Reset)"
+  },
+  {
+    "type": "post",
+    "url": "/api/auth/password-reset/init",
+    "title": "Initialize Password Reset",
+    "name": "postAuthPasswordResetInit",
+    "group": "Authentication_(Password_Reset)",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>email of the user that wants to reset passwaord</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Initialize Password Reset</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication_(Password_Reset)"
+  },
+  {
     "type": "post",
     "url": "/api/auth/admin/signin",
     "title": "Admin Sign In",
@@ -677,30 +763,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "post",
-    "url": "/api/auth/password-recovery/init",
-    "title": "Initialize Password Recovery",
-    "name": "postAuthPasswordRecoveryInit",
-    "group": "Authentication",
-    "version": "1.0.0",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>email of the user that wants to reset passwaord</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Initialize Password Recovery</p>",
-    "filename": "src/api/routes/auth.js",
-    "groupTitle": "Authentication"
   },
   {
     "type": "post",
