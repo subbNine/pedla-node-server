@@ -9,6 +9,7 @@ const TruckAndDriver = require("./truck-driver");
 const OrderController = require("./order");
 const NotificationController = require("./notification");
 const BlogPostController = require("./blog-post");
+const MessageController = require("./message");
 
 module.exports = {
 	auth: new Auth(),
@@ -22,4 +23,5 @@ module.exports = {
 	orderController: new OrderController(),
 	notificationController: new NotificationController(),
 	blogPostController: new BlogPostController(),
+	messageController: new MessageController(),
 };

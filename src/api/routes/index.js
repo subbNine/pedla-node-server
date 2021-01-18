@@ -3,6 +3,7 @@ const { Router } = require("express");
 const authRoutes = require("./auth");
 const otpRoutes = require("./otp");
 const userRoutes = require("./user");
+const supportRoutes = require("./support");
 const nonProtectedRoutes = require("./non-protected-routes");
 const fileUploadRoutes = require("./file-upload");
 const shield = require("../middlewares/shield");
@@ -22,6 +23,8 @@ router.use("/otp", shield(), otpRoutes);
 router.use("/user", userRoutes);
 
 router.use("/file", fileUploadRoutes);
+
+router.use("/support", supportRoutes);
 
 router.use(nonProtectedRoutes);
 

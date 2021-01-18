@@ -317,7 +317,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		}
 
 		return Result.ok(null);
@@ -337,7 +337,7 @@ module.exports = class Order {
 		if (updatedOrder) {
 			this._deductOrderedQuantityFromProduct(updatedOrder);
 
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		}
 
 		return Result.ok(null);
@@ -370,7 +370,7 @@ module.exports = class Order {
 
 			// notification.sendNotification(notificationObject);
 
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
 		}
@@ -412,7 +412,7 @@ module.exports = class Order {
 
 			// notification.sendNotification(notificationObject);
 
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
 		}
@@ -438,7 +438,7 @@ module.exports = class Order {
 
 			// notification.sendNotification(notificationObject);
 
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
 		}
@@ -471,7 +471,7 @@ module.exports = class Order {
 
 			// notification.sendNotification(notificationObject);
 
-			return Result.ok({ id: updatedOrder.repr().id });
+			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
 		}
@@ -486,6 +486,6 @@ module.exports = class Order {
 			{ _id: order.id },
 			orderEnt
 		);
-		return Result.ok({ id: updatedOrder.repr().id });
+		return Result.ok(updatedOrder.repr());
 	}
 };

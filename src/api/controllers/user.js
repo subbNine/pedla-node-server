@@ -341,4 +341,10 @@ module.exports = class User extends BaseController {
 
 		this.response(result, res);
 	}
+
+	async getSupportAgents(req, res, next) {
+		const result = await userService.getSupportAgents();
+
+		this.response(result, res);
+	}
 };

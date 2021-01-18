@@ -69,16 +69,22 @@ module.exports = class User {
 		objectRepr.id = this.id || null;
 		objectRepr.firstName = this.firstName || null;
 		objectRepr.lastName = this.lastName || null;
-		objectRepr.email = this.email || null;
-		objectRepr.phoneNumber = this.phoneNumber || null;
-		objectRepr.address = this.address || null;
-		objectRepr.permission = this.permission || null;
-		objectRepr.type = this.type || null;
 		objectRepr.avatarImg =
 			(isType("object", this.avatarImg) && this.avatarImg.uri) ||
 			this.avatarImg ||
 			null;
 		objectRepr.presence = this.presence || null;
+
+		if (this.isAdmin()) {
+			objectRepr.userName = this.userName || null;
+			return objectRepr;
+		}
+
+		objectRepr.phoneNumber = this.phoneNumber || null;
+		objectRepr.email = this.email || null;
+		objectRepr.address = this.address || null;
+		objectRepr.permission = this.permission || null;
+		objectRepr.type = this.type || null;
 		objectRepr.isActive = this.isActive || false;
 
 		if (this.passwordResetToken) {

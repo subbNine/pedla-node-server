@@ -81,6 +81,12 @@ module.exports = class UserMapper extends BaseMapper {
 		return await User.countDocuments(filter);
 	}
 
+	async findSupportAgents() {
+		const supportAgents = await this.findUsers({ type: types.ADMIN });
+
+		return supportAgents;
+	}
+
 	async findUsers(filter, options) {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));

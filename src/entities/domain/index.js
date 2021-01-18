@@ -9,6 +9,7 @@ const OrderEnt = require("./order");
 const PushDeviceEnt = require("./push-device");
 const BlogPostEnt = require("./blog-post");
 const PaymentEnt = require("./payment");
+const Message = require("./message");
 
 module.exports = {
 	UserEnt,
@@ -22,4 +23,5 @@ module.exports = {
 	PushDeviceEnt,
 	BlogPostEnt,
 	PaymentEnt,
+	Message,
 };

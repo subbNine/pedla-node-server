@@ -2697,6 +2697,94 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/support/agents",
+    "title": "Get support agents",
+    "name": "getSupportAgents",
+    "group": "Support",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get all support agents</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "get",
+    "url": "/api/support/message/read",
+    "title": "Get messages that has already been read",
+    "name": "getSupportMessageRead",
+    "group": "Support",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get all read messages</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "get",
+    "url": "/api/support/message/unread",
+    "title": "Get messages that has not been read",
+    "name": "getSupportMessageUnread",
+    "group": "Support",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get all unread messages</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "post",
+    "url": "/api/support/message",
+    "title": "Send Support Message",
+    "name": "postSupportMessage",
+    "group": "Support",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>message body</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "to",
+            "description": "<p>id of the user you wnat to message</p>"
+          }
+        ]
+      }
+    },
+    "version": "1.0.0",
+    "description": "<p>Endpoint to post support message</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "post",
+    "url": "/api/support/message/:messageId",
+    "title": "Read a message sent to you",
+    "name": "postSupportMessageMessageId",
+    "group": "Support",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "messageId",
+            "description": "<p>[url param] id of the message you want to mark as read</p>"
+          }
+        ]
+      }
+    },
+    "version": "1.0.0",
+    "description": "<p>Endpoint to read message sent to you</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "get",
     "url": "/api/user/peddler/trucks",
     "title": "Get trucks",
     "name": "getPeddlerTrucks",

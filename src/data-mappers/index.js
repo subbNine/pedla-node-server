@@ -11,6 +11,7 @@ const OrderMapper = require("./order");
 const PushDeviceMapper = require("./push-device");
 const BlogPostMapper = require("./blog-post");
 const PaymentMapper = require("./payment");
+const MessageMapper = require("./message");
 
 module.exports = {
 	userMapper: new UserMapper(dbModels),
@@ -24,4 +25,5 @@ module.exports = {
 	pushDeviceMapper: new PushDeviceMapper(dbModels),
 	blogPostMapper: new BlogPostMapper(dbModels),
 	paymentMapper: new PaymentMapper(dbModels),
+	messageMapper: new MessageMapper(dbModels),
 };

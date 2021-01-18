@@ -411,4 +411,15 @@ module.exports = class User {
 		}
 		return Result.ok([]);
 	}
+
+	async getSupportAgents() {
+		const { userMapper } = this.mappers;
+
+		const supportAgents = await userMapper.findSupportAgents();
+
+		if (supportAgents) {
+			return Result.ok(supportAgents.map((eachUser) => eachUser.repr()));
+		}
+		return Result.ok(null);
+	}
 };
