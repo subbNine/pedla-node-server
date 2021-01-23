@@ -12,50 +12,88 @@ module.exports = class Message extends BaseMapper {
 		return await Message.countDocuments(filter);
 	}
 
-	async countRead(userId) {
+	async countRead(user) {
 		const { Message } = this.models;
-		return await Message.countDocuments({
-			$and: [
-				{ $or: [{ to: userId }, { from: userId }] },
-				{ readAt: { $exists: true } },
-			],
-		});
-	}
-
-	async countUnread(userId) {
-		const { Message } = this.models;
-		return await Message.countDocuments({
-			$and: [
-				{ $or: [{ to: userId }, { from: userId }] },
-				{ readAt: { $exists: false } },
-			],
-		});
-	}
-
-	async getUnreadMessages(userId, options) {
-		const res = await this._findMessages(
-			{
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
 				$and: [
-					{ $or: [{ to: userId }, { from: userId }] },
+					{ $or: [{ to: { $exists: false } }, { from: user.id }] },
+					{ readAt: { $exists: true } },
+				],
+			};
+		} else {
+			filter = {
+				$and: [
+					{ $or: [{ to: user.id }, { from: user.id }] },
+					{ readAt: { $exists: true } },
+				],
+			};
+		}
+		return await Message.countDocuments(filter);
+	}
+
+	async countUnread(user) {
+		const { Message } = this.models;
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
+				$and: [
+					{ $or: [{ to: { $exists: false } }, { from: user.id }] },
 					{ readAt: { $exists: false } },
 				],
-			},
-			options
-		);
+			};
+		} else {
+			filter = {
+				$and: [
+					{ $or: [{ to: user.id }, { from: user.id }] },
+					{ readAt: { $exists: false } },
+				],
+			};
+		}
+		return await Message.countDocuments(filter);
+	}
+
+	async getUnreadMessages(user, options) {
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
+				$and: [
+					{ $or: [{ to: { $exists: false } }, { from: user.id }] },
+					{ readAt: { $exists: false } },
+				],
+			};
+		} else {
+			filter = {
+				$and: [
+					{ $or: [{ to: user.id }, { from: user.id }] },
+					{ readAt: { $exists: false } },
+				],
+			};
+		}
+		const res = await this._findMessages(filter, options);
 
 		return res;
 	}
 
-	async getReadMessages(userId, options) {
-		const res = await this._findMessages(
-			{
+	async getReadMessages(user, options) {
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
 				$and: [
-					{ $or: [{ to: userId }, { from: userId }] },
+					{ $or: [{ to: { $exists: false } }, { from: user.id }] },
 					{ readAt: { $exists: true } },
 				],
-			},
-			options
-		);
+			};
+		} else {
+			filter = {
+				$and: [
+					{ $or: [{ to: user.id }, { from: user.id }] },
+					{ readAt: { $exists: true } },
+				],
+			};
+		}
+		const res = await this._findMessages(filter, options);
 
 		return res;
 	}
