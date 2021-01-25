@@ -12,6 +12,21 @@ module.exports = class Message extends BaseMapper {
 		return await Message.countDocuments(filter);
 	}
 
+	async countAll(user) {
+		const { Message } = this.models;
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
+				$and: [{ $or: [{ to: { $exists: false } }, { from: user.id }] }],
+			};
+		} else {
+			filter = {
+				$and: [{ $or: [{ to: user.id }, { from: user.id }] }],
+			};
+		}
+		return await Message.countDocuments(filter);
+	}
+
 	async countRead(user) {
 		const { Message } = this.models;
 		let filter = {};
@@ -54,21 +69,15 @@ module.exports = class Message extends BaseMapper {
 		return await Message.countDocuments(filter);
 	}
 
-	async getUnreadMessages(user, options) {
+	async getAllMessages(user, options) {
 		let filter = {};
 		if (user.isAdmin()) {
 			filter = {
-				$and: [
-					{ $or: [{ to: { $exists: false } }, { from: user.id }] },
-					{ readAt: { $exists: false } },
-				],
+				$and: [{ $or: [{ to: { $exists: false } }, { from: user.id }] }],
 			};
 		} else {
 			filter = {
-				$and: [
-					{ $or: [{ to: user.id }, { from: user.id }] },
-					{ readAt: { $exists: false } },
-				],
+				$and: [{ $or: [{ to: user.id }, { from: user.id }] }],
 			};
 		}
 		const res = await this._findMessages(filter, options);
@@ -153,6 +162,27 @@ module.exports = class Message extends BaseMapper {
 			return this._toEntity(newMessageObj, MessageEnt, {
 				_id: "id",
 			});
+		}
+	}
+
+	async readAllUnread(user) {
+		const { Message } = this.models;
+
+		const doc = await Message.updateMany(
+			{
+				$and: [
+					{ $or: [{ from: user.id }, { to: user.id }] },
+					{ sentAt: { $lte: new Date() } },
+					{ readAt: { $exists: false } },
+				],
+			},
+			{
+				readAt: new Date(),
+			}
+		);
+
+		if (doc) {
+			return doc;
 		}
 	}
 

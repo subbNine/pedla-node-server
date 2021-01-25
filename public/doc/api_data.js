@@ -2719,12 +2719,21 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/support/message/unread",
+    "url": "/api/support/messages",
     "title": "Get messages that has not been read",
     "name": "getSupportMessageUnread",
     "group": "Support",
     "version": "1.0.0",
     "description": "<p>Endpoint to get all unread messages</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n {\"data\": [\n      {\n          \"id\": \"60058b6451662c8222130f1d\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:21:40.883Z\",\n          \"readAt\": \"2021-01-18T13:25:42.197Z\"\n      },\n      {\n          \"id\": \"60058ae475f9417ba7c285a5\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:19:32.127Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058abc75f9417ba7c285a4\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:18:52.297Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058a1f75f9417ba7c285a3\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:16:15.244Z\",\n          \"readAt\": null\n      }\n  ],\n  \"pagination\": {\n      \"currentPage\": 1,\n      \"totalPages\": 1,\n      \"totalDocs\": 4\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
     "filename": "src/api/routes/support.js",
     "groupTitle": "Support"
   },
@@ -2769,7 +2778,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/support/message/:messageId",
+    "url": "/api/support/messages/read",
     "title": "Read a message sent to you",
     "name": "postSupportMessageMessageId",
     "group": "Support",

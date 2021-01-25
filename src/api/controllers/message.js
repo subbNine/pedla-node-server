@@ -28,12 +28,12 @@ module.exports = class Message extends BaseController {
 		return this.response(result, res);
 	}
 
-	async getUnread(req, res, next) {
+	async getMessages(req, res, next) {
 		const { limit, page } = req.query;
 
 		const { user } = req._App;
 
-		const result = await messageService.getUnread(user, {
+		const result = await messageService.getMessages(user, {
 			pagination: { limit, page },
 		});
 
@@ -41,9 +41,9 @@ module.exports = class Message extends BaseController {
 	}
 
 	async read(req, res, next) {
-		const { messageId } = req.params;
+		const { user } = req._App;
 
-		const result = await messageService.read(messageId);
+		const result = await messageService.read(user);
 
 		return this.response(result, res);
 	}

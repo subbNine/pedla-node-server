@@ -25,7 +25,7 @@ router.use(shield());
 router.post("/message", catchAsync(messageController.send));
 
 /**
- * @api {post} /api/support/message/:messageId Read a message sent to you
+ * @api {post} /api/support/messages/read Read a message sent to you
  * @apiName postSupportMessageMessageId
  * @apiGroup Support
  *
@@ -34,18 +34,138 @@ router.post("/message", catchAsync(messageController.send));
  *
  * @apiDescription Endpoint to read message sent to you
  */
-router.post("/message/:messageId", catchAsync(messageController.read));
+router.post("/messages/read", catchAsync(messageController.read));
 
 /**
- * @api {get} /api/support/message/unread Get messages that has not been read
+ * @api {get} /api/support/messages Get messages that has not been read
  * @apiName getSupportMessageUnread
  * @apiGroup Support
  *
  * @apiVersion 1.0.0
  *
  * @apiDescription Endpoint to get all unread messages
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {"data": [
+ *       {
+ *           "id": "60058b6451662c8222130f1d",
+ *           "type": 1,
+ *           "content": " heyy i am supposed to be a driver",
+ *           "sender": {
+ *               "id": "5fd8b3fc7a78f300173bd7ee",
+ *               "firstName": "James",
+ *               "lastName": "Uso",
+ *               "avatarImg": "https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg",
+ *               "presence": "online",
+ *               "phoneNumber": "+2348123451746",
+ *               "email": null,
+ *               "address": null,
+ *               "permission": 3,
+ *               "type": "DRIVER",
+ *               "isActive": false,
+ *               "peddler": "5fd391cd841bc60017b619c6",
+ *               "driverStats": null,
+ *               "userName": "driver1",
+ *               "truck": null,
+ *               "latlon": {
+ *                   "lon": 8.3441639,
+ *                   "lat": 4.9814586
+ *               }
+ *           },
+ *           "sentAt": "2021-01-18T13:21:40.883Z",
+ *           "readAt": "2021-01-18T13:25:42.197Z"
+ *       },
+ *       {
+ *           "id": "60058ae475f9417ba7c285a5",
+ *           "type": 1,
+ *           "content": " heyy i am supposed to be a driver",
+ *           "sender": {
+ *               "id": "5fd8b3fc7a78f300173bd7ee",
+ *               "firstName": "James",
+ *               "lastName": "Uso",
+ *               "avatarImg": "https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg",
+ *               "presence": "online",
+ *               "phoneNumber": "+2348123451746",
+ *               "email": null,
+ *               "address": null,
+ *               "permission": 3,
+ *               "type": "DRIVER",
+ *               "isActive": false,
+ *               "peddler": "5fd391cd841bc60017b619c6",
+ *               "driverStats": null,
+ *               "userName": "driver1",
+ *               "truck": null,
+ *               "latlon": {
+ *                   "lon": 8.3441639,
+ *                   "lat": 4.9814586
+ *               }
+ *           },
+ *           "sentAt": "2021-01-18T13:19:32.127Z",
+ *           "readAt": null
+ *       },
+ *       {
+ *           "id": "60058abc75f9417ba7c285a4",
+ *           "type": 1,
+ *           "sender": {
+ *               "id": "5fd8b3fc7a78f300173bd7ee",
+ *               "firstName": "James",
+ *               "lastName": "Uso",
+ *               "avatarImg": "https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg",
+ *               "presence": "online",
+ *               "phoneNumber": "+2348123451746",
+ *               "email": null,
+ *               "address": null,
+ *               "permission": 3,
+ *               "type": "DRIVER",
+ *               "isActive": false,
+ *               "peddler": "5fd391cd841bc60017b619c6",
+ *               "driverStats": null,
+ *               "userName": "driver1",
+ *               "truck": null,
+ *               "latlon": {
+ *                   "lon": 8.3441639,
+ *                   "lat": 4.9814586
+ *               }
+ *           },
+ *           "sentAt": "2021-01-18T13:18:52.297Z",
+ *           "readAt": null
+ *       },
+ *       {
+ *           "id": "60058a1f75f9417ba7c285a3",
+ *           "type": 1,
+ *           "sender": {
+ *               "id": "5fd8b3fc7a78f300173bd7ee",
+ *               "firstName": "James",
+ *               "lastName": "Uso",
+ *               "avatarImg": "https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg",
+ *               "presence": "online",
+ *               "phoneNumber": "+2348123451746",
+ *               "email": null,
+ *               "address": null,
+ *               "permission": 3,
+ *               "type": "DRIVER",
+ *               "isActive": false,
+ *               "peddler": "5fd391cd841bc60017b619c6",
+ *               "driverStats": null,
+ *               "userName": "driver1",
+ *               "truck": null,
+ *               "latlon": {
+ *                   "lon": 8.3441639,
+ *                   "lat": 4.9814586
+ *               }
+ *           },
+ *           "sentAt": "2021-01-18T13:16:15.244Z",
+ *           "readAt": null
+ *       }
+ *   ],
+ *   "pagination": {
+ *       "currentPage": 1,
+ *       "totalPages": 1,
+ *       "totalDocs": 4
+ *   }
+ * }
  */
-router.get("/messages/unread", catchAsync(messageController.getUnread));
+router.get("/messages", catchAsync(messageController.getMessages));
 
 /**
  * @api {get} /api/support/message/read Get messages that has already been read

@@ -63,24 +63,24 @@ module.exports = class Message {
 		}
 	}
 
-	async getUnread(user, options) {
+	async getMessages(user, options) {
 		const { messageMapper } = this.mappers;
 
 		const { pagination } = options || {};
 		const { limit = 30, page } = pagination || {};
 
-		const totalUnreadMessages = await messageMapper.countUnread(user);
+		const totalMessages = await messageMapper.countAll(user);
 
-		const totalPages = limit ? Math.ceil(totalUnreadMessages / +limit) : 1;
+		const totalPages = limit ? Math.ceil(totalMessages / +limit) : 1;
 
-		const unreadMessages = await messageMapper.getUnreadMessages(user, {
+		const messages = await messageMapper.getAllMessages(user, {
 			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
 		});
 
-		if (unreadMessages) {
+		if (messages) {
 			const results = [];
 
-			for (const eachMessage of unreadMessages) {
+			for (const eachMessage of messages) {
 				results.push(eachMessage.repr());
 			}
 
@@ -89,7 +89,7 @@ module.exports = class Message {
 				pagination: {
 					currentPage: +page || 1,
 					totalPages,
-					totalDocs: totalUnreadMessages,
+					totalDocs: totalMessages,
 				},
 			});
 		} else {
@@ -97,13 +97,13 @@ module.exports = class Message {
 		}
 	}
 
-	async read(messageId) {
+	async read(user) {
 		const { messageMapper } = this.mappers;
 
-		const read = await messageMapper.read(messageId);
+		const read = await messageMapper.readAllUnread(user);
 
 		if (read) {
-			return Result.ok(read.repr());
+			return Result.ok(true);
 		} else {
 			return Result.ok(null);
 		}
