@@ -8,10 +8,10 @@ module.exports = class Message extends BaseController {
 	}
 
 	async send(req, res, next) {
-		const { message, to } = req.body;
+		const { content: message, type = 1, to } = req.body;
 		const { user } = req._App;
 
-		const result = await messageService.send(user, to, message);
+		const result = await messageService.send(user, { to, message, type });
 
 		return this.response(result, res);
 	}

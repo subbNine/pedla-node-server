@@ -2741,21 +2741,29 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "message",
+            "field": "content",
             "description": "<p>message body</p>"
           },
           {
             "group": "Parameter",
             "type": "ID",
-            "optional": false,
+            "optional": true,
             "field": "to",
-            "description": "<p>id of the user you wnat to message</p>"
+            "description": "<p>id of the user you want to message. Admin alone, pass in this field</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "type",
+            "defaultValue": "1",
+            "description": "<p>type of message. 1 = text, 2 =  image/file.</p>"
           }
         ]
       }
     },
     "version": "1.0.0",
-    "description": "<p>Endpoint to post support message</p>",
+    "description": "<p>Endpoint to post support message. Support messages are of two types text designated by the integer 1 and image/file designated by the integer 2. The content of type = 2 is the url of the image and that of type = 1 is the message text</p>",
     "filename": "src/api/routes/support.js",
     "groupTitle": "Support"
   },

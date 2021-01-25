@@ -14,11 +14,13 @@ router.use(shield());
  * @apiName postSupportMessage
  * @apiGroup Support
  *
- * @apiParam {String} message message body
- * @apiParam {ID} to id of the user you wnat to message
+ * @apiParam {String} content message body
+ * @apiParam {ID} [to] id of the user you want to message. Admin alone, pass in this field
+ * @apiParam {Number} [type=1] type of message. 1 = text, 2 =  image/file.
  * @apiVersion 1.0.0
  *
- * @apiDescription Endpoint to post support message
+ * @apiDescription Endpoint to post support message. Support messages are of two types text designated by the integer 1 and image/file designated by the
+ * integer 2. The content of type = 2 is the url of the image and that of type = 1 is the message text
  */
 router.post("/message", catchAsync(messageController.send));
 

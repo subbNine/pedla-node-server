@@ -8,12 +8,13 @@ module.exports = class Message {
 		this.mappers = mappers;
 	}
 
-	async send(sender, to, message) {
+	async send(sender, { to, message, type }) {
 		const { messageMapper } = this.mappers;
 
 		const msgObj = {
 			from: sender.id,
 			message,
+			type,
 		};
 
 		if (to) {
@@ -22,7 +23,7 @@ module.exports = class Message {
 
 		const created = await messageMapper.create(msgObj);
 
-		if (created) {
+		if (created && created.to) {
 		}
 
 		return Result.ok(created.repr());

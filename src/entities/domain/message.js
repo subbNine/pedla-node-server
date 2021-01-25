@@ -5,6 +5,7 @@ module.exports = class Message {
 	to;
 	sentAt;
 	readAt;
+	type;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -22,23 +23,19 @@ module.exports = class Message {
 			objectRepr.id = this.id;
 		}
 
+		if (this.type) {
+			objectRepr.type = this.type;
+		}
+
 		if (this.message) {
-			objectRepr.message = this.message;
+			objectRepr.content = this.message;
 		}
 
 		if (this.from) {
 			if (this.from.repr) {
-				objectRepr.from = this.from.repr();
+				objectRepr.sender = this.from.repr();
 			} else {
-				objectRepr.from = this.from;
-			}
-		}
-
-		if (this.to) {
-			if (this.to.repr) {
-				objectRepr.to = this.to.repr();
-			} else {
-				objectRepr.to = this.to;
+				objectRepr.sender = this.from;
 			}
 		}
 
