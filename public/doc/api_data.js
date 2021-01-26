@@ -2719,7 +2719,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/support/messages",
+    "url": "/api/support/messages?limit=4&page=1",
     "title": "Get messages",
     "name": "getSupportMessageUnread",
     "group": "Support",

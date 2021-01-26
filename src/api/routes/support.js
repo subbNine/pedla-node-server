@@ -36,7 +36,7 @@ router.post("/message", catchAsync(messageController.send));
 router.post("/messages/read", catchAsync(messageController.read));
 
 /**
- * @api {get} /api/support/messages Get messages 
+ * @api {get} /api/support/messages?limit=4&page=1 Get messages 
  * @apiName getSupportMessageUnread
  * @apiGroup Support
  *
