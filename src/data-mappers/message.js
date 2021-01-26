@@ -156,7 +156,9 @@ module.exports = class Message extends BaseMapper {
 
 		const newMessageObj = newMessage.toObject();
 
-		newMessageObj.to = this._toEntity(to.toObject(), UserEnt, { _id: "id" });
+		if (to) {
+			newMessageObj.to = this._toEntity(to.toObject(), UserEnt, { _id: "id" });
+		}
 
 		if (newMessage) {
 			return this._toEntity(newMessageObj, MessageEnt, {
