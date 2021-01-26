@@ -25,25 +25,24 @@ router.use(shield());
 router.post("/message", catchAsync(messageController.send));
 
 /**
- * @api {post} /api/support/messages/read Read a message sent to you
+ * @api {post} /api/support/messages/read Read unread messages sent to you
  * @apiName postSupportMessageMessageId
  * @apiGroup Support
  *
- * @apiParam {ID} messageId [url param] id of the message you want to mark as read
  * @apiVersion 1.0.0
  *
- * @apiDescription Endpoint to read message sent to you
+ * @apiDescription Endpoint to read unread messages sent to you
  */
 router.post("/messages/read", catchAsync(messageController.read));
 
 /**
- * @api {get} /api/support/messages Get messages that has not been read
+ * @api {get} /api/support/messages Get messages 
  * @apiName getSupportMessageUnread
  * @apiGroup Support
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription Endpoint to get all unread messages
+ * @apiDescription Endpoint to get all messages
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {"data": [

@@ -2720,11 +2720,11 @@
   {
     "type": "get",
     "url": "/api/support/messages",
-    "title": "Get messages that has not been read",
+    "title": "Get messages",
     "name": "getSupportMessageUnread",
     "group": "Support",
     "version": "1.0.0",
-    "description": "<p>Endpoint to get all unread messages</p>",
+    "description": "<p>Endpoint to get all messages</p>",
     "success": {
       "examples": [
         {
@@ -2779,24 +2779,11 @@
   {
     "type": "post",
     "url": "/api/support/messages/read",
-    "title": "Read a message sent to you",
+    "title": "Read unread messages sent to you",
     "name": "postSupportMessageMessageId",
     "group": "Support",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "ID",
-            "optional": false,
-            "field": "messageId",
-            "description": "<p>[url param] id of the message you want to mark as read</p>"
-          }
-        ]
-      }
-    },
     "version": "1.0.0",
-    "description": "<p>Endpoint to read message sent to you</p>",
+    "description": "<p>Endpoint to read unread messages sent to you</p>",
     "filename": "src/api/routes/support.js",
     "groupTitle": "Support"
   },
