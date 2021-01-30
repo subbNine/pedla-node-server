@@ -598,6 +598,44 @@ define({ "api": [
     "groupTitle": "Admin_-_Users"
   },
   {
+    "type": "post",
+    "url": "/api/auth/change-password",
+    "title": "Change Password",
+    "name": "postAuthChangePassword",
+    "group": "Authentication_(Change_Password)",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "otpToken",
+            "description": "<p>otp token user receive's from call to send otp route</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "oldPassword",
+            "description": "<p>old password of the user</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "newPassword",
+            "description": "<p>[body param] new password of the user</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>To initialize the process. Send an opt token by calling the send otp route. Then call this endpoint supplying the otp token, new password and old password. The endpoint will return the updated user object</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication_(Change_Password)"
+  },
+  {
     "type": "get",
     "url": "/api/auth/password-reset/:resetToken",
     "title": "Resend password reset code",

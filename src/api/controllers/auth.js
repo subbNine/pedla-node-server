@@ -160,4 +160,12 @@ module.exports = class Auth extends BaseController {
 
 		this.response(result, res);
 	}
+
+	async changePassword(req, res, next) {
+		const { user } = req._App;
+
+		const result = await authService.changePassword(user, req.body);
+
+		return this.response(result, res);
+	}
 };

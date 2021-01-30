@@ -7,6 +7,7 @@ const { catchAsync } = require("../../errors");
 
 const { validateBody } = require("../middlewares/validator-helpers");
 const validationSchemas = require("../validators");
+const shield = require("../middlewares/shield");
 
 const router = Router();
 
@@ -237,6 +238,26 @@ router.post(
 router.get(
 	"/password-reset/:resetToken",
 	catchAsync(authController.sendResetCode)
+);
+
+/**
+ * @api {post} /api/auth/change-password Change Password
+ * @apiName postAuthChangePassword
+ * @apiGroup Authentication (Change Password)
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} otpToken otp token user receive's from call to send otp route
+ * @apiParam {String} oldPassword  old password of the user
+ * @apiParam {String} newPassword [body param] new password of the user
+ *
+ * @apiDescription To initialize the process. Send an opt token by calling the send otp route. Then call this endpoint supplying the otp token, 
+ * new password and old password. The endpoint will return the updated user object
+ */
+router.post(
+	"/change-password",
+	shield(),
+	catchAsync(authController.changePassword)
 );
 
 module.exports = router;

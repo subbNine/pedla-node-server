@@ -1,3 +1,5 @@
+const { totp } = require("otplib");
+
 const { UserEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
@@ -306,6 +308,62 @@ module.exports = class Auth {
 					name: errorCodes.WrongTokensError.name,
 					message: errMessages.wrongTokens,
 					statusCode: errorCodes.WrongTokensError.statusCode,
+				})
+			);
+		}
+	}
+
+	async changePassword(user, inputObj) {
+		const { secretMapper, userMapper } = this.mappers;
+
+		const { otpToken, oldPassword, newPassword } = inputObj || {};
+
+		const foundSecret = await secretMapper.findSecret(
+			{ userId: user.id },
+			(doc) => doc.populate("userId")
+		);
+
+		if (foundSecret) {
+			const otpSecret = foundSecret.otpSecret;
+
+			const isValidOtp = totp.check(otpToken, otpSecret);
+
+			if (isValidOtp) {
+				const isOldPasswordMatch = foundSecret.user.comparePassword(
+					oldPassword
+				);
+
+				if (isOldPasswordMatch) {
+					const updatedUser = await userMapper.updateUser(
+						{ _id: user.id },
+						{ password: newPassword }
+					);
+
+					return Result.ok(updatedUser.repr());
+				} else {
+					return Result.fail(
+						new AppError({
+							name: errorCodes.IncorrectPasswordError.name,
+							statusCode: errorCodes.IncorrectPasswordError.statusCode,
+							message: errMessages.incorrectPassword,
+						})
+					);
+				}
+			} else {
+				return Result.fail(
+					new AppError({
+						name: errorCodes.ExpiredOtp.name,
+						statusCode: errorCodes.ExpiredOtp.statusCode,
+						message: errMessages.expiredOtp,
+					})
+				);
+			}
+		} else {
+			return Result.fail(
+				new AppError({
+					name: errorCodes.OtpNotIssued,
+					statusCode: errorCodes.OtpNotIssued.statusCode,
+					message: errMessages.otpNotIssued,
 				})
 			);
 		}
