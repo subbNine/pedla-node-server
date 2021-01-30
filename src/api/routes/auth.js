@@ -7,7 +7,6 @@ const { catchAsync } = require("../../errors");
 
 const { validateBody } = require("../middlewares/validator-helpers");
 const validationSchemas = require("../validators");
-const shield = require("../middlewares/shield");
 
 const router = Router();
 
