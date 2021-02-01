@@ -253,18 +253,30 @@ module.exports = class User {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
 
-		const isAlreadyExistingUser = await userMapper.findUser({
-			userName: userEnt.userName,
-		});
+		if (userDto.userName) {
+			const isAlreadyExistingUser = await userMapper.findUser({
+				$and: [
+					{ userName: { $exists: true } },
+					{
+						userName: userEnt.userName,
+					},
+				],
+			});
 
-		if (isAlreadyExistingUser) {
-			return Result.fail(
-				new AppError({
-					name: errorCodes.NameConflictError.name,
-					message: errMessages.userNameConflict,
-					statusCode: errorCodes.NameConflictError.statusCode,
-				})
-			);
+			if (
+				isAlreadyExistingUser &&
+				isAlreadyExistingUser.id &&
+				isAlreadyExistingUser.id.toString &&
+				isAlreadyExistingUser.id.toString() != userDto.id
+			) {
+				return Result.fail(
+					new AppError({
+						name: errorCodes.NameConflictError.name,
+						message: errMessages.userNameConflict,
+						statusCode: errorCodes.NameConflictError.statusCode,
+					})
+				);
+			}
 		}
 
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
