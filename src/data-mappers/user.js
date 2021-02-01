@@ -208,6 +208,11 @@ module.exports = class UserMapper extends BaseMapper {
 			new: true,
 		});
 
+		if (updates.password) {
+			doc.password = updates.password;
+			await doc.save();
+		}
+
 		if (doc) {
 			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
 		}
