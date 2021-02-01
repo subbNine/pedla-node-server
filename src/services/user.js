@@ -260,15 +260,11 @@ module.exports = class User {
 					{
 						userName: userEnt.userName,
 					},
+					{ _id: { $ne: userDto.id } },
 				],
 			});
 
-			if (
-				isAlreadyExistingUser &&
-				isAlreadyExistingUser.id &&
-				isAlreadyExistingUser.id.toString &&
-				isAlreadyExistingUser.id.toString() != userDto.id
-			) {
+			if (isAlreadyExistingUser) {
 				return Result.fail(
 					new AppError({
 						name: errorCodes.NameConflictError.name,
