@@ -85,6 +85,22 @@ module.exports = class Message extends BaseMapper {
 		return res;
 	}
 
+	async getLastMessage(user) {
+		let filter = {};
+		if (user.isAdmin()) {
+			filter = {
+				$and: [{ $or: [{ to: { $exists: false } }, { from: user.id }] }],
+			};
+		} else {
+			filter = {
+				$and: [{ $or: [{ to: user.id }, { from: user.id }] }],
+			};
+		}
+		const res = await this._findMessage(filter);
+
+		return res;
+	}
+
 	async getReadMessages(user, options) {
 		let filter = {};
 		if (user.isAdmin()) {
@@ -143,6 +159,28 @@ module.exports = class Message extends BaseMapper {
 			}
 
 			return results;
+		}
+	}
+
+	async _findMessage(filter) {
+		const { Message } = this.models;
+
+		const query = Message.findOne(filter)
+			.populate("from")
+			.populate("to")
+			.sort("-sentAt");
+
+		const doc = await query;
+
+		if (doc) {
+			const msgObj = doc.toObject();
+
+			msgObj.from = this._toEntity(msgObj.from, UserEnt, { _id: "id" });
+			msgObj.to = this._toEntity(msgObj.to, UserEnt, { _id: "id" });
+
+			return this._toEntity(msgObj, MessageEnt, {
+				_id: "id",
+			});
 		}
 	}
 

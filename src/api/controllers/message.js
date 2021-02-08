@@ -40,6 +40,14 @@ module.exports = class Message extends BaseController {
 		return this.response(result, res);
 	}
 
+	async getLastMessage(req, res, next) {
+		const { user } = req._App;
+
+		const result = await messageService.getLastMessage(user, userId);
+
+		return this.response(result, res);
+	}
+
 	async read(req, res, next) {
 		const { user } = req._App;
 

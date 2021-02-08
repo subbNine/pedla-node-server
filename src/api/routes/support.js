@@ -36,7 +36,7 @@ router.post("/message", catchAsync(messageController.send));
 router.post("/messages/read", catchAsync(messageController.read));
 
 /**
- * @api {get} /api/support/messages?limit=4&page=1 Get messages 
+ * @api {get} /api/support/messages?limit=4&page=1 Get messages
  * @apiName getSupportMessageUnread
  * @apiGroup Support
  *
@@ -176,6 +176,17 @@ router.get("/messages", catchAsync(messageController.getMessages));
  * @apiDescription Endpoint to get all read messages
  */
 router.get("/messages/read", catchAsync(messageController.getRead));
+
+/**
+ * @api {get} /api/support/last-message Get last message
+ * @apiName getSupportLastMessage
+ * @apiGroup Support
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Endpoint to get last message
+ */
+router.get("/last-message", catchAsync(messageController.getLastMessage));
 
 /**
  * @api {get} /api/support/agents Get support agents

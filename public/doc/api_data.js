@@ -2746,6 +2746,17 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/support/last-message",
+    "title": "Get last messag",
+    "name": "getSupportLastMessage",
+    "group": "Support",
+    "version": "1.0.0",
+    "description": "<p>Endpoint to get last message</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "get",
     "url": "/api/support/message/read",
     "title": "Get messages that has already been read",
     "name": "getSupportMessageRead",
