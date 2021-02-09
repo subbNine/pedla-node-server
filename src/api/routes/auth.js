@@ -250,13 +250,33 @@ router.get(
  * @apiParam {String} oldPassword  old password of the user
  * @apiParam {String} newPassword [body param] new password of the user
  *
- * @apiDescription To initialize the process. Send an opt token by calling the send otp route. Then call this endpoint supplying the otp token, 
+ * @apiDescription To initialize the process. Send an opt token by calling the send otp route. Then call this endpoint supplying the otp token,
  * new password and old password. The endpoint will return the updated user object
  */
 router.post(
 	"/change-password",
 	shield(),
 	catchAsync(authController.changePassword)
+);
+
+/**
+ * @api {get} /api/auth/incomplete-profile Get incomplete peddler profile
+ * @apiName getAuthIncompleteProfile
+ * @apiGroup Authentication Peddler
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} email email that will be used to retreive incomplete profile to
+ * continue peddler registration
+ *
+ * @apiDescription With this endpoint a peddler will get back a profile which has been
+ * created but hasn't completed registration.
+ *
+ * @apiUse IncorrectEmailError
+ */
+router.get(
+	"/incomplete-profile",
+	catchAsync(authController.getIncompletePeddlerProfile)
 );
 
 module.exports = router;

@@ -722,6 +722,49 @@
     "groupTitle": "Authentication_(Password_Reset)"
   },
   {
+    "type": "get",
+    "url": "/api/auth/incomplete-profile",
+    "title": "Get incomplete peddler profile",
+    "name": "getAuthIncompleteProfile",
+    "group": "Authentication_Peddler",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>email that will be used to retreive incomplete profile to continue peddler registration</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>With this endpoint a peddler will get back a profile which has been created but hasn't completed registration.</p>",
+    "filename": "src/api/routes/auth.js",
+    "groupTitle": "Authentication_Peddler",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "IncorrectEmailError",
+            "description": "<p>A user with the email was not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n\t\"name\": \"IncorrectEmailError\",\n\t\"message\": \"The email you entered was not found\",\n\t\"isOperational\": true\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/api/auth/admin/signin",
     "title": "Admin Sign In",
@@ -2747,7 +2790,7 @@
   {
     "type": "get",
     "url": "/api/support/last-message",
-    "title": "Get last messag",
+    "title": "Get last message",
     "name": "getSupportLastMessage",
     "group": "Support",
     "version": "1.0.0",

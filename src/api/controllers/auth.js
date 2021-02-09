@@ -43,6 +43,17 @@ module.exports = class Auth extends BaseController {
 		return this.response(result, res);
 	}
 
+	async getIncompletePeddlerProfile(userDto) {
+		const userDto = new UserDto();
+		const { email } = req.body;
+
+		userDto.email = ("" + email).toLowerCase();
+
+		const result = await authService.getIncompletePeddlerProfile(userDto);
+
+		return this.response(result, res);
+	}
+
 	async createPeddlerProfile(req, res, next) {
 		const userDto = new UserDto();
 		const { firstName, lastName, email, phoneNumber, nTrucks } = req.body;

@@ -97,6 +97,18 @@ module.exports = class Message {
 		}
 	}
 
+	async getLastMessage(user) {
+		const { messageMapper } = this.mappers;
+
+		const message = await messageMapper.getLastMessage(user);
+
+		if (message) {
+			return Result.ok(message.repr());
+		} else {
+			return Result.ok(null);
+		}
+	}
+
 	async read(user) {
 		const { messageMapper } = this.mappers;
 
