@@ -63,6 +63,7 @@ module.exports = {
 		statusCode: 400,
 		name: "PaymentError",
 	},
+	DuplicatePeddlerProfile: { statusCode: 400, name: "DuplicatePeddlerProfile" },
 	ExpiredOtp: { statusCode: 400, name: "ExpiredOtp" },
 	IncorrectOtp: { statusCode: 400, name: "IncorrectOtp" },
 	OtpNotIssued: { statusCode: 400, name: "OtpNotIssued" },
