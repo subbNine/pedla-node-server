@@ -227,6 +227,8 @@ module.exports = class User {
 			);
 		}
 
+		userEnt.isActive = true;
+
 		let newUser = await userMapper.createUser(userEnt);
 
 		if (newUser) {

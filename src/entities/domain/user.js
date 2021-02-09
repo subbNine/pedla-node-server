@@ -194,10 +194,7 @@ module.exports = class User {
 						return done(err);
 					}
 				}
-				console.log({
-					candidatePassword,
-					inputPassword: this.password,
-				});
+
 				resolve(matched);
 				if (done) {
 					return done(null, matched);
