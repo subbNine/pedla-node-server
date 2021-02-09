@@ -11,7 +11,10 @@ const {
 	notificationController,
 } = require("../../controllers");
 const { permissions } = require("../../../db/mongo/enums/user");
-const { validateBody } = require("../../middlewares/validator-helpers");
+const {
+	validateBody,
+	validateQuery,
+} = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
 
 const router = Router();
@@ -126,6 +129,7 @@ router.get(
 router.get(
 	"/orders",
 	shield(permissions.PERM002),
+	validateQuery(validationSchemas.getOrders),
 	catchAsync(orderController.getOrders)
 );
 

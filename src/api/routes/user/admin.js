@@ -14,6 +14,7 @@ const {
 const {
 	validateBody,
 	validateParams,
+	validateQuery,
 } = require("../../middlewares/validator-helpers");
 const validationSchemas = require("../../validators");
 
@@ -180,7 +181,11 @@ router.get("/users/count", catchAsync(userController.countUsers));
  * To return results with more than one status, seperate the status passed in the query with a plus symbol
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
-router.get("/orders", catchAsync(orderController.getOrders));
+router.get(
+	"/orders",
+	validateQuery(validationSchemas.getOrders),
+	catchAsync(orderController.getOrders)
+);
 
 /**
  * @api {get} /api/user/admin/orders/count?status=pending+accepted Retrieve number of orders
@@ -217,7 +222,11 @@ router.get("/orders/stats", catchAsync(orderController.ordersStats));
  * To return results with more than one status, seperate the status passed in the query with a plus symbol
  * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
  */
-router.get("/orders/recent", catchAsync(orderController.recentOrders));
+router.get(
+	"/orders/recent",
+	validateQuery(validationSchemas.getOrders),
+	catchAsync(orderController.recentOrders)
+);
 
 /**
  * @api {post} /api/user/admin/post Create Post
@@ -283,7 +292,11 @@ router.delete("/posts", catchAsync(blogPostController.deletePosts));
  * @apiDescription Endpoint to get feeds for products. The product Id is used to categorize feeds
  *
  */
-router.get("/posts", catchAsync(blogPostController.getPosts));
+router.get(
+	"/posts",
+	validateQuery(validationSchemas.pagination),
+	catchAsync(blogPostController.getPosts)
+);
 
 /**
  * @api {put} /api/user/admin/payment/verify/:paymentId Verify payment
@@ -341,6 +354,9 @@ router.get("/buyers/corporate", catchAsync(userController.getCorporateBuyers));
  *
  * @apiParam {ID} buyerId the id of the buyer whose account you want to activate
  */
-router.put("/buyer/:buyerId", catchAsync(userController.activateCorporateBuyer));
+router.put(
+	"/buyer/:buyerId",
+	catchAsync(userController.activateCorporateBuyer)
+);
 
 module.exports = router;
