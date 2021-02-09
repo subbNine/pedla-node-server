@@ -9,7 +9,7 @@ module.exports = class Truck extends BaseController {
 	}
 
 	async createTruck(req, res, next) {
-		const { model, brand, productId, size } = req.body;
+		const { model, brand, productId, size, quantity } = req.body;
 
 		const { user } = req._App;
 
@@ -19,10 +19,10 @@ module.exports = class Truck extends BaseController {
 		truckDto.model = model;
 		truckDto.brand = brand;
 		truckDto.size = size;
+		truckDto.quantity = quantity;
 
 		if (req.files) {
-			const licenseImageObj =
-				req.files["license"] && req.files["license"][0];
+			const licenseImageObj = req.files["license"] && req.files["license"][0];
 			const insuranceImageObj =
 				req.files["insurance"] && req.files["insurance"][0];
 			const worthinessImageObj =
@@ -61,7 +61,7 @@ module.exports = class Truck extends BaseController {
 	}
 
 	async updateTruck(req, res, next) {
-		const { model, brand, productId, size } = req.body;
+		const { model, brand, productId, size, quantity } = req.body;
 		const { truckId } = req.params;
 
 		const truckDto = new TruckDto();
@@ -70,10 +70,10 @@ module.exports = class Truck extends BaseController {
 		truckDto.model = model;
 		truckDto.brand = brand;
 		truckDto.size = size;
+		truckDto.quantity = quantity;
 
 		if (req.files) {
-			const licenseImageObj =
-				req.files["license"] && req.files["license"][0];
+			const licenseImageObj = req.files["license"] && req.files["license"][0];
 			const insuranceImageObj =
 				req.files["insurance"] && req.files["insurance"][0];
 			const worthinessImageObj =

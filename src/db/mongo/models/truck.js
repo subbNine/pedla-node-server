@@ -14,6 +14,7 @@ let schema = new Schema({
 	insurance: { imgId: String, uri: String },
 	worthiness: { imgId: String, uri: String },
 	ownership: { imgId: String, uri: String },
+	quantity: { type: Number, min: 0, default: 0 },
 });
 
 module.exports = mongoose.model("Truck", schema);

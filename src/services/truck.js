@@ -31,35 +31,35 @@ module.exports = class Truck {
 	async findTrucks(truckDto) {
 		const { truckMapper, truckAndDriverMapper } = this.mappers;
 
-		const foundTrucks = await truckMapper.findTrucks(
-			new TruckEnt(truckDto)
-		);
+		const foundTrucks = await truckMapper.findTrucks(new TruckEnt(truckDto));
 
-		const trucksWithDrivers = await asyncExec(
-			foundTrucks,
-			async (truckEnt) => {
-				const truckWithDriver = await truckAndDriverMapper.findTruckAndDriver(
-					{
-						truckId: truckEnt.id,
+		if (foundTrucks) {
+			const trucksWithDrivers = await asyncExec(
+				foundTrucks,
+				async (truckEnt) => {
+					const truckWithDriver = await truckAndDriverMapper.findTruckAndDriver(
+						{
+							truckId: truckEnt.id,
+						}
+					);
+
+					if (truckWithDriver) {
+						truckEnt.driver = truckWithDriver.driver.repr();
+						return truckEnt;
+					} else {
+						return truckEnt;
 					}
-				);
-
-				if (truckWithDriver) {
-					truckEnt.driver = truckWithDriver.driver.repr();
-					return truckEnt;
-				} else {
-					return truckEnt;
 				}
-			}
-		);
-
-		if (trucksWithDrivers) {
-			return Result.ok(
-				trucksWithDrivers.map((eachTruck) => eachTruck.repr())
 			);
-		} else {
-			return Result.ok([]);
+
+			if (trucksWithDrivers) {
+				return Result.ok(
+					trucksWithDrivers.map((eachTruck) => eachTruck.repr())
+				);
+			}
 		}
+
+		return Result.ok([]);
 	}
 
 	async updateTruck(truckDto) {
