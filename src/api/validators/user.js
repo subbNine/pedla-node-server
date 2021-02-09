@@ -132,3 +132,7 @@ module.exports.notification = Joi.object().keys({
 	message: Joi.string(),
 	platform: Joi.string(),
 });
+
+module.exports.email = Joi.object().keys({
+	email: Joi.string().required(),
+});

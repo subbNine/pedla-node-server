@@ -260,7 +260,7 @@ router.post(
 );
 
 /**
- * @api {get} /api/auth/incomplete-profile Get incomplete peddler profile
+ * @api {post} /api/auth/incomplete-profile Get incomplete peddler profile
  * @apiName getAuthIncompleteProfile
  * @apiGroup Authentication Peddler
  *
@@ -275,8 +275,9 @@ router.post(
  *
  * @apiUse IncorrectEmailError
  */
-router.get(
+router.post(
 	"/incomplete-profile",
+	validateBody(validationSchemas.email),
 	catchAsync(authController.getIncompletePeddlerProfile)
 );
 
