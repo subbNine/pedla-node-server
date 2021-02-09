@@ -266,11 +266,12 @@ router.post(
  *
  * @apiVersion 1.0.0
  *
- * @apiParam {String} email email that will be used to retreive incomplete profile to
+ * @apiParam {String} email (body-param) email that will be used to retreive incomplete profile to
  * continue peddler registration
  *
  * @apiDescription With this endpoint a peddler will get back a profile which has been
- * created but hasn't completed registration.
+ * created but hasn't completed registration. An incorrect email error will be thrown if the
+ * password does not exists
  *
  * @apiUse IncorrectEmailError
  */

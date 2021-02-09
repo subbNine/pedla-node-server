@@ -21,7 +21,11 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			$and: [{ email: { $exists: true } }, { email: userDto.email }],
+			$and: [
+				{ email: { $exists: true } },
+				{ email: userDto.email },
+				{ type: types.BUYER },
+			],
 		});
 
 		if (foundUser) {
@@ -58,11 +62,14 @@ module.exports = class Auth {
 		const { userMapper } = this.mappers;
 
 		let foundUser = await userMapper.findUser({
-			$and: [{ userName: { $exists: true } }, { userName: userDto.userName }],
+			$and: [
+				{ userName: { $exists: true } },
+				{ userName: userDto.userName },
+				{ type: { $in: [types.DRIVER, types.PEDDLER] } },
+			],
 		});
 
 		if (foundUser) {
-			// console.log.log({foundUser})
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
@@ -187,6 +194,42 @@ module.exports = class Auth {
 		}
 	}
 
+	async getIncompletePeddlerProfile(userDto) {
+		const { userMapper } = this.mappers;
+
+		let foundUser = await userMapper.findUser({
+			email: userDto.email,
+		});
+
+		if (foundUser) {
+			if (foundUser.isVerifiedPeddler()) {
+				return Result.fail(
+					new AppError({
+						message: errMessages.duplicatePeddlerProfile,
+						name: errorCodes.DuplicatePeddlerProfile.name,
+						statusCode: errorCodes.DuplicatePeddlerProfile.statusCode,
+					})
+				);
+			}
+
+			eventEmitter.emit(eventTypes.peddlerProfileCreated, foundUser);
+
+			const objRepr = foundUser.repr();
+			const token = generateJwtToken({ ...objRepr });
+			objRepr.token = token;
+
+			return Result.ok({ ...objRepr });
+		} else {
+			return Result.fail(
+				new AppError({
+					message: errMessages.incorrectEmail,
+					name: errorCodes.IncorrectEmailError.name,
+					statusCode: errorCodes.IncorrectEmailError.statusCode,
+				})
+			);
+		}
+	}
+
 	async createPeddlerProfile(userDto) {
 		const { userMapper } = this.mappers;
 
@@ -234,6 +277,7 @@ module.exports = class Auth {
 			);
 		} else {
 			foundUser.elevatePerm();
+			foundUser.isActive = true;
 			const updatedUser = await userMapper.updateUserById(
 				foundUser.id,
 				foundUser

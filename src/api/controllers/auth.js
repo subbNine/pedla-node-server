@@ -43,7 +43,7 @@ module.exports = class Auth extends BaseController {
 		return this.response(result, res);
 	}
 
-	async getIncompletePeddlerProfile(userDto) {
+	async getIncompletePeddlerProfile(req, res, next) {
 		const userDto = new UserDto();
 		const { email } = req.body;
 
