@@ -48,7 +48,6 @@ let schema = new Schema({
 	peddlerCode: String,
 	isActivePeddler: Boolean,
 	isActive: Boolean,
-	isDisabled: { type: Boolean, default: false },
 	isDeleted: { type: Boolean, default: false },
 	passwordResetToken: String,
 	passwordResetCode: String,
