@@ -162,7 +162,7 @@ module.exports = class Payment {
 		if (paymentResp && paymentResp.status) {
 			paymentRespData.status = paymentResp.status;
 			paymentRespData.data = { status: paymentResp.data.status };
-			paymentRespData.data.amount = paymentResp.datadata.dataamount;
+			paymentRespData.data.amount = paymentResp.data.amount;
 			paymentRespData.data.currency = paymentResp.data.currency;
 			paymentRespData.data.message = paymentResp.data.gateway_response;
 
