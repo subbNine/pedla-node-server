@@ -33,6 +33,7 @@ function _sendProdError(err, res) {
 			return res.status(errorCodes.InternalServerError.statusCode).json({
 				name: errorCodes.InternalServerError.name,
 				message: "Sorry an unexpected error has occured",
+				stack: err.stack,
 			});
 		}
 	}
