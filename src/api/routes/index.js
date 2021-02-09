@@ -7,12 +7,16 @@ const supportRoutes = require("./support");
 const nonProtectedRoutes = require("./non-protected-routes");
 const fileUploadRoutes = require("./file-upload");
 const shield = require("../middlewares/shield");
+const resetUserPresence = require("../middlewares/reset-user-presence");
 const initExpressVars = require("../middlewares/init-express-global-vars");
 const { user: userController } = require("../controllers");
+const { catchAsync } = require("../../errors");
 
 const router = Router();
 
-router.get("/user", userController.checkUserExistence);
+router.use(catchAsync(resetUserPresence));
+
+router.get("/user", catchAsync(userController.checkUserExistence));
 
 router.use(initExpressVars);
 

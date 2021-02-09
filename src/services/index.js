@@ -15,6 +15,7 @@ const PushDeviceService = require("./push-device");
 const BlogPost = require("./blog-post");
 const Payment = require("./payment");
 const Message = require("./message");
+const Activity = require("./activity");
 
 module.exports = {
 	auth: new Auth({ mappers }),
@@ -32,4 +33,5 @@ module.exports = {
 	blogPost: new BlogPost({ mappers }),
 	payment: new Payment({ mappers }),
 	message: new Message({ mappers }),
+	activity: new Activity({ mappers }),
 };

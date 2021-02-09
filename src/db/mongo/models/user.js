@@ -53,6 +53,7 @@ let schema = new Schema({
 	passwordResetToken: String,
 	passwordResetCode: String,
 	passwordResetExpires: Date,
+	lastActive: Date,
 });
 
 schema.index({ latlon: "2dsphere" });

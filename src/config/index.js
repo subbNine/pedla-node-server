@@ -58,7 +58,8 @@ const APP_ENV = NODE_ENV || "development";
 
 module.exports.dbConnStr = dbConf.mongo[APP_ENV].generateConnStr();
 module.exports.jwtTokenSecret = TOKEN_SECRET;
-module.exports.OTP_TOKEN_TTL = 7 * 60; // 7 minutes
+module.exports.OTP_TOKEN_TTL = 7 * 60;
+module.exports.INACTIVE_TTL = 5 * 60 * 1000;
 module.exports.APP_ENV = APP_ENV;
 module.exports.PORT = PORT || 4700;
 module.exports.CLOUDINARY_CLOUD_NAME = CLOUDINARY_CLOUD_NAME;
