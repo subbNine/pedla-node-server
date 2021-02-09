@@ -31,7 +31,11 @@ module.exports = {
 	notAcceptableOrder:
 		"The order cannot be completed as the driver has a pending order",
 	wrongTokens: "incorrect or expired code",
-	duplicatePeddlerProfile: "The email you entered is associated with an already verified profile",
+	duplicatePeddlerProfile:
+		"The email you entered is associated with an already verified profile",
+	deletedAccount: "Your account has been deleted. Please contact your peddler",
+	disabledAccount:
+		"Your account is no longer active. Please contact your peddler",
 };
 
 function replacement(subjectArg, subjectNameArg) {

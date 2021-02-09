@@ -493,6 +493,38 @@ module.exports = class UserMapper extends BaseMapper {
 
 		return driversList;
 	}
+
+	async disableDriver(driverId) {
+		const { User } = this.models;
+
+		const doc = await User.findOneAndUpdate(
+			{ _id: driverId, type: types.DRIVER },
+			{ isActive: false },
+			{
+				new: true,
+			}
+		);
+
+		if (doc) {
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+		}
+	}
+
+	async deleteDriver(driverId) {
+		const { User } = this.models;
+
+		const doc = await User.findOneAndUpdate(
+			{ _id: driverId, type: types.DRIVER },
+			{ isDeleted: true },
+			{
+				new: true,
+			}
+		);
+
+		if (doc) {
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+		}
+	}
 };
 
 function isEqualIds(mongoObj1, mongoObj2) {

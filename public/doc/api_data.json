@@ -722,7 +722,7 @@
     "groupTitle": "Authentication_(Password_Reset)"
   },
   {
-    "type": "get",
+    "type": "post",
     "url": "/api/auth/incomplete-profile",
     "title": "Get incomplete peddler profile",
     "name": "getAuthIncompleteProfile",
@@ -2028,6 +2028,54 @@
         ]
       }
     },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/peddler/driver/:driverId/delete",
+    "title": "Delete Driver",
+    "name": "postPeddlerDriverDelete",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>id of driver you want to delete</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>This endpoint will delete a driver</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
+    "type": "put",
+    "url": "/api/user/peddler/driver/:driverId/disable",
+    "title": "Disable Driver",
+    "name": "postPeddlerDriverDisable",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>id of driver you want to disable</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>This endpoint will disbale a driver</p>",
     "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Driver_Management"
   },

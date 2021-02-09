@@ -432,4 +432,28 @@ module.exports = class User {
 		}
 		return Result.ok(null);
 	}
+
+	async disableDriver(driverId) {
+		const { userMapper } = this.mappers;
+
+		const disabledDriver = await userMapper.disableDriver(driverId);
+
+		if (disabledDriver) {
+			return Result.ok(disabledDriver.repr());
+		}
+
+		return Result.ok();
+	}
+
+	async deleteDriver(driverId) {
+		const { userMapper } = this.mappers;
+
+		const deletedDriver = await userMapper.deleteDriver(driverId);
+
+		if (deletedDriver) {
+			return Result.ok(deletedDriver.repr());
+		}
+
+		return Result.ok(null);
+	}
 };

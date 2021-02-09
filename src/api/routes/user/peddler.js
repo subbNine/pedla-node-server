@@ -211,6 +211,37 @@ router.post(
 );
 
 /**
+ * @api {put} /api/user/peddler/driver/:driverId/disable Disable Driver
+ * @apiName postPeddlerDriverDisable
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {ID} driverId id of driver you want to disable
+ *
+ * @apiDescription This endpoint will disbale a driver
+ *
+ */
+router.put(
+	"/driver/:driverId/disable",
+	catchAsync(userController.disableDriver)
+);
+
+/**
+ * @api {put} /api/user/peddler/driver/:driverId/delete Delete Driver
+ * @apiName postPeddlerDriverDelete
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {ID} driverId id of driver you want to delete
+ *
+ * @apiDescription This endpoint will delete a driver
+ *
+ */
+router.put("/driver/:driverId/delete", catchAsync(userController.deleteDriver));
+
+/**
  * @api {post} /api/user/peddler/truck Create truck
  * @apiName postPeddlerTruck
  * @apiGroup Truck Management

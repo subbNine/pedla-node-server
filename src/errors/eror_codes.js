@@ -70,4 +70,6 @@ module.exports = {
 	InvalidCodeError: { statusCode: 400, name: "InvalidCodeError" },
 	UnverifiedProfileError: { statusCode: 400, name: "UnverifiedProfileError" },
 	WrongTokensError: { statusCode: 401, name: "WrongTokensError" },
+	DisabledAccountError: { statusCode: 401, name: "DisabledAccountError" },
+	DeletedAccountError: { statusCode: 401, name: "DeletedAccountError" },
 };

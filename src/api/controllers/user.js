@@ -347,4 +347,20 @@ module.exports = class User extends BaseController {
 
 		this.response(result, res);
 	}
+
+	async disableDriver(req, res, next) {
+		const { driverId } = req.params;
+
+		const result = await userService.disableDriver(driverId);
+
+		this.response(result, res);
+	}
+
+	async deleteDriver(req, res, next) {
+		const { driverId } = req.params;
+
+		const result = await userService.deleteDriver(driverId);
+
+		this.response(result, res);
+	}
 };

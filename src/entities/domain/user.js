@@ -185,6 +185,14 @@ module.exports = class User {
 		return this.peddlerCode && this.permission > permissions.PERM001;
 	}
 
+	isActiveUser() {
+		return !!this.isActive;
+	}
+
+	isDeletedUser() {
+		return !!this.isDeleted;
+	}
+
 	comparePassword(candidatePassword, done) {
 		return new Promise((resolve, reject) => {
 			bcrypt.compare(candidatePassword, this.password, (err, matched) => {
