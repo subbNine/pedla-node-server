@@ -62,6 +62,20 @@ module.exports = router;
  */
 
 /**
+ * @apiDefine IncorrectEmailError
+ *
+ * @apiError IncorrectEmailError Thrown if the email does not exist
+ *
+ * @apiErrorExample Error-Response:
+ * 	HTTP/1.1 401 Authorization Error
+ * 	{
+ * 		"name": "IncorrectEmailError",
+ * 		"message": "The email address you entered is not associated with any account. Double-check your email address and try again",
+ * 		"isOperational": true
+ * 	}
+ */
+
+/**
  * @apiDefine IncorrectUsernameError
  *
  * @apiError IncorrectUsernameError The username of the user is incorrect
