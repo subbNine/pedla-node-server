@@ -3019,7 +3019,7 @@ define({ "api": [
     "groupTitle": "Truck_Management"
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/api/user/peddler/truck/:truckId/delete",
     "title": "Delete truck",
     "name": "postPeddlerTruckDelete",

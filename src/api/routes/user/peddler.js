@@ -316,7 +316,7 @@ router.post(
 );
 
 /**
- * @api {post} /api/user/peddler/truck/:truckId/delete Delete truck
+ * @api {put} /api/user/peddler/truck/:truckId/delete Delete truck
  * @apiName postPeddlerTruckDelete
  * @apiGroup Truck Management
  *
@@ -326,7 +326,7 @@ router.post(
  *
  * @apiParam {ID} truckId truck ID
  */
-router.post(
+router.put(
 	"/truck/:truckId/delete",
 	validateBody(validationSchemas.deleteTruck),
 	catchAsync(truckController.deleteTruck)
