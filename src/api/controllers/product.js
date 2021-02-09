@@ -40,7 +40,7 @@ module.exports = class Product extends BaseController {
 		const { name, description, price } = req.body;
 		const { productId } = req.params;
 
-		const productDto = new UserDto();
+		const productDto = new ProductDto();
 		productDto.id = productId;
 		productDto.name = name;
 		productDto.description = description;
