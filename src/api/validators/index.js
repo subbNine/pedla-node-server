@@ -31,4 +31,7 @@ module.exports = {
 	notification: (payload) => JoiValidator(payload, usersSchema.notification),
 	profileUpdate: (payload) =>
 		JoiValidator(payload, usersSchema.postProfileUpdate),
+	getOrders: (payload) => JoiValidator(payload, usersSchema.getOrders),
+	pagination: (payload) => JoiValidator(payload, usersSchema.pagination),
+	deleteTruck: (payload) => JoiValidator(payload, usersSchema.deleteTruck),
 };

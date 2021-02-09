@@ -55,11 +55,27 @@ module.exports.postDriver = Joi.object().keys({
 	email: Joi.string(),
 });
 
+module.exports.getOrders = Joi.object().keys({
+	status: Joi.string().allow(null),
+	page: Joi.number().min(0),
+	limit: Joi.number().min(0),
+});
+
+module.exports.pagination = Joi.object().keys({
+	page: Joi.number().min(0),
+	limit: Joi.number().min(0),
+});
+
 module.exports.postTruck = Joi.object().keys({
 	productId: mongoIdVal.string().mongoId(),
 	model: Joi.string(),
 	brand: Joi.string(),
 	size: Joi.number(),
+	quantity: Joi.number().min(0).allow(null),
+});
+
+module.exports.deleteTruck = Joi.object().keys({
+	truckId: mongoIdVal.string().mongoId(),
 });
 
 module.exports.postTruckAndDriver = Joi.object().keys({
