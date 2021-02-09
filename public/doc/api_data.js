@@ -736,12 +736,12 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>email that will be used to retreive incomplete profile to continue peddler registration</p>"
+            "description": "<p>(body-param) email that will be used to retreive incomplete profile to continue peddler registration</p>"
           }
         ]
       }
     },
-    "description": "<p>With this endpoint a peddler will get back a profile which has been created but hasn't completed registration.</p>",
+    "description": "<p>With this endpoint a peddler will get back a profile which has been created but hasn't completed registration. An incorrect email error will be thrown if the password does not exists</p>",
     "filename": "src/api/routes/auth.js",
     "groupTitle": "Authentication_Peddler",
     "error": {
@@ -2931,6 +2931,13 @@ define({ "api": [
           },
           {
             "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>the quantity of petroleum product that the truck carries</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "File",
             "optional": false,
             "field": "license",
@@ -2956,6 +2963,30 @@ define({ "api": [
             "optional": false,
             "field": "ownership",
             "description": "<p>the truck's proof of ownership</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Truck_Management"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/peddler/truck/:truckId/delete",
+    "title": "Delete truck",
+    "name": "postPeddlerTruckDelete",
+    "group": "Truck_Management",
+    "version": "1.0.0",
+    "description": "<p>This endpoint is used to delete a truck. The delete operation is a soft delete</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "truckId",
+            "description": "<p>truck ID</p>"
           }
         ]
       }
@@ -3001,6 +3032,13 @@ define({ "api": [
             "optional": false,
             "field": "size",
             "description": "<p>size of truck in litres</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>the quantity of petroleum product that the truck carries</p>"
           },
           {
             "group": "Parameter",

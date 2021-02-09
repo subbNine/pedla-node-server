@@ -223,6 +223,7 @@ router.post(
  * @apiParam {String} brand truck Brand
  * @apiParam {ID} product type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
+ * @apiParam {Number} quantity the quantity of petroleum product that the truck carries
  * @apiParam {File} license truck liscence
  * @apiParam {File} insurance the truck's insurance
  * @apiParam {File} worthiness the truck's road worthiness
@@ -265,6 +266,7 @@ router.get("/trucks", catchAsync(truckController.getPeddlerTrucks));
  * @apiParam {String} brand truck Brand
  * @apiParam {ID} product type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
+ * @apiParam {Number} quantity the quantity of petroleum product that the truck carries
  * @apiParam {File} license truck liscence
  * @apiParam {File} insurance the truck's insurance
  * @apiParam {File} worthiness the truck's road worthiness
@@ -280,6 +282,23 @@ router.post(
 	]),
 	validateBody(validationSchemas.postTruck),
 	catchAsync(truckController.updateTruck)
+);
+
+/**
+ * @api {post} /api/user/peddler/truck/:truckId/delete Delete truck
+ * @apiName postPeddlerTruckDelete
+ * @apiGroup Truck Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription This endpoint is used to delete a truck. The delete operation is a soft delete
+ *
+ * @apiParam {ID} truckId truck ID
+ */
+router.post(
+	"/truck/:truckId/delete",
+	validateBody(validationSchemas.deleteTruck),
+	catchAsync(truckController.deleteTruck)
 );
 
 /**
