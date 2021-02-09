@@ -15,10 +15,13 @@ module.exports = class TruckMapper extends BaseMapper {
 
 	async findTrucks(filter) {
 		const { Truck } = this.models;
-		const docs = await Truck.find(this.toTruckPersistence(filter))
+		const q = Truck.find(this.toTruckPersistence(filter))
 			.populate("ownerId")
 			.populate({ path: "productId", populate: { path: "productId" } });
 
+		q.where({ $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] });
+
+		const docs = await q;
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
@@ -31,12 +34,17 @@ module.exports = class TruckMapper extends BaseMapper {
 
 	async findTruck(filter) {
 		const { Truck } = this.models;
-		const doc = await Truck.findOne(this.toTruckPersistence(filter))
+		const q = Truck.findOne(this.toTruckPersistence(filter))
 			.populate("ownerId")
 			.populate({ path: "productId", populate: { path: "productId" } });
 
+		q.where({ $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] });
+
+		const doc = await q;
+
 		if (doc) {
-			return this.toTruckEnt(doc.toObject());
+			const docObj = doc.toObject();
+			return this.toTruckEnt(docObj);
 		}
 	}
 
@@ -49,6 +57,8 @@ module.exports = class TruckMapper extends BaseMapper {
 
 		if (doc) {
 			return this.toTruckEnt(doc.toObject());
+		} else {
+			return this.toTruckEnt({});
 		}
 	}
 
@@ -61,16 +71,21 @@ module.exports = class TruckMapper extends BaseMapper {
 
 		if (doc) {
 			return this.toTruckEnt(doc.toObject());
+		} else {
+			return this.toTruckEnt({});
 		}
 	}
 
 	async deleteTruck(id) {
 		const { Truck } = this.models;
 
-		const doc = await Truck.findByIdAndDelete(id);
+		const doc = await Truck.findByIdAndUpdate(id, { isDeleted: true });
 
 		if (doc) {
-			return this.toTruckEnt(doc.toObject());
+			const docObj = doc.toObject();
+			return this.toTruckEnt(docObj);
+		} else {
+			return this.toTruckEnt({});
 		}
 	}
 

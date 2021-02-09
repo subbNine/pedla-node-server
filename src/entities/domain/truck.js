@@ -14,6 +14,8 @@ module.exports = class Truck {
 	worthiness;
 	ownership;
 	driver;
+	isDeleted;
+	quantity;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -54,6 +56,7 @@ module.exports = class Truck {
 				this.ownership ||
 				null,
 			driver: this.driver || null,
+			quantity: this.quantity || 0,
 		};
 	}
 };

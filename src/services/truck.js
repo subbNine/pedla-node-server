@@ -73,4 +73,12 @@ module.exports = class Truck {
 
 		return Result.ok(updatedTruck.repr());
 	}
+
+	async deleteTruck(truckId) {
+		const { truckMapper } = this.mappers;
+
+		const deletedTruck = await truckMapper.deleteTruck(truckId);
+
+		return Result.ok(deletedTruck);
+	}
 };

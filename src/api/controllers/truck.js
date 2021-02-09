@@ -132,6 +132,14 @@ module.exports = class Truck extends BaseController {
 		this.response(result, res);
 	}
 
+	async deleteTruck(req, res, next) {
+		const { truckId } = req.params;
+
+		const result = await truckService.deleteTruck(truckId);
+
+		this.response(result, res);
+	}
+
 	async getPeddlerTrucks(req, res, next) {
 		const { peddlerId } = req.params;
 
