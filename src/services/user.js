@@ -305,24 +305,25 @@ module.exports = class User {
 
 		const foundUsers = await userMapper.findUsers(new UserEnt(userDto));
 
-		const driversWithTrucks = await asyncExec(foundUsers, async (userEnt) => {
-			const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver({
-				driverId: userEnt.id,
+		if (foundUsers) {
+			const driversWithTrucks = await asyncExec(foundUsers, async (userEnt) => {
+				const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver({
+					driverId: userEnt.id,
+				});
+
+				if (driverWithTruck) {
+					userEnt.truck = driverWithTruck.truck.repr();
+					return userEnt;
+				} else {
+					return userEnt;
+				}
 			});
 
-			if (driverWithTruck) {
-				userEnt.truck = driverWithTruck.truck.repr();
-				return userEnt;
-			} else {
-				return userEnt;
+			if (driversWithTrucks) {
+				return Result.ok(driversWithTrucks.map((eachUser) => eachUser.repr()));
 			}
-		});
-
-		if (driversWithTrucks) {
-			return Result.ok(driversWithTrucks.map((eachUser) => eachUser.repr()));
-		} else {
-			return Result.ok([]);
 		}
+		return Result.ok([]);
 	}
 
 	async getCorporateBuyers(options) {

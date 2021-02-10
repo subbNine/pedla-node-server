@@ -33,16 +33,20 @@ module.exports = class UserMapper extends BaseMapper {
 		const { User } = this.models;
 
 		const search = this._toPersistence(filter, this._toPersistenceTransform);
-		const doc = User.findOne(search);
+		const query = User.findOne(search);
 		if (populateFn) {
-			populateFn(doc);
+			populateFn(query);
 		}
 
-		const result = await doc;
-		if (result) {
-			const entObj = result.toObject();
-			if (result.avatarImg && result.avatarImg.uri) {
-				entObj.avatarImg = result.avatarImg.uri;
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
+
+		const doc = await query;
+		if (doc) {
+			const entObj = doc.toObject();
+			if (doc.avatarImg && doc.avatarImg.uri) {
+				entObj.avatarImg = doc.avatarImg.uri;
 			}
 			const userEnt = this._toEntity(entObj, UserEnt, this._toEntityTransform);
 
@@ -104,6 +108,10 @@ module.exports = class UserMapper extends BaseMapper {
 		if (populate && typeof populate === "function") {
 			populate(query);
 		}
+
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
 
 		const docs = await query;
 
@@ -497,13 +505,11 @@ module.exports = class UserMapper extends BaseMapper {
 	async disableDriver(driverId) {
 		const { User } = this.models;
 
-		const doc = await User.findOneAndUpdate(
-			{ _id: driverId, type: types.DRIVER },
-			{ isActive: false },
-			{
-				new: true,
-			}
-		);
+		let doc = await User.findOne({ _id: driverId, type: types.DRIVER });
+
+		doc.isActive = !doc.isActive;
+
+		doc = await doc.save();
 
 		if (doc) {
 			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
