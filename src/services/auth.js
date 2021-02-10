@@ -29,26 +29,6 @@ module.exports = class Auth {
 		});
 
 		if (foundUser) {
-			if (!foundUser.isActiveUser()) {
-				return Result.fail(
-					new AppError({
-						message: errMessages.disabledAccount,
-						name: errorCodes.DisabledAccountError.name,
-						statusCode: errorCodes.DisabledAccountError.statusCode,
-					})
-				);
-			}
-
-			if (!foundUser.isDeletedUser()) {
-				return Result.fail(
-					new AppError({
-						message: errMessages.deletedAccount,
-						name: errorCodes.DeletedAccountError.name,
-						statusCode: errorCodes.DeletedAccountError.statusCode,
-					})
-				);
-			}
-
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
@@ -90,6 +70,27 @@ module.exports = class Auth {
 		});
 
 		if (foundUser) {
+			if (foundUser.isDriver()) {
+				if (!foundUser.isActiveUser()) {
+					return Result.fail(
+						new AppError({
+							message: errMessages.disabledAccount,
+							name: errorCodes.DisabledAccountError.name,
+							statusCode: errorCodes.DisabledAccountError.statusCode,
+						})
+					);
+				}
+
+				if (foundUser.isDeletedUser()) {
+					return Result.fail(
+						new AppError({
+							message: errMessages.deletedAccount,
+							name: errorCodes.DeletedAccountError.name,
+							statusCode: errorCodes.DeletedAccountError.statusCode,
+						})
+					);
+				}
+			}
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
