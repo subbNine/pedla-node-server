@@ -4,7 +4,7 @@ const authRoutes = require("./auth");
 const otpRoutes = require("./otp");
 const userRoutes = require("./user");
 const supportRoutes = require("./support");
-const nonProtectedRoutes = require("./non-protected-routes");
+const blogPost = require("./blog-post");
 const fileUploadRoutes = require("./file-upload");
 const shield = require("../middlewares/shield");
 const logLastActive = require("../middlewares/log-last-active");
@@ -30,7 +30,7 @@ router.use("/file", fileUploadRoutes);
 
 router.use("/support", supportRoutes);
 
-router.use(nonProtectedRoutes);
+router.use(blogPost);
 
 module.exports = router;
 
