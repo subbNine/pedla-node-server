@@ -7,11 +7,10 @@ module.exports = class ActivityMapper extends BaseMapper {
 		this.models = models;
 	}
 
-	resetUserPresence(user) {
+	logLastActive(user) {
 		const { User } = this.models;
 
 		User.findByIdAndUpdate(user.id, {
-			presence: ONLINE,
 			lastActive: new Date(),
 		}).then((doc, err) => {
 			if (err) {

@@ -6,10 +6,10 @@ module.exports = class Activity {
 		this.mappers = mappers;
 	}
 
-	async resetUserPresence(user) {
+	async logLastActive(user) {
 		const { activityMapper } = this.mappers;
 
-		await activityMapper.resetUserPresence(user);
+		await activityMapper.logLastActive(user);
 	}
 
 	setInactiveUsersOffline() {
