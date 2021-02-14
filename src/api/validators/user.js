@@ -67,10 +67,10 @@ module.exports.pagination = Joi.object().keys({
 });
 
 module.exports.postTruck = Joi.object().keys({
-	productId: mongoIdVal.string().mongoId(),
-	model: Joi.string(),
-	brand: Joi.string(),
-	size: Joi.number(),
+	productId: mongoIdVal.string().mongoId().allow(null),
+	model: Joi.string().allow(null),
+	brand: Joi.string().allow(null),
+	size: Joi.number().allow(null),
 	quantity: Joi.number().min(0).allow(null),
 });
 
