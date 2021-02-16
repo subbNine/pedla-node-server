@@ -90,7 +90,19 @@ module.exports = class Order {
 		const $and = [];
 
 		if (orderFilterDto.driver.id) {
-			$and.push({ driverId: orderFilterDto.driver.id });
+			$and.push({
+				$or: [
+					{
+						driverId: orderFilterDto.driver.id,
+						paymentMethod: { $ne: "credit" },
+						paid: true,
+					},
+					{
+						driverId: orderFilterDto.driver.id,
+						paymentMethod: "credit",
+					},
+				],
+			});
 		} else {
 			if (orderFilterDto.buyer.id) {
 				$and.push({ buyerId: orderFilterDto.buyer.id });
@@ -133,7 +145,19 @@ module.exports = class Order {
 		const $and = [];
 
 		if (orderFilterDto.driver.id) {
-			$and.push({ driverId: orderFilterDto.driver.id });
+			$and.push({
+				$or: [
+					{
+						driverId: orderFilterDto.driver.id,
+						paymentMethod: { $ne: "credit" },
+						paid: true,
+					},
+					{
+						driverId: orderFilterDto.driver.id,
+						paymentMethod: "credit",
+					},
+				],
+			});
 		} else {
 			if (orderFilterDto.buyer.id) {
 				$and.push({ buyerId: orderFilterDto.buyer.id });
