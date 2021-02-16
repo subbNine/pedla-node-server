@@ -99,8 +99,8 @@ module.exports = class GeoLoc {
 					return Result.ok(usersRepr);
 				}
 			}
-			return Result.ok([]);
 		}
+		return Result.ok([]);
 	}
 
 	async updateGeoLocation(geoDto) {
