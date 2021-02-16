@@ -56,7 +56,7 @@ module.exports.postDriver = Joi.object().keys({
 });
 
 module.exports.getOrders = Joi.object().keys({
-	status: Joi.string().allow(null),
+	status: Joi.string().allow(null).allow(""),
 	page: Joi.number().min(0),
 	limit: Joi.number().min(0),
 });
