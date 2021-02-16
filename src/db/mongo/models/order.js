@@ -36,6 +36,7 @@ let schema = new Schema({
 		enum: Object.values(orderEnums.deliveryStatus),
 		default: orderEnums.deliveryStatus.NOTDELIVERED,
 	},
+	paid: { type: Boolean, default: false },
 });
 
 schema.index({ buyerLatlon: "2dsphere", driverLatlon: "2dsphere" });

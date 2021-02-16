@@ -153,7 +153,7 @@ module.exports = class Payment {
 	}
 
 	async verifyPaystackPayment(ref) {
-		const { paymentMapper } = this.mappers;
+		const { paymentMapper, orderMapper } = this.mappers;
 
 		const paymentResp = await paymentGateway.verifyTransaction(ref);
 
@@ -167,10 +167,16 @@ module.exports = class Payment {
 			paymentRespData.data.message = paymentResp.data.gateway_response;
 
 			if (paymentRespData.data.status === "success") {
-				paymentMapper.updatePayment(
+				const updatedPayment = await paymentMapper.updatePayment(
 					{ gatewayReference: ref },
 					{ status: paymentStatus.PAID }
 				);
+
+				if (updatedPayment.order.id) {
+					await orderMapper.updateOrderById(updatedPayment.order.id, {
+						paid: true,
+					});
+				}
 			} else {
 				return Result.fail(
 					new AppError({
@@ -263,12 +269,18 @@ module.exports = class Payment {
 	}
 
 	async verifyTransferPayment(paymentId) {
-		const { paymentMapper } = this.mappers;
+		const { paymentMapper, orderMapper } = this.mappers;
 
 		const verified = await paymentMapper.updatePayment(
 			{ _id: paymentId, paymentMethod: { $ne: paymentMethod.paystack } },
 			{ status: paymentStatus.PAID }
 		);
+
+		if (updatedPayment.order.id) {
+			await orderMapper.updateOrderById(updatedPayment.order.id, {
+				paid: true,
+			});
+		}
 
 		return Result.ok(
 			(verified && { ...verified, order: { id: verified.order.id } }) || null
