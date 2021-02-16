@@ -297,6 +297,32 @@ module.exports = class Order {
 		const { orderMapper } = this.mappers;
 		const payment = new Payment({ mappers: this.mappers });
 
+		const truck = await this._getTruck(order.driver);
+
+		if (truck) {
+			const truckQuantity = +truck.quantity;
+
+			if (order.quantity) {
+				if (order.quantity > truckQuantity) {
+					return Result.fail(
+						new AppError({
+							name: errorCodes.InvalidOrderError,
+							statusCode: errorCodes.InvalidOrderError.statusCode,
+							message: errMessages.quantityOrderedGreaterThanAvailable,
+						})
+					);
+				}
+			} else {
+				return Result.fail(
+					new AppError({
+						name: errorCodes.InvalidOrderError,
+						statusCode: errorCodes.InvalidOrderError.statusCode,
+						message: errMessages.invalidQuantity,
+					})
+				);
+			}
+		}
+
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 
 		const paymentResp = await payment.initPayment(newOrder);
@@ -307,6 +333,18 @@ module.exports = class Order {
 		});
 	}
 
+	async _getTruck(driver) {
+		const { truckAndDriverMapper } = this.mappers;
+
+		const truckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
+			driverId: driver.id,
+		});
+
+		if (truckAndDriver) {
+			return truckAndDriver.truck;
+		}
+	}
+
 	async _isOrderInProgress(driverId) {
 		const { orderMapper } = this.mappers;
 		return await orderMapper.findOrder({
@@ -314,15 +352,58 @@ module.exports = class Order {
 		});
 	}
 
-	async _deductOrderedQuantityFromProduct(order) {
-		const { peddlerProductMapper } = this.mappers;
+	async _returnOrderedQuantity(order) {
+		const { peddlerProductMapper, truckMapper } = this.mappers;
 
 		const orderedQuantity = order.quantity;
 		const productId = String(order.product.id);
 
-		await peddlerProductMapper.updateProductById(productId, {
-			$inc: { quantity: -1 * orderedQuantity },
-		});
+		const peddlerProductQtyUpdateQuery = peddlerProductMapper.updateProductById(
+			productId,
+			{
+				$inc: { quantity: orderedQuantity },
+			}
+		);
+
+		const truckQuery = this._getTruck(order.driver);
+
+		const [peddlerProductQtyUpdate, truck] = await Promise.all([
+			peddlerProductQtyUpdateQuery,
+			truckQuery,
+		]);
+
+		if (truck) {
+			truck.quantity = truck.quantity + order.quantity;
+
+			return await truckMapper.updateTruckById(truck.id, truck);
+		}
+	}
+
+	async _deductOrderedQuantity(order) {
+		const { peddlerProductMapper, truckMapper } = this.mappers;
+
+		const orderedQuantity = order.quantity;
+		const productId = String(order.product.id);
+
+		const peddlerProductQtyUpdateQuery = peddlerProductMapper.updateProductById(
+			productId,
+			{
+				$inc: { quantity: -1 * orderedQuantity },
+			}
+		);
+
+		const truckQuery = this._getTruck(order.driver);
+
+		const [_peddlerProductQtyUpdate, truck] = await Promise.all([
+			peddlerProductQtyUpdateQuery,
+			truckQuery,
+		]);
+
+		if (truck) {
+			truck.quantity = truck.quantity - order.quantity;
+
+			return await truckMapper.updateTruckById(truck.id, truck);
+		}
 	}
 
 	async completeOrder(order) {
@@ -359,8 +440,6 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			this._deductOrderedQuantityFromProduct(updatedOrder);
-
 			return Result.ok(updatedOrder.repr());
 		}
 
@@ -379,21 +458,9 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			// const notificationObject = {
-			// 	title: "Order Rejected",
-			// 	message: "The order has been Rejected",
-			// };
-
-			// if (user.isDriver()) {
-			// 	notificationObject.receiverId = updatedOrder.buyer.id;
-			// } else {
-			// 	if (user.isBuyer()) {
-			// 		notificationObject.receiverId = updatedOrder.driver.id;
-			// 	}
-			// }
-
-			// notification.sendNotification(notificationObject);
-
+			this._returnOrderedQuantity(updatedOrder).then((res) =>
+				console.log("success")
+			);
 			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
@@ -428,14 +495,6 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			// const notificationObject = {
-			// 	title: "Delivery Started",
-			// 	receiverId: updatedOrder.buyer.id,
-			// 	message: "Your order is on it's way",
-			// };
-
-			// notification.sendNotification(notificationObject);
-
 			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
@@ -454,13 +513,9 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			// const notificationObject = {
-			// 	title: "Order Accepted",
-			// 	receiverId: updatedOrder.buyer.id,
-			// 	message: "Your order has been accepted",
-			// };
-
-			// notification.sendNotification(notificationObject);
+			this._deductOrderedQuantity(updatedOrder).then((res) =>
+				console.log("success")
+			);
 
 			return Result.ok(updatedOrder.repr());
 		} else {
@@ -480,21 +535,6 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			// const notificationObject = {
-			// 	title: "Order Accepted",
-			// 	message: "Your order has been accepted",
-			// };
-
-			// if (user.isDriver()) {
-			// 	notificationObject.receiverId = updatedOrder.buyer.id;
-			// } else {
-			// 	if (user.isBuyer()) {
-			// 		notificationObject.receiverId = updatedOrder.driver.id;
-			// 	}
-			// }
-
-			// notification.sendNotification(notificationObject);
-
 			return Result.ok(updatedOrder.repr());
 		} else {
 			return Result.ok(null);
