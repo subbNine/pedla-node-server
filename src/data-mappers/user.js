@@ -6,6 +6,7 @@ const {
 	PeddlerProductEnt,
 	GeoEnt,
 	ProductEnt,
+	TruckEnt,
 } = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
 const {
@@ -371,7 +372,7 @@ module.exports = class UserMapper extends BaseMapper {
 	}
 
 	async searchForProductDrivers({ productId, quantity, geo }, options) {
-		const { PeddlerProduct, TruckAndDriver, User } = this.models;
+		const { User, PeddlerProduct } = this.models;
 
 		const { pagination } = options || {};
 		const { page, limit } = pagination || {};
@@ -380,38 +381,62 @@ module.exports = class UserMapper extends BaseMapper {
 		const lat = geoEnt.getLat();
 		const lon = geoEnt.getLon();
 
-		const products = await PeddlerProduct.aggregate([
+		const drivers = await User.aggregate([
 			{
 				$match: {
-					quantity: { $gt: +quantity || 1 },
-					productId: Types.ObjectId(productId),
+					$expr: {
+						$and: [
+							{ peddler: { $exists: true } },
+							{ presence: presence.ONLINE },
+							{ type: types.DRIVER },
+							// { $eq: ["$isActive", true] },
+							// { $eq: ["$isDeleted", false] },
+						],
+					},
+				},
+			},
+			{
+				$geoNear: {
+					near: { type: "Point", coordinates: [+lon, +lat] },
+					key: "latlon",
+					distanceField: "dist.calculated",
+					spherical: true,
 				},
 			},
 			{
 				$lookup: {
-					from: "users",
-					let: { peddId: "$peddlerId" },
+					from: "truckdrivers",
+					let: { driverId: "$_id" },
 					pipeline: [
-						{
-							$geoNear: {
-								near: { type: "Point", coordinates: [+lon, +lat] },
-								key: "latlon",
-								distanceField: "dist.calculated",
-								spherical: true,
-							},
-						},
 						{
 							$match: {
 								$expr: {
-									$and: [
-										{ $eq: ["$peddler", "$$peddId"] },
-										{ $eq: ["$presence", presence.ONLINE] },
-									],
+									$eq: ["$driverId", "$$driverId"],
 								},
 							},
 						},
+						{
+							$lookup: {
+								from: "trucks",
+								let: { truckId: "$truckId" },
+								pipeline: [
+									{
+										$match: {
+											$expr: {
+												$and: [
+													{ $eq: ["$_id", "$$truckId"] },
+													{ $eq: ["$productId", Types.ObjectId(productId)] },
+													{ $gte: ["$quantity", +quantity] },
+												],
+											},
+										},
+									},
+								],
+								as: "trucks",
+							},
+						},
 					],
-					as: "drivers",
+					as: "truckDrivers",
 				},
 			},
 			{ $skip: +page },
@@ -420,42 +445,33 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const driversList = [];
 
-		if (products) {
-			for (const p of products) {
-				const { drivers, ...product } = p;
-				if (drivers && drivers.length) {
-					for (const driver of drivers) {
-						//#
-						const truckAndDriverQuery = TruckAndDriver.findOne({
-							driverId: driver._id,
-						})
-							.populate({
-								path: "truckId",
-								populate: {
-									path: "productId", // peddlers product loaded on the truck
-									populate: {
-										path: "productId", // system product
-									},
-								},
-							})
-							.sort("-createdAt");
+		if (drivers && drivers.length) {
+			for (const d of drivers) {
+				const { truckDrivers, ...driver } = d;
 
-						const peddlerQuery = User.findOne({ _id: driver.peddler });
+				if (truckDrivers && truckDrivers.length) {
+					for (const td of truckDrivers) {
+						const { trucks } = td;
 
-						const driverStatsQuery = this.driverOrderStats(driver._id);
+						if (trucks && trucks.length) {
+							const truck = trucks[0];
 
-						const [truckAndDriver, peddler, driverStats] = await Promise.all([
-							truckAndDriverQuery,
-							peddlerQuery,
-							driverStatsQuery,
-						]);
+							const truckProductQuery = PeddlerProduct.findById(
+								truck.productId
+							).populate({
+								path: "productId", // system product
+							});
 
-						const foundDriverProduct =
-							truckAndDriver &&
-							truckAndDriver.truckId &&
-							truckAndDriver.truckId.productId;
+							const peddlerQuery = User.findOne({ _id: driver.peddler });
 
-						if (isEqualIds(foundDriverProduct, product)) {
+							const driverStatsQuery = this.driverOrderStats(driver._id);
+
+							const [truckProduct, peddler, driverStats] = await Promise.all([
+								truckProductQuery,
+								peddlerQuery,
+								driverStatsQuery,
+							]);
+
 							const driverEnt = this._toEntity(driver, UserEnt, {
 								streetAddress: "address",
 								_id: "id",
@@ -463,16 +479,14 @@ module.exports = class UserMapper extends BaseMapper {
 
 							driverEnt.peddlerCode = peddler.peddlerCode;
 
-							const productTypeEnt = this._toEntity(
-								foundDriverProduct.productId,
+							truckProduct.productId = this._toEntity(
+								truckProduct.productId,
 								ProductEnt,
 								{ _id: "id" }
 							);
 
-							product.productId = productTypeEnt;
-
-							const peddlerProductEnt = this._toEntity(
-								product,
+							const truckProductEnt = this._toEntity(
+								truckProduct,
 								PeddlerProductEnt,
 								{
 									_id: "id",
@@ -481,19 +495,24 @@ module.exports = class UserMapper extends BaseMapper {
 								}
 							);
 
-							const peddlerProductRepr = peddlerProductEnt.repr();
+							const truckEnt = this._toEntity(truck, TruckEnt, {
+								_id: "id",
+								ownerId: "owner",
+								productId: "product",
+							});
+
+							truckEnt.product = truckProductEnt;
 							driverEnt.driverStats = driverStats;
-							driverEnt.truck = { product: peddlerProductRepr };
+							driverEnt.truck = truckEnt.repr();
 
 							driversList.push(
 								Object.assign(
 									{},
 									{ driver: driverEnt.repr() },
-									{ product: peddlerProductRepr }
+									{ product: truckProductEnt.repr() }
 								)
 							);
 						}
-						//#
 					}
 				}
 			}
@@ -532,15 +551,3 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 };
-
-function isEqualIds(mongoObj1, mongoObj2) {
-	return (
-		mongoObj1 &&
-		mongoObj1._id &&
-		mongoObj1._id.toString &&
-		mongoObj2 &&
-		mongoObj2._id &&
-		mongoObj2._id.toString &&
-		mongoObj1._id.toString() == mongoObj2._id.toString()
-	);
-}
