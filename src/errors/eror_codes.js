@@ -72,4 +72,5 @@ module.exports = {
 	WrongTokensError: { statusCode: 401, name: "WrongTokensError" },
 	DisabledAccountError: { statusCode: 401, name: "DisabledAccountError" },
 	DeletedAccountError: { statusCode: 401, name: "DeletedAccountError" },
+	InvalidOrderError: { statusCode: 400, name: "InvalidOrderError" },
 };

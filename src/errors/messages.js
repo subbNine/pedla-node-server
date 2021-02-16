@@ -36,6 +36,10 @@ module.exports = {
 	deletedAccount: "Your account has been deleted. Please contact your peddler",
 	disabledAccount:
 		"Your account is no longer active. Please contact your peddler",
+	invalidQuantity:
+		"The value passed in as quantity is not valid. Must be greater than 0",
+	quantityOrderedGreaterThanAvailable:
+		"The quantity your ordered is greater than the quantity the driver has available",
 };
 
 function replacement(subjectArg, subjectNameArg) {

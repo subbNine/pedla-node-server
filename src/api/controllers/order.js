@@ -1,6 +1,6 @@
 const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
-const { orderService, payment } = require("../../services");
+const { orderService, payment, user } = require("../../services");
 const { orderStatus } = require("../../db/mongo/enums/order");
 const { isValidDateTime } = require("../../lib/utils");
 
@@ -79,6 +79,26 @@ module.exports = class Order extends BaseController {
 
 			this.response(result, res);
 		}
+	}
+
+	async getPeddlerOrders(req, res, next) {
+		const { status, limit, page } = req.query;
+
+		const { user } = req._App;
+
+		const orderDto = new OrderDto();
+
+		orderDto.status = status
+			? status
+					.split(/,|\s+|\+/)
+					.map((status) => ("" + status).toUpperCase().trim())
+			: Object.values(orderStatus);
+
+		const result = await orderService.findPeddlerOrders(user, orderDto, {
+			pagination: { limit, page },
+		});
+
+		this.response(result, res);
 	}
 
 	async getOrderById(req, res, next) {

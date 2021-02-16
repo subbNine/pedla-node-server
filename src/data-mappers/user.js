@@ -35,13 +35,14 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const search = this._toPersistence(filter, this._toPersistenceTransform);
 		const query = User.findOne(search);
+
 		if (populateFn) {
 			populateFn(query);
 		}
 
-		query.where({
-			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
-		});
+		// query.where({
+		// 	$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		// });
 
 		const doc = await query;
 		if (doc) {
@@ -96,7 +97,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));
 
-		const { pagination, populate } = options || {};
+		const { pagination, populate, all } = options || {};
 
 		const { limit = 0, page = 0 } = pagination || {};
 
@@ -110,9 +111,11 @@ module.exports = class UserMapper extends BaseMapper {
 			populate(query);
 		}
 
-		query.where({
-			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
-		});
+		if (!all) {
+			query.where({
+				$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+			});
+		}
 
 		const docs = await query;
 

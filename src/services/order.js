@@ -1,9 +1,10 @@
+const toObjectId = require("mongoose").Types.ObjectId;
+
 const { OrderEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const {
-	order: { orderStatus, deliveryStatus, paymentMethod },
+	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
-const { notification } = require("../index.js");
 const Payment = require("./payment");
 
 const AppError = error.AppError;
@@ -200,6 +201,64 @@ module.exports = class Order {
 		} else {
 			return Result.ok(null);
 		}
+	}
+
+	async findPeddlerOrders(peddler, orderFilter, options) {
+		const { orderMapper, userMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const ownDrivers = await userMapper.findUsers(
+			{ peddler: peddler.id },
+			{ all: true }
+		);
+
+		let ownDriversId;
+
+		if (ownDrivers) {
+			ownDriversId = ownDrivers.map((each) => toObjectId(each._id));
+		}
+
+		if (ownDriversId) {
+			const $and = [{ driverId: { $in: ownDriversId } }];
+
+			if (orderFilter.status) {
+				$and.push({ status: { $in: orderFilter.status } });
+			}
+
+			const search = {};
+
+			if ($and && $and.length) {
+				search.$and = $and;
+			}
+
+			const totalDocs = await orderMapper.countDocs(search);
+
+			const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+			const foundOrders = await orderMapper.findOrders(search, {
+				pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
+			});
+
+			if (foundOrders) {
+				const results = [];
+
+				for (const eachOrder of foundOrders) {
+					await Promise.all([
+						this._loadPeddlerInfo(eachOrder),
+						this._loadPayment(eachOrder),
+					]);
+					results.push(eachOrder.repr());
+				}
+
+				return Result.ok({
+					data: results,
+					pagination: { totalPages, currentPage: +page || 1, totalDocs },
+				});
+			}
+		}
+		return Result.ok(null);
 	}
 
 	async recentOrdersPaginated(orderFilterDto, options) {

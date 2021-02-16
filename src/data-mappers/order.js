@@ -20,7 +20,7 @@ module.exports = class OrderMapper extends BaseMapper {
 	async findOrders(filter, options) {
 		const { Order } = this.models;
 		const query = Order.find(filter)
-			.sort("-createdAt")
+			.sort({ createdAt: -1, status: -1 })
 			.populate({ path: "productId", populate: { path: "productId" } })
 			.populate("driverId")
 			.populate("buyerId");
