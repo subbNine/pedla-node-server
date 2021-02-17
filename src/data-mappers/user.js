@@ -387,15 +387,13 @@ module.exports = class UserMapper extends BaseMapper {
 		const drivers = await User.aggregate([
 			{
 				$match: {
-					$expr: {
-						$and: [
-							{ peddler: { $exists: true } },
-							{ presence: presence.ONLINE },
-							{ type: types.DRIVER },
-							// { $eq: ["$isActive", true] },
-							// { $eq: ["$isDeleted", false] },
-						],
-					},
+					$and: [
+						{ peddler: { $exists: true } },
+						{ presence: presence.ONLINE },
+						{ type: types.DRIVER },
+						// { $eq: ["$isActive", true] },
+						// { $eq: ["$isDeleted", false] },
+					],
 				},
 			},
 			{
