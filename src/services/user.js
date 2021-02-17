@@ -435,9 +435,18 @@ module.exports = class User {
 	}
 
 	async disableDriver(driverId) {
-		const { userMapper } = this.mappers;
+		const { userMapper, truckAndDriverMapper } = this.mappers;
 
-		const disabledDriver = await userMapper.disableDriver(driverId);
+		const disableDriverPromise = userMapper.disableDriver(driverId);
+
+		const deleteDriverTruckPromise = truckAndDriverMapper.deleteTruckAndDriver({
+			driverId,
+		});
+
+		const [disabledDriver, _] = await Promise.all([
+			disableDriverPromise,
+			deleteDriverTruckPromise,
+		]);
 
 		if (disabledDriver) {
 			return Result.ok(disabledDriver.repr());
@@ -447,9 +456,18 @@ module.exports = class User {
 	}
 
 	async deleteDriver(driverId) {
-		const { userMapper } = this.mappers;
+		const { userMapper, truckAndDriverMapper } = this.mappers;
 
-		const deletedDriver = await userMapper.deleteDriver(driverId);
+		const deleteDriverPromise = userMapper.deleteDriver(driverId);
+
+		const deleteDriverTruckPromise = truckAndDriverMapper.deleteTruckAndDriver({
+			driverId,
+		});
+
+		const [deletedDriver, _] = await Promise.all([
+			deleteDriverPromise,
+			deleteDriverTruckPromise,
+		]);
 
 		if (deletedDriver) {
 			return Result.ok(deletedDriver.repr());
