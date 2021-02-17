@@ -1,3 +1,5 @@
+const { Types } = require("mongoose");
+
 const BaseMapper = require("./base");
 const {
 	TruckAndDriverEnt,
@@ -102,7 +104,11 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 		if (doc) {
 			let truckEnt;
 			let driverEnt;
-			if (doc.truckId && doc.truckId._id) {
+			if (
+				doc.truckId &&
+				!Types.ObjectId.isValid(doc.truckId) &&
+				doc.truckId._id
+			) {
 				// doc.truckId is an object. This indicates that it has been populated
 				truckEnt = this._toEntity(doc.truckId, TruckEnt, {
 					_id: "id",
@@ -110,7 +116,11 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 					productId: "product",
 				});
 
-				if (doc.truckId.productId && doc.truckId.productId._id) {
+				if (
+					doc.truckId.productId &&
+					!Types.ObjectId.isValid(doc.truckId.productId) &&
+					doc.truckId.productId._id
+				) {
 					const entObj = doc.truckId.productId;
 
 					truckEnt.product = this._toEntity(
@@ -137,7 +147,11 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.driverId && doc.driverId._id) {
+			if (
+				doc.driverId &&
+				!Types.ObjectId.isValid(doc.driverId) &&
+				doc.driverId._id
+			) {
 				driverEnt = this._toEntity(doc.driverId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",

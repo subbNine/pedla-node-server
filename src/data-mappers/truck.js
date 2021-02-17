@@ -1,3 +1,5 @@
+const { Types } = require("mongoose");
+
 const BaseMapper = require("./base");
 const {
 	TruckEnt,
@@ -93,7 +95,11 @@ module.exports = class TruckMapper extends BaseMapper {
 		if (doc) {
 			let userEnt;
 			let peddlerProductEnt;
-			if (doc.ownerId && doc.ownerId._id) {
+			if (
+				doc.ownerId &&
+				!Types.ObjectId.isValid(doc.ownerId) &&
+				doc.ownerId._id
+			) {
 				userEnt = this._toEntity(doc.ownerId, UserEnt, {
 					_id: "id",
 					streetAddress: "address",
@@ -105,7 +111,11 @@ module.exports = class TruckMapper extends BaseMapper {
 				});
 			}
 
-			if (doc.productId && doc.productId._id) {
+			if (
+				doc.productId &&
+				!Types.ObjectId.isValid(doc.productId) &&
+				doc.productId._id
+			) {
 				const entObj = doc.productId;
 
 				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {
