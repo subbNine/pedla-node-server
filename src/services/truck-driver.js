@@ -107,10 +107,26 @@ module.exports = class TruckAndDriver {
 			}
 		}
 
-		const newTruckAndDriver = await truckAndDriverMapper.createTruckAndDriver(
-			new TruckAndDriverEnt(truckAndDriverDto)
-		);
-		return Result.ok(newTruckAndDriver.repr());
+		if (truckAssignedADriver) {
+			await truckAndDriverMapper.deleteTruckAndDriver({
+				_id: truckAssignedADriver.id,
+			});
+		}
+
+		if (driverAssignedATruck) {
+			const newTruckAndDriver = await truckAndDriverMapper.updateTruckAndDriver(
+				{ driverId: truckAndDriverDto.driver.id },
+				new TruckAndDriverEnt(truckAndDriverDto)
+			);
+
+			return Result.ok(newTruckAndDriver.repr());
+		} else {
+			const newTruckAndDriver = await truckAndDriverMapper.createTruckAndDriver(
+				new TruckAndDriverEnt(truckAndDriverDto)
+			);
+
+			return Result.ok(newTruckAndDriver.repr());
+		}
 	}
 
 	async findTruckAndDrivers(truckOwnerDto) {

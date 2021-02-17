@@ -7,7 +7,7 @@ const {
 } = require("../entities/domain");
 const isType = require("../lib/utils/is-type");
 const {
-	order: { orderStatus, deliveryStatus },
+	order: { deliveryStatus },
 } = require("../db/mongo/enums");
 const { Types } = require("mongoose");
 

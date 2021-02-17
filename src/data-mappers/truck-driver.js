@@ -71,11 +71,15 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 	}
 
 	async updateTruckAndDriverById(id, truckAndDriverEnt) {
+		return await this.updateTruckAndDriver({ _id: id }, truckAndDriverEnt);
+	}
+
+	async updateTruckAndDriver(filter, truckAndDriverEnt) {
 		const { TruckAndDriver } = this.models;
 
 		const updates = this.toTruckAndDriverPersistence(truckAndDriverEnt);
 
-		const doc = await TruckAndDriver.findByIdAndUpdate(id, updates, {
+		const doc = await TruckAndDriver.findOneAndUpdate(filter, updates, {
 			new: true,
 		});
 
@@ -84,10 +88,10 @@ module.exports = class TruckAndDriverMapper extends BaseMapper {
 		}
 	}
 
-	async deleteTruckAndDriver(id) {
+	async deleteTruckAndDriver(filter) {
 		const { TruckAndDriver } = this.models;
 
-		const doc = await TruckAndDriver.findByIdAndDelete(id);
+		const doc = await TruckAndDriver.findOneAndDelete(filter);
 
 		if (doc) {
 			return this.toTruckAndDriverEnt(doc.toObject());
