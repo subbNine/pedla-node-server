@@ -1744,7 +1744,7 @@
     "group": "Buyer_And_Seller_-_Post",
     "version": "1.0.0",
     "description": "<p>Endpoint to get feeds for products. The product Id is used to categorize feeds</p>",
-    "filename": "src/api/routes/non-protected-routes.js",
+    "filename": "src/api/routes/blog-post.js",
     "groupTitle": "Buyer_And_Seller_-_Post"
   },
   {
@@ -2448,6 +2448,44 @@
     },
     "filename": "src/api/routes/user/admin.js",
     "groupTitle": "Payment"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/orders?status=pending+accepted&limit=30&page=1",
+    "title": "Retrieve orders",
+    "name": "getPeddlerOrders",
+    "group": "Peddler_-_Order",
+    "version": "1.0.0",
+    "description": "<p>Return orders based on status (pending|accepted|completed|cancelled|inprogress) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus symbol</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>order status. multiple order status should be seperated with a &quot;+&quot; symbol</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number (query param)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>page limit (query Param)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_-_Order"
   },
   {
     "type": "get",
