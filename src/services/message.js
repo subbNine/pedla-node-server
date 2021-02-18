@@ -1,5 +1,5 @@
+const NotificationService = require("./notification");
 const { utils } = require("../lib");
-const { eventEmitter, eventTypes } = require("../events");
 
 const { Result } = utils;
 
@@ -24,6 +24,33 @@ module.exports = class Message {
 		const created = await messageMapper.create(msgObj);
 
 		if (created && created.to) {
+			const notificationService = new NotificationService({
+				mappers: this.mappers,
+			});
+
+			const notificationObject = {
+				title: "You have a message",
+				receiverId: msgObj.to,
+				senderId: msgObj.from,
+				message,
+			};
+
+			notificationService
+				.sendNotification(notificationObject)
+				.then((result) => console.log(result))
+				.catch(
+					(e) =>
+						new AppError(
+							Object.assign(
+								{
+									name: errorCodes.InternalServerError.name,
+									statusCode: errorCodes.InternalServerError.statusCode,
+									isOperational: false,
+								},
+								e
+							)
+						)
+				);
 		}
 
 		return Result.ok(created.repr());
