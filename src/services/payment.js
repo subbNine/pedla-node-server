@@ -1,4 +1,5 @@
 const paymentGateway = require("../gateways/payment");
+const NotificationService = require("./notification");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { paymentStatus, paymentMethod } = require("../db/mongo/enums/order");
@@ -277,9 +278,37 @@ module.exports = class Payment {
 		);
 
 		if (updatedPayment.order.id) {
-			await orderMapper.updateOrderById(updatedPayment.order.id, {
+			const order = await orderMapper.updateOrderById(updatedPayment.order.id, {
 				paid: true,
 			});
+
+			const notificationService = new NotificationService({
+				mappers: this.mappers,
+			});
+
+			const notificationObject = {
+				title: "New Order",
+				receiverId: order.driver.id,
+				message: "You have a new order",
+				senderId: order.buyer.id,
+			};
+
+			notificationService
+				.sendNotification(notificationObject)
+				.then((result) => console.log(result))
+				.catch(
+					(e) =>
+						new AppError(
+							Object.assign(
+								{
+									name: errorCodes.InternalServerError.name,
+									statusCode: errorCodes.InternalServerError.statusCode,
+									isOperational: false,
+								},
+								e
+							)
+						)
+				);
 		}
 
 		return Result.ok(
