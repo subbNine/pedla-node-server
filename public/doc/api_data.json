@@ -2864,6 +2864,39 @@
   },
   {
     "type": "get",
+    "url": "/api/support/last-messages?limit=30&page=1",
+    "title": "Get last messages",
+    "name": "getLastSupportMessages",
+    "group": "Support",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "defaultValue": "30",
+            "description": "<p>number of items to return per page</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>page number</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Endpoint to get last messages</p>",
+    "filename": "src/api/routes/support.js",
+    "groupTitle": "Support"
+  },
+  {
+    "type": "get",
     "url": "/api/support/agents",
     "title": "Get support agents",
     "name": "getSupportAgents",
@@ -2875,12 +2908,21 @@
   },
   {
     "type": "get",
-    "url": "/api/support/last-message",
-    "title": "Get last message",
-    "name": "getSupportLastMessage",
+    "url": "/api/support/messages?limit=30&page=1",
+    "title": "Get messages",
+    "name": "getSupportMessageAll",
     "group": "Support",
     "version": "1.0.0",
-    "description": "<p>Endpoint to get last message</p>",
+    "description": "<p>Endpoint to get all messages</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n {\"data\": [\n      {\n          \"id\": \"60058b6451662c8222130f1d\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:21:40.883Z\",\n          \"readAt\": \"2021-01-18T13:25:42.197Z\"\n      },\n      {\n          \"id\": \"60058ae475f9417ba7c285a5\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:19:32.127Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058abc75f9417ba7c285a4\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:18:52.297Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058a1f75f9417ba7c285a3\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:16:15.244Z\",\n          \"readAt\": null\n      }\n  ],\n  \"pagination\": {\n      \"currentPage\": 1,\n      \"totalPages\": 1,\n      \"totalDocs\": 4\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
     "filename": "src/api/routes/support.js",
     "groupTitle": "Support"
   },
@@ -2897,21 +2939,41 @@
   },
   {
     "type": "get",
-    "url": "/api/support/messages?limit=4&page=1",
-    "title": "Get messages",
-    "name": "getSupportMessageUnread",
+    "url": "/api/support/messages/:userId?limit=30&page=1",
+    "title": "Get messages of specific user",
+    "name": "getUserSupportMessages",
     "group": "Support",
     "version": "1.0.0",
-    "description": "<p>Endpoint to get all messages</p>",
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n {\"data\": [\n      {\n          \"id\": \"60058b6451662c8222130f1d\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:21:40.883Z\",\n          \"readAt\": \"2021-01-18T13:25:42.197Z\"\n      },\n      {\n          \"id\": \"60058ae475f9417ba7c285a5\",\n          \"type\": 1,\n          \"content\": \" heyy i am supposed to be a driver\",\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:19:32.127Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058abc75f9417ba7c285a4\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:18:52.297Z\",\n          \"readAt\": null\n      },\n      {\n          \"id\": \"60058a1f75f9417ba7c285a3\",\n          \"type\": 1,\n          \"sender\": {\n              \"id\": \"5fd8b3fc7a78f300173bd7ee\",\n              \"firstName\": \"James\",\n              \"lastName\": \"Uso\",\n              \"avatarImg\": \"https://res.cloudinary.com/dl7ajt4jv/image/upload/v1608876964/peddler_app/160887696337137337%7D.jpg\",\n              \"presence\": \"online\",\n              \"phoneNumber\": \"+2348123451746\",\n              \"email\": null,\n              \"address\": null,\n              \"permission\": 3,\n              \"type\": \"DRIVER\",\n              \"isActive\": false,\n              \"peddler\": \"5fd391cd841bc60017b619c6\",\n              \"driverStats\": null,\n              \"userName\": \"driver1\",\n              \"truck\": null,\n              \"latlon\": {\n                  \"lon\": 8.3441639,\n                  \"lat\": 4.9814586\n              }\n          },\n          \"sentAt\": \"2021-01-18T13:16:15.244Z\",\n          \"readAt\": null\n      }\n  ],\n  \"pagination\": {\n      \"currentPage\": 1,\n      \"totalPages\": 1,\n      \"totalDocs\": 4\n  }\n}",
-          "type": "json"
-        }
-      ]
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "defaultValue": "30",
+            "description": "<p>number of items to return per page</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>page number</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>id of the user you want to fetch messages for</p>"
+          }
+        ]
+      }
     },
+    "description": "<p>Endpoint to get messages from specific users. This route can be accessed by admins alone</p>",
     "filename": "src/api/routes/support.js",
     "groupTitle": "Support"
   },

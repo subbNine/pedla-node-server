@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const { messageController, user: userControler } = require("../controllers");
 const { catchAsync } = require("../../errors");
+const { bounceNonAdmins } = require("../middlewares/access-control");
 
 const shield = require("../middlewares/shield");
 
@@ -36,8 +37,8 @@ router.post("/message", catchAsync(messageController.send));
 router.post("/messages/read", catchAsync(messageController.read));
 
 /**
- * @api {get} /api/support/messages?limit=4&page=1 Get messages
- * @apiName getSupportMessageUnread
+ * @api {get} /api/support/messages?limit=30&page=1 Get messages
+ * @apiName getSupportMessageAll
  * @apiGroup Support
  *
  * @apiVersion 1.0.0
@@ -167,6 +168,25 @@ router.post("/messages/read", catchAsync(messageController.read));
 router.get("/messages", catchAsync(messageController.getMessages));
 
 /**
+ * @api {get} /api/support/messages/:userId?limit=30&page=1 Get messages of specific user
+ * @apiName getUserSupportMessages
+ * @apiGroup Support
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {Number} [limit = 30] number of items to return per page
+ * @apiParam {Number} [page=1] page number
+ * @apiParam {ID} userId id of the user you want to fetch messages for
+ *
+ * @apiDescription Endpoint to get messages from specific users. This route can be accessed by admins alone
+ */
+router.get(
+	"/messages/:userId",
+	bounceNonAdmins,
+	catchAsync(messageController.getUserMessages)
+);
+
+/**
  * @api {get} /api/support/message/read Get messages that has already been read
  * @apiName getSupportMessageRead
  * @apiGroup Support
@@ -178,15 +198,18 @@ router.get("/messages", catchAsync(messageController.getMessages));
 router.get("/messages/read", catchAsync(messageController.getRead));
 
 /**
- * @api {get} /api/support/last-message Get last message
- * @apiName getSupportLastMessage
+ * @api {get} /api/support/last-messages?limit=30&page=1 Get last messages
+ * @apiName getLastSupportMessages
  * @apiGroup Support
  *
  * @apiVersion 1.0.0
  *
- * @apiDescription Endpoint to get last message
+ * @apiParam {Number} [limit = 30] number of items to return per page
+ * @apiParam {Number} [page=1] page number
+ *
+ * @apiDescription Endpoint to get last messages
  */
-router.get("/last-message", catchAsync(messageController.getLastMessage));
+router.get("/last-messages", catchAsync(messageController.getLastMessages));
 
 /**
  * @api {get} /api/support/agents Get support agents

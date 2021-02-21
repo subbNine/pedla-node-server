@@ -40,10 +40,25 @@ module.exports = class Message extends BaseController {
 		return this.response(result, res);
 	}
 
-	async getLastMessage(req, res, next) {
+	async getUserMessages(req, res, next) {
+		const { limit, page } = req.query;
+		const { userId } = req.params;
+
+		const result = await messageService.getUserMessages(userId, {
+			pagination: { limit, page },
+		});
+
+		return this.response(result, res);
+	}
+
+	async getLastMessages(req, res, next) {
+		const { limit, page } = req.query;
+
 		const { user } = req._App;
 
-		const result = await messageService.getLastMessage(user);
+		const result = await messageService.getLastMessages(user, {
+			pagination: { limit, page },
+		});
 
 		return this.response(result, res);
 	}

@@ -124,13 +124,45 @@ module.exports = class Message {
 		}
 	}
 
-	async getLastMessage(user) {
+	async getUserMessages(userId, options) {
 		const { messageMapper } = this.mappers;
 
-		const message = await messageMapper.getLastMessage(user);
+		const { pagination } = options || {};
+		const { limit = 30, page } = pagination || {};
 
-		if (message) {
-			return Result.ok(message.repr());
+		const messages = await messageMapper.getUserMessages(userId, {
+			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
+		});
+
+		if (messages) {
+			return Result.ok({
+				data: messages,
+				pagination: {
+					currentPage: +page || 1,
+				},
+			});
+		} else {
+			return Result.ok(null);
+		}
+	}
+
+	async getLastMessages(user, options) {
+		const { messageMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit = 30, page } = pagination || {};
+
+		const messages = await messageMapper.getLastMessages(user, {
+			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
+		});
+
+		if (messages) {
+			return Result.ok({
+				data: messages,
+				pagination: {
+					currentPage: +page || 1,
+				},
+			});
 		} else {
 			return Result.ok(null);
 		}

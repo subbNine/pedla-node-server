@@ -85,20 +85,76 @@ module.exports = class Message extends BaseMapper {
 		return res;
 	}
 
-	async getLastMessage(user) {
-		let filter = {};
-		if (user.isAdmin()) {
-			filter = {
-				$and: [{ $or: [{ to: { $exists: false } }, { from: user.id }] }],
-			};
-		} else {
-			filter = {
-				$and: [{ $or: [{ to: user.id }, { from: user.id }] }],
-			};
-		}
-		const res = await this._findMessage(filter);
+	async getUserMessages(userId, options) {
+		let filter = {
+			$or: [
+				{ to: userId, from: { $exists: true } },
+				{ from: userId, to: { $exists: false } },
+			],
+		};
+
+		const res = await this._findMessages(filter, options);
 
 		return res;
+	}
+
+	async getLastMessages(_user, options) {
+		const { Message } = this.models;
+
+		const { pagination } = options || {};
+
+		const { limit = 0, page = 0 } = pagination || {};
+
+		const messages = await Message.aggregate(
+			{
+				$sort: { sentAt: -1 },
+			},
+			{
+				$group: {
+					_id: { thread: { $ifNull: ["$to", "$from"] } },
+					from: { $last: "$from" },
+					lastMessage: { $last: "$message" },
+					sentAt: { $last: "$sentAt" },
+					readAt: { $last: "$readAt" },
+					type: { $last: "$type" },
+				},
+			},
+			{ $limit: +limit },
+			{ $skip: +page * +limit },
+			{
+				$lookup: {
+					from: "users",
+					let: { userId: "$from" },
+					pipeline: [
+						{
+							$match: {
+								$expr: {
+									$eq: ["$_id", "$$userId"],
+								},
+							},
+						},
+						{
+							$project: {
+								id: "$_id",
+								_id: 0,
+								firstName: 1,
+								lastName: 1,
+								password: 0,
+								userName: 1,
+								email: 1,
+								phoneNumber: 1,
+								permission: 1,
+							},
+						},
+					],
+					as: "user",
+				},
+			},
+			{ $unwind: "$user" },
+			{ $project: { _id: 0, user: 1, sentAt: 1, readAt: 1, type: 1 } }
+		);
+
+		return messages;
 	}
 
 	async getReadMessages(user, options) {
