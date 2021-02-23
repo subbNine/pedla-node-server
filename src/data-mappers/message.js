@@ -136,7 +136,6 @@ module.exports = class Message extends BaseMapper {
 						{
 							$project: {
 								id: "$_id",
-								_id: 0,
 								firstName: 1,
 								lastName: 1,
 								userName: 1,
