@@ -113,7 +113,7 @@ module.exports = class Message extends BaseMapper {
 				$group: {
 					_id: { thread: { $ifNull: ["$to", "$from"] } },
 					from: { $last: "$from" },
-					lastMessage: { $last: "$message" },
+					message: { $last: "$message" },
 					sentAt: { $last: "$sentAt" },
 					readAt: { $last: "$readAt" },
 					type: { $last: "$type" },
