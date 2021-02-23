@@ -149,10 +149,10 @@ module.exports = class Message extends BaseMapper {
 				},
 			},
 			{ $unwind: "$user" },
-			{ $project: { _id: 0, user: 1, sentAt: 1, readAt: 1, type: 1 } },
+			{ $project: { user: 1, sentAt: 1, readAt: 1, type: 1, lastMessage: 1 } },
 		]);
 
-		console.log(messages)
+		console.log(messages);
 
 		return messages;
 	}
