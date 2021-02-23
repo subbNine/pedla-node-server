@@ -105,7 +105,7 @@ module.exports = class Message extends BaseMapper {
 
 		const { limit = 0, page = 0 } = pagination || {};
 
-		const messages = await Message.aggregate(
+		const messages = await Message.aggregate([
 			{
 				$sort: { sentAt: -1 },
 			},
@@ -151,8 +151,8 @@ module.exports = class Message extends BaseMapper {
 				},
 			},
 			{ $unwind: "$user" },
-			{ $project: { _id: 0, user: 1, sentAt: 1, readAt: 1, type: 1 } }
-		);
+			{ $project: { _id: 0, user: 1, sentAt: 1, readAt: 1, type: 1 } },
+		]);
 
 		return messages;
 	}
