@@ -8,7 +8,7 @@ const options = {
 		dsn:
 			"https://15eb77b294a34b0ba706701e99076341@o499149.ingest.sentry.io/5577371",
 	},
-	level: "info",
+	level: "error",
 };
 
 const { combine, timestamp, label, printf, colorize } = format;
