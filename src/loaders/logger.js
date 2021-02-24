@@ -1,6 +1,16 @@
 const { APP_ENV } = require("../config");
 
 const { createLogger, format, addColors, transports } = require("winston");
+const Sentry = require("winston-transport-sentry-node").default;
+
+const options = {
+	sentry: {
+		dsn:
+			"https://15eb77b294a34b0ba706701e99076341@o499149.ingest.sentry.io/5577371",
+	},
+	level: "error",
+};
+
 const { combine, timestamp, label, printf, colorize } = format;
 
 const logFormat = printf((info) => {
@@ -32,5 +42,5 @@ module.exports = createLogger({
 		logFormat
 	),
 	levels: logLevels.levels,
-	transports: [new transports.Console()],
+	transports: [new transports.Console(), new Sentry(options)],
 });
