@@ -424,7 +424,6 @@ module.exports = class UserMapper extends BaseMapper {
 											$expr: {
 												$and: [
 													{ $eq: ["$_id", "$$truckId"] },
-													{ $eq: ["$productId", Types.ObjectId(productId)] },
 													{ $gte: ["$quantity", +quantity] },
 												],
 											},
@@ -471,46 +470,48 @@ module.exports = class UserMapper extends BaseMapper {
 								driverStatsQuery,
 							]);
 
-							const driverEnt = this._toEntity(driver, UserEnt, {
-								streetAddress: "address",
-								_id: "id",
-							});
-
-							driverEnt.peddlerCode = peddler.peddlerCode;
-
-							truckProduct.productId = this._toEntity(
-								truckProduct.productId,
-								ProductEnt,
-								{ _id: "id" }
-							);
-
-							const truckProductEnt = this._toEntity(
-								truckProduct,
-								PeddlerProductEnt,
-								{
+							if (truckProduct.productId._id.toString() === productId) {
+								const driverEnt = this._toEntity(driver, UserEnt, {
+									streetAddress: "address",
 									_id: "id",
-									peddlerId: "peddler",
+								});
+
+								driverEnt.peddlerCode = peddler.peddlerCode;
+
+								truckProduct.productId = this._toEntity(
+									truckProduct.productId,
+									ProductEnt,
+									{ _id: "id" }
+								);
+
+								const truckProductEnt = this._toEntity(
+									truckProduct,
+									PeddlerProductEnt,
+									{
+										_id: "id",
+										peddlerId: "peddler",
+										productId: "product",
+									}
+								);
+
+								const truckEnt = this._toEntity(truck, TruckEnt, {
+									_id: "id",
+									ownerId: "owner",
 									productId: "product",
-								}
-							);
+								});
 
-							const truckEnt = this._toEntity(truck, TruckEnt, {
-								_id: "id",
-								ownerId: "owner",
-								productId: "product",
-							});
+								truckEnt.product = truckProductEnt;
+								driverEnt.driverStats = driverStats;
+								driverEnt.truck = truckEnt.repr();
 
-							truckEnt.product = truckProductEnt;
-							driverEnt.driverStats = driverStats;
-							driverEnt.truck = truckEnt.repr();
-
-							driversList.push(
-								Object.assign(
-									{},
-									{ driver: driverEnt.repr() },
-									{ product: truckProductEnt.repr() }
-								)
-							);
+								driversList.push(
+									Object.assign(
+										{},
+										{ driver: driverEnt.repr() },
+										{ product: truckProductEnt.repr() }
+									)
+								);
+							}
 						}
 					}
 				}
