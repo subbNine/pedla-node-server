@@ -122,7 +122,11 @@ module.exports = class TruckMapper extends BaseMapper {
 					_id: "id",
 				});
 
-				if (isType("object", entObj.productId)) {
+				if (
+					entObj.productId &&
+					!Types.ObjectId.isValid(entObj.productId) &&
+					entObj.productId._id
+				) {
 					const productEnt = this._toEntity(entObj.productId, ProductEnt, {
 						_id: "id",
 					});
