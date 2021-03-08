@@ -34,7 +34,7 @@ module.exports = class PeddlerProduct {
 		}
 		resultList = await Promise.all(arrOfPromises);
 
-		return Result.ok(resultList.map((eachProduct) => eachProduct.repr()));
+		return Result.ok(resultList.map((eachProduct) => eachProduct.toDto()));
 	}
 
 	async findProducts(peddlerProductFilterDto) {
@@ -46,7 +46,7 @@ module.exports = class PeddlerProduct {
 
 		if (foundProducts) {
 			return Result.ok(
-				foundProducts.map((eachProduct) => eachProduct.repr())
+				foundProducts.map((eachProduct) => eachProduct.toDto())
 			);
 		} else {
 			return Result.ok([]);
@@ -62,6 +62,6 @@ module.exports = class PeddlerProduct {
 			peddlerProductEnt
 		);
 
-		return Result.ok(updatedProduct.repr());
+		return Result.ok(updatedProduct.toDto());
 	}
 };

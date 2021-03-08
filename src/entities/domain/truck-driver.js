@@ -14,7 +14,7 @@ module.exports = class TruckAndDriver {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
 			truck: this.truck || null,

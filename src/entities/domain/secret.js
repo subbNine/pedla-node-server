@@ -17,10 +17,10 @@ module.exports = class Otp {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
-			user: this.user.repr ? this.user.repr() : this.user || null,
+			user: this.user.toDto ? this.user.toDto() : this.user || null,
 			createdAt: this.createdAt || null,
 		};
 	}

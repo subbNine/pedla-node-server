@@ -66,7 +66,7 @@ class Secrets {
 					}
 				}
 
-				const objRepr = userEnt.repr();
+				const objRepr = userEnt.toDto();
 				const token = generateJwtToken(objRepr);
 				return Result.ok({ token, ...objRepr });
 			} else {

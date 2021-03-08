@@ -31,21 +31,21 @@ module.exports = class Order {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
 			driver:
-				(this.driver && this.driver.repr && this.driver.repr()) ||
+				(this.driver && this.driver.toDto && this.driver.toDto()) ||
 				this.driver ||
 				null,
 			buyer:
-				(this.buyer && this.buyer.repr && this.buyer.repr()) ||
+				(this.buyer && this.buyer.toDto && this.buyer.toDto()) ||
 				this.buyer ||
 				null,
 			quantity: this.quantity || null,
 			unitAmount: this.unitAmount || null,
 			product:
-				(this.product && this.product.repr && this.product.repr()) ||
+				(this.product && this.product.toDto && this.product.toDto()) ||
 				this.product ||
 				null,
 			rating: this.rating || null,
@@ -76,8 +76,8 @@ module.exports = class Order {
 			deliveryStatus: this.deliveryStatus || null,
 			createdAt: this.createdAt || null,
 			payment:
-				(this.payment && this.payment.repr
-					? this.payment.repr()
+				(this.payment && this.payment.toDto
+					? this.payment.toDto()
 					: this.payment) || null,
 		};
 	}

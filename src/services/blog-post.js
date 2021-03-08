@@ -12,7 +12,7 @@ module.exports = class Post {
 		const { blogPostMapper } = this.mappers;
 
 		const newPost = await blogPostMapper.createPost(new BlogPostEnt(postDto));
-		return Result.ok({ id: newPost.repr().id });
+		return Result.ok({ id: newPost.toDto().id });
 	}
 
 	async findPost(filter) {
@@ -21,7 +21,7 @@ module.exports = class Post {
 		const foundPost = await blogPostMapper.findPost(filter);
 
 		if (foundPost) {
-			return Result.ok(foundPost.repr());
+			return Result.ok(foundPost.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -43,7 +43,7 @@ module.exports = class Post {
 
 		if (posts) {
 			return Result.ok({
-				data: posts.map((post) => post.repr()),
+				data: posts.map((post) => post.toDto()),
 				pagination: { totalPages, currentPage: page || 1, totalDocs },
 			});
 		} else {
@@ -59,7 +59,7 @@ module.exports = class Post {
 		let updatedPost = await blogPostMapper.updatePostById(postEnt.id, postEnt);
 
 		if (updatedPost) {
-			const objRepr = updatedPost.repr();
+			const objRepr = updatedPost.toDto();
 			return Result.ok(objRepr);
 		}
 	}

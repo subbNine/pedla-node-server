@@ -53,7 +53,7 @@ module.exports = class Message {
 				);
 		}
 
-		return Result.ok(created.repr());
+		return Result.ok(created.toDto());
 	}
 
 	async getRead(user, options) {
@@ -74,7 +74,7 @@ module.exports = class Message {
 			const results = [];
 
 			for (const eachMessage of readMessages) {
-				results.push(eachMessage.repr());
+				results.push(eachMessage.toDto());
 			}
 
 			return Result.ok({
@@ -108,7 +108,7 @@ module.exports = class Message {
 			const results = [];
 
 			for (const eachMessage of messages) {
-				results.push(eachMessage.repr());
+				results.push(eachMessage.toDto());
 			}
 
 			return Result.ok({

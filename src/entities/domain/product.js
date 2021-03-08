@@ -12,7 +12,7 @@ module.exports = class Product {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
 			name: this.name || null,

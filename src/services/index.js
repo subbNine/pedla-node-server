@@ -14,7 +14,7 @@ const OrderService = require("./order");
 const PushDeviceService = require("./push-device");
 const BlogPost = require("./blog-post");
 const Payment = require("./payment");
-const Message = require("./message");
+const Message = require("./support");
 const Activity = require("./activity");
 
 module.exports = {

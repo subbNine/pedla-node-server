@@ -17,7 +17,7 @@ module.exports = class Truck {
 		}
 		resultList = await Promise.all(arrOfPromises);
 
-		return Result.ok(resultList.map((eachTruck) => eachTruck.repr()));
+		return Result.ok(resultList.map((eachTruck) => eachTruck.toDto()));
 	}
 
 	async createTruck(truckDto) {
@@ -44,7 +44,7 @@ module.exports = class Truck {
 					);
 
 					if (truckWithDriver) {
-						truckEnt.driver = truckWithDriver.driver.repr();
+						truckEnt.driver = truckWithDriver.driver.toDto();
 						return truckEnt;
 					} else {
 						return truckEnt;
@@ -54,7 +54,7 @@ module.exports = class Truck {
 
 			if (trucksWithDrivers) {
 				return Result.ok(
-					trucksWithDrivers.map((eachTruck) => eachTruck.repr())
+					trucksWithDrivers.map((eachTruck) => eachTruck.toDto())
 				);
 			}
 		}
@@ -71,7 +71,7 @@ module.exports = class Truck {
 			truckEnt
 		);
 
-		return Result.ok(updatedTruck.repr());
+		return Result.ok(updatedTruck.toDto());
 	}
 
 	async deleteTruck(truckId) {

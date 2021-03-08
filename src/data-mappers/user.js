@@ -208,6 +208,32 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
+	async resetUserPassword(
+		newPassword,
+		{ passwordResetCode, passwordResetToken }
+	) {
+		const { User } = this.models;
+
+		const doc = await User.findOne({
+			$and: [
+				{ passwordResetToken },
+				{ passwordResetCode },
+				{ passwordResetExpires: { $gt: new Date() } },
+			],
+		});
+
+		if (doc) {
+			doc.password = newPassword;
+			doc.passwordResetCode = undefined;
+			doc.passwordResetToken = undefined;
+			doc.passwordResetExpires = undefined;
+
+			const saved = await doc.save();
+
+			return this._toEntity(saved.toObject(), UserEnt, this._toEntityTransform);
+		}
+	}
+
 	async updateUserById(userId, userEntUpdate) {
 		const { User } = this.models;
 
@@ -502,13 +528,13 @@ module.exports = class UserMapper extends BaseMapper {
 
 								truckEnt.product = truckProductEnt;
 								driverEnt.driverStats = driverStats;
-								driverEnt.truck = truckEnt.repr();
+								driverEnt.truck = truckEnt.toDto();
 
 								driversList.push(
 									Object.assign(
 										{},
-										{ driver: driverEnt.repr() },
-										{ product: truckProductEnt.repr() }
+										{ driver: driverEnt.toDto() },
+										{ product: truckProductEnt.toDto() }
 									)
 								);
 							}

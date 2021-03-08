@@ -128,7 +128,7 @@ module.exports = class Order {
 					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
-				results.push(eachOrder.repr());
+				results.push(eachOrder.toDto());
 			}
 
 			return Result.ok(results);
@@ -191,7 +191,7 @@ module.exports = class Order {
 					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
-				results.push(eachOrder.repr());
+				results.push(eachOrder.toDto());
 			}
 
 			return Result.ok({
@@ -249,7 +249,7 @@ module.exports = class Order {
 						this._loadPeddlerInfo(eachOrder),
 						this._loadPayment(eachOrder),
 					]);
-					results.push(eachOrder.repr());
+					results.push(eachOrder.toDto());
 				}
 
 				return Result.ok({
@@ -297,7 +297,7 @@ module.exports = class Order {
 					this._loadPeddlerInfo(eachOrder),
 					this._loadPayment(eachOrder),
 				]);
-				results.push(eachOrder.repr());
+				results.push(eachOrder.toDto());
 			}
 
 			return Result.ok({
@@ -346,7 +346,7 @@ module.exports = class Order {
 				this._loadPeddlerInfo(foundOrder),
 				this._loadPayment(foundOrder),
 			]);
-			return Result.ok(foundOrder.repr());
+			return Result.ok(foundOrder.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -387,7 +387,7 @@ module.exports = class Order {
 		const paymentResp = await payment.initPayment(newOrder);
 
 		return Result.ok({
-			id: newOrder.repr().id,
+			id: newOrder.toDto().id,
 			payment: paymentResp.getValue(),
 		});
 	}
@@ -481,7 +481,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		}
 
 		return Result.ok(null);
@@ -499,7 +499,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		}
 
 		return Result.ok(null);
@@ -520,7 +520,7 @@ module.exports = class Order {
 			this._returnOrderedQuantity(updatedOrder).then((res) =>
 				console.log("success")
 			);
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -554,7 +554,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -576,7 +576,7 @@ module.exports = class Order {
 				console.log("success")
 			);
 
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -594,7 +594,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			return Result.ok(updatedOrder.repr());
+			return Result.ok(updatedOrder.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -609,6 +609,6 @@ module.exports = class Order {
 			{ _id: order.id },
 			orderEnt
 		);
-		return Result.ok(updatedOrder.repr());
+		return Result.ok(updatedOrder.toDto());
 	}
 };

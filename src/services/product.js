@@ -30,7 +30,7 @@ module.exports = class Product {
 			const newProduct = await productMapper.createProduct(
 				new ProductEnt(productDto)
 			);
-			return Result.ok(newProduct.repr());
+			return Result.ok(newProduct.toDto());
 		}
 	}
 
@@ -43,7 +43,7 @@ module.exports = class Product {
 
 		if (foundProducts) {
 			return Result.ok(
-				foundProducts.map((eachProduct) => eachProduct.repr())
+				foundProducts.map((eachProduct) => eachProduct.toDto())
 			);
 		} else {
 			return Result.ok([]);
@@ -59,6 +59,6 @@ module.exports = class Product {
 			productEnt
 		);
 
-		return Result.ok(updatedProduct.repr());
+		return Result.ok(updatedProduct.toDto());
 	}
 };

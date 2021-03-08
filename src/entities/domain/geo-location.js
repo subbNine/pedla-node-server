@@ -26,7 +26,7 @@ module.exports = class User {
 	}
 
 	// object representation of the domain entity.
-	repr() {
+	toDto() {
 		const objectRepr = {};
 
 		if (this.id) {

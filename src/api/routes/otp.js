@@ -1,6 +1,6 @@
 const { Router } = require("express");
 
-const { otp: otpController } = require("../controllers");
+const { secret: otpController } = require("../controllers");
 const { catchAsync } = require("../../errors");
 
 const { validateBody } = require("../middlewares/validator-helpers");

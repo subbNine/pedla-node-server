@@ -23,7 +23,7 @@ module.exports = class User {
 		if (updatedUser) {
 			eventEmitter.emit(eventTypes.userProfileCreated, updatedUser);
 
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			const token = generateJwtToken(objRepr);
 			return Result.ok({ ...objRepr, token });
 		}
@@ -40,7 +40,7 @@ module.exports = class User {
 		if (updatedUser) {
 			eventEmitter.emit(eventTypes.peddlerVerified, updatedUser);
 
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ ...objRepr });
 		}
 	}
@@ -53,7 +53,7 @@ module.exports = class User {
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
 
 		if (updatedUser) {
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ ...objRepr });
 		}
 	}
@@ -72,7 +72,7 @@ module.exports = class User {
 		if (updatedUser) {
 			eventEmitter.emit(eventTypes.peddlerRejected, updatedUser);
 
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ ...objRepr });
 		}
 	}
@@ -92,7 +92,7 @@ module.exports = class User {
 
 		if (peddlers) {
 			return Result.ok({
-				data: peddlers.map((eachUser) => eachUser.repr()),
+				data: peddlers.map((eachUser) => eachUser.toDto()),
 				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
@@ -108,7 +108,7 @@ module.exports = class User {
 		});
 
 		if (driverWithTruck) {
-			driverEnt.truck = driverWithTruck.truck.repr();
+			driverEnt.truck = driverWithTruck.truck.toDto();
 		}
 		return driverEnt;
 	}
@@ -156,7 +156,7 @@ module.exports = class User {
 		}
 
 		if (user) {
-			return Result.ok(user.repr());
+			return Result.ok(user.toDto());
 		} else {
 			return Result.ok(null);
 		}
@@ -169,7 +169,7 @@ module.exports = class User {
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
 
 		if (updatedUser) {
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ ...objRepr });
 		} else {
 			return Result.ok(null);
@@ -183,7 +183,7 @@ module.exports = class User {
 		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
 
 		if (updatedUser) {
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ id: objRepr.id, presence: objRepr.presence });
 		} else {
 			return Result.ok(null);
@@ -293,7 +293,7 @@ module.exports = class User {
 				})
 			);
 
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 			return Result.ok({ ...objRepr });
 		} else {
 			return Result.ok(null);
@@ -312,7 +312,7 @@ module.exports = class User {
 				});
 
 				if (driverWithTruck) {
-					userEnt.truck = driverWithTruck.truck.repr();
+					userEnt.truck = driverWithTruck.truck.toDto();
 					return userEnt;
 				} else {
 					return userEnt;
@@ -320,7 +320,7 @@ module.exports = class User {
 			});
 
 			if (driversWithTrucks) {
-				return Result.ok(driversWithTrucks.map((eachUser) => eachUser.repr()));
+				return Result.ok(driversWithTrucks.map((eachUser) => eachUser.toDto()));
 			}
 		}
 		return Result.ok([]);
@@ -353,7 +353,7 @@ module.exports = class User {
 
 		if (foundUsers) {
 			return Result.ok({
-				data: foundUsers.map((eachUser) => eachUser.repr()),
+				data: foundUsers.map((eachUser) => eachUser.toDto()),
 				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
@@ -380,7 +380,7 @@ module.exports = class User {
 
 		if (foundUsers) {
 			return Result.ok({
-				data: foundUsers.map((eachUser) => eachUser.repr()),
+				data: foundUsers.map((eachUser) => eachUser.toDto()),
 				pagination: { totalPages, currentPage: page, totalDocs },
 			});
 		} else {
@@ -429,7 +429,7 @@ module.exports = class User {
 		const supportAgents = await userMapper.findSupportAgents();
 
 		if (supportAgents) {
-			return Result.ok(supportAgents.map((eachUser) => eachUser.repr()));
+			return Result.ok(supportAgents.map((eachUser) => eachUser.toDto()));
 		}
 		return Result.ok(null);
 	}
@@ -449,7 +449,7 @@ module.exports = class User {
 		]);
 
 		if (disabledDriver) {
-			return Result.ok(disabledDriver.repr());
+			return Result.ok(disabledDriver.toDto());
 		}
 
 		return Result.ok();
@@ -470,7 +470,7 @@ module.exports = class User {
 		]);
 
 		if (deletedDriver) {
-			return Result.ok(deletedDriver.repr());
+			return Result.ok(deletedDriver.toDto());
 		}
 
 		return Result.ok(null);

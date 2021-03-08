@@ -16,7 +16,7 @@ module.exports = class Message {
 	}
 
 	// object representation of the domain entity.
-	repr() {
+	toDto() {
 		const objectRepr = {};
 
 		if (this.id) {
@@ -32,8 +32,8 @@ module.exports = class Message {
 		}
 
 		if (this.from) {
-			if (this.from.repr) {
-				objectRepr.sender = this.from.repr();
+			if (this.from.toDto) {
+				objectRepr.sender = this.from.toDto();
 			} else {
 				objectRepr.sender = this.from;
 			}

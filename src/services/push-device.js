@@ -21,7 +21,7 @@ module.exports = class PushDevice {
 		);
 
 		if (updated) {
-			return Result.ok(updated.repr());
+			return Result.ok(updated.toDto());
 		}
 	}
 };

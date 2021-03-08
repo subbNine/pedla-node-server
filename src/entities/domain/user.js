@@ -63,7 +63,7 @@ module.exports = class User {
 	}
 
 	// object representation of the domain entity.
-	repr() {
+	toDto() {
 		const objectRepr = {};
 
 		objectRepr.id = this.id || null;
@@ -97,8 +97,8 @@ module.exports = class User {
 
 		if (this.isDriver()) {
 			objectRepr.peddler =
-				(this.peddler && this.peddler.repr
-					? this.peddler.repr()
+				(this.peddler && this.peddler.toDto
+					? this.peddler.toDto()
 					: this.peddler) || null;
 			objectRepr.driverStats = this.driverStats || null;
 		}

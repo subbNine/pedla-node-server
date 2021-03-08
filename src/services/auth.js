@@ -32,7 +32,7 @@ module.exports = class Auth {
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
-				const objRepr = foundUser.repr();
+				const objRepr = foundUser.toDto();
 				const token = generateJwtToken({ ...objRepr });
 
 				objRepr.token = token;
@@ -94,7 +94,7 @@ module.exports = class Auth {
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
-				const objRepr = foundUser.repr();
+				const objRepr = foundUser.toDto();
 
 				let token;
 				if (foundUser.isPeddler()) {
@@ -143,7 +143,7 @@ module.exports = class Auth {
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
-				const objRepr = foundUser.repr();
+				const objRepr = foundUser.toDto();
 				const token = generateJwtToken({ ...objRepr });
 				objRepr.token = token;
 
@@ -179,7 +179,7 @@ module.exports = class Auth {
 			const isPasswordMatch = await foundUser.comparePassword(userDto.password);
 
 			if (isPasswordMatch) {
-				const objRepr = foundUser.repr();
+				const objRepr = foundUser.toDto();
 				const token = generateJwtToken({ ...objRepr });
 				objRepr.token = token;
 
@@ -206,7 +206,7 @@ module.exports = class Auth {
 				const userEnt = new UserEnt(userDto);
 				const updatedUser = await userMapper.signup(foundUser.id, userEnt);
 
-				const objRepr = updatedUser.repr();
+				const objRepr = updatedUser.toDto();
 				const token = generateJwtToken({ ...objRepr });
 				objRepr.token = token;
 
@@ -235,7 +235,7 @@ module.exports = class Auth {
 
 			eventEmitter.emit(eventTypes.peddlerProfileCreated, foundUser);
 
-			const objRepr = foundUser.repr();
+			const objRepr = foundUser.toDto();
 			const token = generateJwtToken({ ...objRepr });
 			objRepr.token = token;
 
@@ -272,7 +272,7 @@ module.exports = class Auth {
 
 			eventEmitter.emit(eventTypes.peddlerProfileCreated, newUser);
 
-			const objRepr = newUser.repr();
+			const objRepr = newUser.toDto();
 			const token = generateJwtToken({ ...objRepr });
 			objRepr.token = token;
 
@@ -304,7 +304,7 @@ module.exports = class Auth {
 				foundUser
 			);
 
-			const objRepr = updatedUser.repr();
+			const objRepr = updatedUser.toDto();
 
 			return Result.ok({ ...objRepr });
 		}
@@ -338,7 +338,7 @@ module.exports = class Auth {
 
 			eventEmitter.emit(eventTypes.buyerCreated, newUser);
 
-			const objRepr = newUser.repr();
+			const objRepr = newUser.toDto();
 			const token = generateJwtToken({ ...objRepr });
 			objRepr.token = token;
 
@@ -346,27 +346,16 @@ module.exports = class Auth {
 		}
 	}
 
-	async resetPassword(newPassword, { passwordResetToken, passwordResetCode }) {
+	async resetUserPassword(newPassword, passwordResetObj) {
 		const { userMapper } = this.mappers;
 
-		const userEnt = await userMapper.updateUser(
-			{
-				$and: [
-					{ passwordResetToken },
-					{ passwordResetCode },
-					{ passwordResetExpires: { $gt: new Date() } },
-				],
-			},
-			{
-				password: newPassword,
-				passwordResetCode: undefined,
-				passwordResetToken: undefined,
-				passwordResetExpires: undefined,
-			}
+		const userEnt = await userMapper.resetUserPassword(
+			newPassword,
+			passwordResetObj
 		);
 
 		if (userEnt) {
-			return Result.ok(userEnt.repr());
+			return Result.ok(userEnt.toDto());
 		} else {
 			return Result.fail(
 				new AppError({
@@ -404,7 +393,7 @@ module.exports = class Auth {
 						{ password: newPassword }
 					);
 
-					return Result.ok(updatedUser.repr());
+					return Result.ok(updatedUser.toDto());
 				} else {
 					return Result.fail(
 						new AppError({

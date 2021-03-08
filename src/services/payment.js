@@ -150,7 +150,7 @@ module.exports = class Payment {
 
 		const paymentRecord = await paymentMapper.createPayment(payment);
 
-		return Result.ok(paymentRecord.repr());
+		return Result.ok(paymentRecord.toDto());
 	}
 
 	async verifyPaystackPayment(ref) {
@@ -209,7 +209,7 @@ module.exports = class Payment {
 		);
 
 		if (updated) {
-			const obj = updated.repr();
+			const obj = updated.toDto();
 
 			return Result.ok({ ...obj, order: { id: obj.order.id } });
 		} else {
@@ -257,7 +257,7 @@ module.exports = class Payment {
 			const results = [];
 
 			for (const eachPayment of unverifiedPayments) {
-				results.push(eachPayment.repr());
+				results.push(eachPayment.toDto());
 			}
 
 			return Result.ok({

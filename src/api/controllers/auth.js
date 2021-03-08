@@ -156,7 +156,7 @@ module.exports = class Auth extends BaseController {
 		const { resetCode, password } = req.body;
 		const { resetToken } = req.params;
 
-		const result = await authService.resetPassword(password, {
+		const result = await authService.resetUserPassword(password, {
 			passwordResetToken: resetToken,
 			passwordResetCode: resetCode,
 		});

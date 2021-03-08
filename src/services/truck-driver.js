@@ -119,13 +119,13 @@ module.exports = class TruckAndDriver {
 				new TruckAndDriverEnt(truckAndDriverDto)
 			);
 
-			return Result.ok(newTruckAndDriver.repr());
+			return Result.ok(newTruckAndDriver.toDto());
 		} else {
 			const newTruckAndDriver = await truckAndDriverMapper.createTruckAndDriver(
 				new TruckAndDriverEnt(truckAndDriverDto)
 			);
 
-			return Result.ok(newTruckAndDriver.repr());
+			return Result.ok(newTruckAndDriver.toDto());
 		}
 	}
 
@@ -148,7 +148,7 @@ module.exports = class TruckAndDriver {
 			});
 
 			if (truckAndDrivers && truckAndDrivers.length) {
-				return Result.ok(truckAndDrivers.map((each) => each && each.repr()));
+				return Result.ok(truckAndDrivers.map((each) => each && each.toDto()));
 			} else {
 				return Result.ok([]);
 			}
@@ -166,6 +166,6 @@ module.exports = class TruckAndDriver {
 			truckAndDriverEnt
 		);
 
-		return Result.ok(updatedTruckAndDriver.repr());
+		return Result.ok(updatedTruckAndDriver.toDto());
 	}
 };

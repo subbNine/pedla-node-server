@@ -25,17 +25,17 @@ module.exports = class Truck {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
 			owner:
-				(this.owner && this.owner.repr && this.owner.repr()) ||
+				(this.owner && this.owner.toDto && this.owner.toDto()) ||
 				this.owner ||
 				null,
 			model: this.model || null,
 			brand: this.brand || null,
 			product:
-				(this.product && this.product.repr && this.product.repr()) ||
+				(this.product && this.product.toDto && this.product.toDto()) ||
 				this.product ||
 				null,
 			size: this.size || null,

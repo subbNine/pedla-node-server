@@ -12,7 +12,7 @@ module.exports = class PushDevice {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			deviceToken: this.deviceToken,
 			platform: this.platform,

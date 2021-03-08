@@ -1,6 +1,6 @@
 const { Router } = require("express");
 
-const { messageController, user: userControler } = require("../controllers");
+const { supportController, user: userControler } = require("../controllers");
 const { catchAsync } = require("../../errors");
 const { bounceNonAdmins } = require("../middlewares/access-control");
 
@@ -23,7 +23,7 @@ router.use(shield());
  * @apiDescription Endpoint to post support message. Support messages are of two types text designated by the integer 1 and image/file designated by the
  * integer 2. The content of type = 2 is the url of the image and that of type = 1 is the message text
  */
-router.post("/message", catchAsync(messageController.send));
+router.post("/message", catchAsync(supportController.send));
 
 /**
  * @api {post} /api/support/messages/read Read unread messages sent to you
@@ -34,7 +34,7 @@ router.post("/message", catchAsync(messageController.send));
  *
  * @apiDescription Endpoint to read unread messages sent to you
  */
-router.post("/messages/read", catchAsync(messageController.read));
+router.post("/messages/read", catchAsync(supportController.read));
 
 /**
  * @api {get} /api/support/messages?limit=30&page=1 Get messages
@@ -165,7 +165,7 @@ router.post("/messages/read", catchAsync(messageController.read));
  *   }
  * }
  */
-router.get("/messages", catchAsync(messageController.getMessages));
+router.get("/messages", catchAsync(supportController.getMessages));
 
 /**
  * @api {get} /api/support/messages/:userId?limit=30&page=1 Get messages of specific user
@@ -183,7 +183,7 @@ router.get("/messages", catchAsync(messageController.getMessages));
 router.get(
 	"/messages/:userId",
 	bounceNonAdmins,
-	catchAsync(messageController.getUserMessages)
+	catchAsync(supportController.getUserMessages)
 );
 
 /**
@@ -195,7 +195,7 @@ router.get(
  *
  * @apiDescription Endpoint to get all read messages
  */
-router.get("/messages/read", catchAsync(messageController.getRead));
+router.get("/messages/read", catchAsync(supportController.getRead));
 
 /**
  * @api {get} /api/support/last-messages?limit=30&page=1 Get last messages
@@ -209,7 +209,7 @@ router.get("/messages/read", catchAsync(messageController.getRead));
  *
  * @apiDescription Endpoint to get last messages
  */
-router.get("/last-messages", catchAsync(messageController.getLastMessages));
+router.get("/last-messages", catchAsync(supportController.getLastMessages));
 
 /**
  * @api {get} /api/support/agents Get support agents

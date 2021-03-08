@@ -15,16 +15,16 @@ module.exports = class PeddlerProduct {
 		}
 	}
 
-	repr() {
+	toDto() {
 		return {
 			id: this.id || null,
 			peddler:
-				this.peddler && this.peddler.repr
-					? this.peddler.repr()
+				this.peddler && this.peddler.toDto
+					? this.peddler.toDto()
 					: this.peddler || null,
 			product:
-				this.product && this.product.repr
-					? this.product.repr()
+				this.product && this.product.toDto
+					? this.product.toDto()
 					: this.product || null,
 			residentialAmt: this.residentialAmt || null,
 			commercialAmt: this.commercialAmt || null,

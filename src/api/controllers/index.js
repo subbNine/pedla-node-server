@@ -1,5 +1,5 @@
 const Auth = require("./auth");
-const Otp = require("./otp");
+const Secret = require("./secret");
 const Product = require("./product");
 const GeoLocation = require("./geo-location");
 const Order = require("./order");
@@ -9,11 +9,11 @@ const TruckAndDriver = require("./truck-driver");
 const OrderController = require("./order");
 const NotificationController = require("./notification");
 const BlogPostController = require("./blog-post");
-const MessageController = require("./message");
+const SupportController = require("./support");
 
 module.exports = {
 	auth: new Auth(),
-	otp: new Otp(),
+	secret: new Secret(),
 	product: new Product(),
 	geoLocation: new GeoLocation(),
 	order: new Order(),
@@ -23,5 +23,5 @@ module.exports = {
 	orderController: new OrderController(),
 	notificationController: new NotificationController(),
 	blogPostController: new BlogPostController(),
-	messageController: new MessageController(),
+	supportController: new SupportController(),
 };
