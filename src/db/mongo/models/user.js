@@ -53,6 +53,15 @@ let schema = new Schema({
 	passwordResetCode: String,
 	passwordResetExpires: Date,
 	lastActive: Date,
+	rating: {
+		totalRating: Number,
+		ratingCount: Number,
+	},
+	orderStats: {
+		nCancelled: Number,
+		nCompleted: Number,
+		nOrders: Number,
+	},
 	products: [
 		{
 			productId: { type: Schema.Types.ObjectId, ref: "Product" },
@@ -64,6 +73,13 @@ let schema = new Schema({
 			quantity: Number,
 		},
 	],
+	truck: {
+		truckId: { type: Schema.Types.ObjectId, ref: "Truck" },
+		productId: { type: Schema.Types.ObjectId, ref: "Product" },
+		productName: String,
+		amount: Number,
+		quantity: Number,
+	},
 });
 
 schema.index({ latlon: "2dsphere" });
