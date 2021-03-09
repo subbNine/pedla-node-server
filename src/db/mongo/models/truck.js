@@ -16,6 +16,7 @@ let schema = new Schema({
 	ownership: { imgId: String, uri: String },
 	quantity: { type: Number, min: 0, default: 0 },
 	isDeleted: { type: Boolean, default: false },
+	driverId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 module.exports = mongoose.model("Truck", schema);

@@ -53,6 +53,17 @@ let schema = new Schema({
 	passwordResetCode: String,
 	passwordResetExpires: Date,
 	lastActive: Date,
+	products: [
+		{
+			productId: { type: Schema.Types.ObjectId, ref: "Product" },
+			productName: String,
+			residentialAmt: Number,
+			commercialAmt: Number,
+			commercialOnCrAmt: Number,
+			createdAt: { type: Date, default: Date.now },
+			quantity: Number,
+		},
+	],
 });
 
 schema.index({ latlon: "2dsphere" });

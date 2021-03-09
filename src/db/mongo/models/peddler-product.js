@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 let schema = new Schema({
 	peddlerId: { type: Schema.Types.ObjectId, ref: "User" },
 	productId: { type: Schema.Types.ObjectId, ref: "Product" },
+	productName: String,
 	residentialAmt: Number,
 	commercialAmt: Number,
 	commercialOnCrAmt: Number,
