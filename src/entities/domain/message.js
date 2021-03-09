@@ -17,38 +17,38 @@ module.exports = class Message {
 
 	// object representation of the domain entity.
 	toDto() {
-		const objectRepr = {};
+		const dto = {};
 
 		if (this.id) {
-			objectRepr.id = this.id;
+			dto.id = this.id;
 		}
 
 		if (this.type) {
-			objectRepr.type = this.type;
+			dto.type = this.type;
 		}
 
 		if (this.message) {
-			objectRepr.content = this.message;
+			dto.content = this.message;
 		}
 
 		if (this.from) {
 			if (this.from.toDto) {
-				objectRepr.sender = this.from.toDto();
+				dto.sender = this.from.toDto();
 			} else {
-				objectRepr.sender = this.from;
+				dto.sender = this.from;
 			}
 		}
 
 		if (this.sentAt) {
-			objectRepr.sentAt = this.sentAt;
+			dto.sentAt = this.sentAt;
 		}
 
 		if (this.readAt) {
-			objectRepr.readAt = this.readAt;
+			dto.readAt = this.readAt;
 		} else {
-			objectRepr.readAt = null;
+			dto.readAt = null;
 		}
 
-		return objectRepr;
+		return dto;
 	}
 };

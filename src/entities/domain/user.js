@@ -64,80 +64,80 @@ module.exports = class User {
 
 	// object representation of the domain entity.
 	toDto() {
-		const objectRepr = {};
+		const dto = {};
 
-		objectRepr.id = this.id || null;
-		objectRepr.firstName = this.firstName || null;
-		objectRepr.lastName = this.lastName || null;
-		objectRepr.avatarImg =
+		dto.id = this.id || null;
+		dto.firstName = this.firstName || null;
+		dto.lastName = this.lastName || null;
+		dto.avatarImg =
 			(isType("object", this.avatarImg) && this.avatarImg.uri) ||
 			this.avatarImg ||
 			null;
-		objectRepr.presence = this.presence || null;
-		objectRepr.type = this.type || null;
-		objectRepr.permission = this.permission || null;
-		objectRepr.isActive = this.isActive || false;
-		objectRepr.phoneNumber = this.phoneNumber || null;
-		objectRepr.email = this.email || null;
-		objectRepr.address = this.address || null;
+		dto.presence = this.presence || null;
+		dto.type = this.type || null;
+		dto.permission = this.permission || null;
+		dto.isActive = this.isActive || false;
+		dto.phoneNumber = this.phoneNumber || null;
+		dto.email = this.email || null;
+		dto.address = this.address || null;
 
 		if (this.isAdmin()) {
-			objectRepr.userName = this.userName || null;
-			return objectRepr;
+			dto.userName = this.userName || null;
+			return dto;
 		}
 
 		if (this.passwordResetToken) {
-			objectRepr.passwordResetToken = this.passwordResetToken;
+			dto.passwordResetToken = this.passwordResetToken;
 		}
 
 		if (this.isPeddler()) {
-			objectRepr.peddlerCode = this.peddlerCode || null;
-			objectRepr.nTrucks = this.nTrucks || null;
+			dto.peddlerCode = this.peddlerCode || null;
+			dto.nTrucks = this.nTrucks || null;
 		}
 
 		if (this.isDriver()) {
-			objectRepr.peddler =
+			dto.peddler =
 				(this.peddler && this.peddler.toDto
 					? this.peddler.toDto()
 					: this.peddler) || null;
-			objectRepr.driverStats = this.driverStats || null;
+			dto.driverStats = this.driverStats || null;
 		}
 
 		if (this.isBuyer()) {
-			objectRepr.cacUrl =
+			dto.cacUrl =
 				(isType("object", this.corporateBuyerCacImg) &&
 					this.corporateBuyerCacImg.uri) ||
 				this.corporateBuyerCacImg ||
 				null;
-			objectRepr.buyerType = ("" + this.buyerType).toLowerCase();
+			dto.buyerType = ("" + this.buyerType).toLowerCase();
 		}
 
 		if (this.isPeddler()) {
-			objectRepr.pooImage =
+			dto.pooImage =
 				(isType("object", this.pooImage) && this.pooImage.uri) ||
 				this.pooImage ||
 				null;
-			objectRepr.userName = this.userName || null;
-			objectRepr.isActivePeddler = this.isActivePeddler || null;
+			dto.userName = this.userName || null;
+			dto.isActivePeddler = this.isActivePeddler || null;
 		}
 
 		if (this.isDriver()) {
-			objectRepr.userName = this.userName || null;
-			objectRepr.truck = this.truck || null;
+			dto.userName = this.userName || null;
+			dto.truck = this.truck || null;
 		}
 
 		if (!this.isPeddler()) {
 			if (this.latlon) {
-				objectRepr.latlon = {
+				dto.latlon = {
 					lon: this.latlon.coordinates[0],
 					lat: this.latlon.coordinates[1],
 				};
 			} else {
-				objectRepr.latlon = this.latlon;
+				dto.latlon = this.latlon;
 			}
 		}
 
-		return objectRepr;
+		return dto;
 	}
 
 	isApprovedUser() {
