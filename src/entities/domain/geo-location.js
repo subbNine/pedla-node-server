@@ -27,16 +27,16 @@ module.exports = class User {
 
 	// object representation of the domain entity.
 	toDto() {
-		const objectRepr = {};
+		const dto = {};
 
 		if (this.id) {
-			objectRepr.id = this.id;
+			dto.id = this.id;
 		}
 
 		if (this.latlon) {
 			objectRep.latlon = this.latlon;
 		}
 
-		return objectRepr;
+		return dto;
 	}
 };

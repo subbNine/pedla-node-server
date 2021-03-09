@@ -17,7 +17,7 @@ module.exports = class BlogPost {
 
 	// object representation of the domain entity.
 	toDto() {
-		const objectRepr = {
+		const dto = {
 			id: this.id || null,
 			title: this.title || null,
 			body: this.body || null,
@@ -29,6 +29,6 @@ module.exports = class BlogPost {
 					: this.product) || null,
 		};
 
-		return objectRepr;
+		return dto;
 	}
 };

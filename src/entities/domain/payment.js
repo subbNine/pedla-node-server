@@ -19,7 +19,7 @@ module.exports = class Payment {
 
 	// object representation of the domain entity.
 	toDto() {
-		const objectRepr = {
+		const dto = {
 			order:
 				(this.order && this.order.toDto ? this.order.toDto() : this.order) ||
 				null,
@@ -34,6 +34,6 @@ module.exports = class Payment {
 				null,
 		};
 
-		return objectRepr;
+		return dto;
 	}
 };
