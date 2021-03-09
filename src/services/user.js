@@ -1,4 +1,4 @@
-const { UserEnt } = require("../entities/domain");
+const { UserEnt, DriverEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { permissions, buyerTypes } = require("../db/mongo/enums/user");
@@ -14,16 +14,16 @@ module.exports = class User {
 		this.mappers = mappers;
 	}
 
-	async updateUser(userDto) {
+	async updateBuyer(userDto) {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedBuyer = await userMapper.updateUserById(userEnt.id, userEnt);
 
-		if (updatedUser) {
-			eventEmitter.emit(eventTypes.userProfileCreated, updatedUser);
+		if (updatedBuyer) {
+			eventEmitter.emit(eventTypes.userProfileCreated, updatedBuyer);
 
-			const objRepr = updatedUser.toDto();
+			const objRepr = updatedBuyer.toDto();
 			const token = generateJwtToken(objRepr);
 			return Result.ok({ ...objRepr, token });
 		}
@@ -300,24 +300,29 @@ module.exports = class User {
 		}
 	}
 
-	async findDrivers(userDto) {
+	async findDrivers(driverDto) {
 		const { userMapper, truckAndDriverMapper } = this.mappers;
 
-		const foundUsers = await userMapper.findUsers(new UserEnt(userDto));
+		const foundUsers = await userMapper.findUsers(new DriverEnt(driverDto));
 
 		if (foundUsers) {
-			const driversWithTrucks = await asyncExec(foundUsers, async (userEnt) => {
-				const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver({
-					driverId: userEnt.id,
-				});
+			const driversWithTrucks = await asyncExec(
+				foundUsers,
+				async (driverEnt) => {
+					const driverWithTruck = await truckAndDriverMapper.findTruckAndDriver(
+						{
+							driverId: driverEnt.id,
+						}
+					);
 
-				if (driverWithTruck) {
-					userEnt.truck = driverWithTruck.truck.toDto();
-					return userEnt;
-				} else {
-					return userEnt;
+					if (driverWithTruck) {
+						driverEnt.truck = driverWithTruck.truck.toDto();
+						return driverEnt;
+					} else {
+						return driverEnt;
+					}
 				}
-			});
+			);
 
 			if (driversWithTrucks) {
 				return Result.ok(driversWithTrucks.map((eachUser) => eachUser.toDto()));

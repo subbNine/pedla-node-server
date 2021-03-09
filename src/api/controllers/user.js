@@ -37,7 +37,7 @@ module.exports = class User extends BaseController {
 		userDto.type = userTypes.BUYER;
 		userDto.id = user.id;
 
-		const result = await userService.updateUser(userDto);
+		const result = await userService.updateBuyer(userDto);
 
 		return this.response(result, res);
 	}
