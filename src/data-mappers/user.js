@@ -256,6 +256,26 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 	}
 
+	async incOrdersCount(driver) {
+		const { User } = this.models;
+
+		const doc = await User.findByIdAndUpdate(
+			driver.id,
+			{
+				$inc: {
+					"orderStats.nOrders": 1,
+				},
+			},
+			{
+				new: true,
+			}
+		);
+
+		if (doc) {
+			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+		}
+	}
+
 	async rejectPeddler(userId) {
 		const { User } = this.models;
 

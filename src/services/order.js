@@ -352,37 +352,59 @@ module.exports = class Order {
 		}
 	}
 
-	async createOrder(order) {
-		const { orderMapper } = this.mappers;
-		const payment = new Payment({ mappers: this.mappers });
+	async validateOrder(order) {
+		const { truckAndDriverMapper } = this.mappers;
 
-		const truck = await this._getTruck(order.driver);
+		const truckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
+			driverId: driver.id,
+		});
 
-		if (truck) {
-			const truckQuantity = +truck.quantity;
+		if (truckAndDriver) {
+			const truck = truckAndDriver.truck;
 
-			if (order.quantity) {
-				if (order.quantity > truckQuantity) {
+			if (truck) {
+				const truckQuantity = +truck.quantity;
+
+				if (order.quantity) {
+					if (order.quantity > truckQuantity) {
+						return Result.fail(
+							new AppError({
+								name: errorCodes.InvalidOrderError,
+								statusCode: errorCodes.InvalidOrderError.statusCode,
+								message: errMessages.quantityOrderedGreaterThanAvailable,
+							})
+						);
+					}
+				} else {
 					return Result.fail(
 						new AppError({
 							name: errorCodes.InvalidOrderError,
 							statusCode: errorCodes.InvalidOrderError.statusCode,
-							message: errMessages.quantityOrderedGreaterThanAvailable,
+							message: errMessages.invalidQuantity,
 						})
 					);
 				}
-			} else {
-				return Result.fail(
-					new AppError({
-						name: errorCodes.InvalidOrderError,
-						statusCode: errorCodes.InvalidOrderError.statusCode,
-						message: errMessages.invalidQuantity,
-					})
-				);
+
+				return true;
 			}
 		}
+	}
 
-		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
+	async placeOrder(order) {
+		await this.validateOrder(order);
+
+		return await this.createOrder(order);
+	}
+
+	async createOrder(order) {
+		const { orderMapper, userMapper } = this.mappers;
+		const payment = new Payment({ mappers: this.mappers });
+
+		const newOrderPromise = orderMapper.createOrder(new OrderEnt(order));
+
+		const orderIncPromise = userMapper.incOrdersCount(order.driver);
+
+		const [newOrder, _] = await Promise.all([newOrderPromise, orderIncPromise]);
 
 		const paymentResp = await payment.initPayment(newOrder);
 

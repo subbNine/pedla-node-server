@@ -181,7 +181,7 @@ module.exports = class Order extends BaseController {
 			orderDto.priceCategory = priceCategory;
 		}
 
-		const result = await orderService.createOrder(orderDto);
+		const result = await orderService.placeOrder(orderDto);
 
 		this.response(result, res);
 	}
