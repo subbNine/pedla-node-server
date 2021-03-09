@@ -21,6 +21,7 @@ module.exports = class User {
 	passwordResetToken;
 	passwordResetExpires;
 	passwordResetCode;
+	userName;
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -135,6 +136,7 @@ module.exports = class User {
 		dto.phoneNumber = this.phoneNumber || null;
 		dto.email = this.email || null;
 		dto.address = this.address || null;
+		dto.userName = this.userName || null;
 		if (this.latlon) {
 			dto.latlon = {
 				lon: this.latlon.coordinates[0],

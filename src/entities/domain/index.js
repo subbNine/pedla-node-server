@@ -10,6 +10,9 @@ const PushDeviceEnt = require("./push-device");
 const BlogPostEnt = require("./blog-post");
 const PaymentEnt = require("./payment");
 const Message = require("./message");
+const BuyerEnt = require("./buyer");
+const DriverEnt = require("./driver");
+const PeddlerEnt = require("./peddler");
 
 module.exports = {
 	UserEnt,
@@ -24,4 +27,7 @@ module.exports = {
 	BlogPostEnt,
 	PaymentEnt,
 	Message,
+	BuyerEnt,
+	DriverEnt,
+	PeddlerEnt,
 };
