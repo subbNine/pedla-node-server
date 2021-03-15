@@ -17,7 +17,7 @@ module.exports = class Order {
 		this.mappers = mappers;
 	}
 
-	async ordersStats() {
+	async allOrderStat() {
 		const { orderMapper } = this.mappers;
 
 		const pendingOrdersFilter = {

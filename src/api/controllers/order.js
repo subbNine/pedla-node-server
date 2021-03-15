@@ -1,6 +1,6 @@
 const BaseController = require("./base");
 const { OrderDto } = require("../../entities/dtos");
-const { orderService, payment, user } = require("../../services");
+const { orderService, payment } = require("../../services");
 const { orderStatus } = require("../../db/mongo/enums/order");
 const { isValidDateTime } = require("../../lib/utils");
 
@@ -27,7 +27,7 @@ module.exports = class Order extends BaseController {
 	}
 
 	async ordersStats(req, res, next) {
-		const result = await orderService.ordersStats();
+		const result = await orderService.allOrderStat();
 
 		this.response(result, res);
 	}
@@ -113,7 +113,7 @@ module.exports = class Order extends BaseController {
 		this.response(result, res);
 	}
 
-	async createOrder(req, res, next) {
+	async placeOrder(req, res, next) {
 		const {
 			driverId,
 			productId,
@@ -181,7 +181,7 @@ module.exports = class Order extends BaseController {
 			orderDto.priceCategory = priceCategory;
 		}
 
-		const result = await orderService.createOrder(orderDto);
+		const result = await orderService.placeOrder(orderDto);
 
 		this.response(result, res);
 	}
@@ -286,7 +286,7 @@ module.exports = class Order extends BaseController {
 		orderDto.id = orderId;
 		orderDto.rating = rating;
 
-		const result = await orderService.rateTransaction(orderDto);
+		const result = await orderService.rateOrder(orderDto);
 
 		this.response(result, res);
 	}

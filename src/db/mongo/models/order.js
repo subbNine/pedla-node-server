@@ -36,6 +36,7 @@ let schema = new Schema({
 		enum: Object.values(orderEnums.deliveryStatus),
 		default: orderEnums.deliveryStatus.NOTDELIVERED,
 	},
+	truckId: { type: Schema.Types.ObjectId, ref: "Truck" },
 	paid: { type: Boolean, default: false },
 });
 
