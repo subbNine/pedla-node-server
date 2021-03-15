@@ -11,45 +11,48 @@ module.exports = class PeddlerProductMapper extends BaseMapper {
 		this.models = models;
 	}
 
-	async findProduct(filter) {
-		const { PeddlerProduct } = this.models;
+	async findProductBy(product, owner) {
+		const { User } = this.models;
 
-		const doc = await PeddlerProduct.findOne(
-			this.toPeddlerProductPersistence(filter)
-		)
-			// .populate("peddlerId")
-			.populate("productId");
+		const doc = await User.findOne(
+			{
+				_id: owner.id,
+			},
+			{ products: { $elemMatch: { productId: product.id } } }
+		);
 
-		if (doc) {
+		if (doc && doc.products && doc.products.length) {
 			const docObj = doc.toObject();
-			const peddler = docObj.peddlerId;
-			const product = this.toProductEntity(docObj.productId);
-			const result = this.toPeddlerProductEntity(
-				Object.assign(docObj, { peddler, product })
-			);
+			const { products, ...peddler } = docObj;
 
-			return result;
+			products[0].peddler = peddler;
+
+			const peddlerProductEnt = this.toPeddlerProductEntity(products[0]);
+
+			return peddlerProductEnt;
 		}
 	}
 
-	async findProducts(filterEnt) {
-		const { PeddlerProduct } = this.models;
+	async findProducts(filter) {
+		const { User } = this.models;
 
-		const docs = await PeddlerProduct.find(
-			this.toPeddlerProductPersistence(filterEnt)
-		)
-			// .populate("peddlerId")
-			.populate("productId");
+		const doc = await User.findById(filter.peddler).populate(
+			"products.productId"
+		);
 
 		const results = [];
-		if (docs) {
-			for (const doc of docs) {
-				const docObj = doc.toObject();
-				const peddler = docObj.peddlerId;
-				const product = this.toProductEntity(docObj.productId);
+		if (doc && doc.products && doc.products.length) {
+			const docObj = doc.toObject();
+			const { products, ...peddler } = docObj;
+
+			for (let product of products) {
+				const productEnt = this.toProductEntity(product.productId);
 				results.push(
 					this.toPeddlerProductEntity(
-						Object.assign(docObj, { peddler, product })
+						Object.assign(product, {
+							peddler: peddler._id,
+							product: productEnt,
+						})
 					)
 				);
 			}
@@ -59,37 +62,115 @@ module.exports = class PeddlerProductMapper extends BaseMapper {
 	}
 
 	async createProduct(peddlerProductEnt) {
-		const { PeddlerProduct } = this.models;
+		const { User } = this.models;
 
-		const newProduct = this.toPeddlerProductPersistence(peddlerProductEnt);
+		const peddlerId = peddlerProductEnt.peddler;
+		const productId = peddlerProductEnt.product;
+		const residentialAmt = peddlerProductEnt.residentialAmt;
+		const commercialAmt = peddlerProductEnt.commercialAmt;
+		const commercialOnCrAmt = peddlerProductEnt.commercialOnCrAmt;
+		const quantity = peddlerProductEnt.quantity;
 
-		const doc = await PeddlerProduct.create(newProduct);
+		const doc = await User.findOne({ _id: peddlerId });
 
 		if (doc) {
+			if (doc.products) {
+				const subDoc = doc.products.find(
+					(each) => String(each.productId) === String(productId)
+				);
+
+				if (subDoc) {
+					subDoc.residentialAmt = residentialAmt;
+					subDoc.commercialAmt = commercialAmt;
+					subDoc.commercialOnCrAmt = commercialOnCrAmt;
+					subDoc.quantity = quantity;
+				} else {
+					doc.products.push({
+						productId,
+						residentialAmt,
+						commercialAmt,
+						commercialOnCrAmt,
+						quantity,
+					});
+				}
+			} else {
+				doc.products = [
+					{
+						productId,
+						residentialAmt,
+						commercialAmt,
+						commercialOnCrAmt,
+						quantity,
+					},
+				];
+			}
+			const saved = await doc.save();
+
 			return this.toPeddlerProductEntity(
-				doc.toObject(),
+				saved
+					.toObject()
+					.products.find((each) => String(each.productId) == String(productId)),
 				PeddlerProductEnt
 			);
 		}
 	}
 
 	async updateProductById(id, peddlerProductEnt) {
-		const { PeddlerProduct } = this.models;
+		const { User } = this.models;
 
-		const update = this.toPeddlerProductPersistence(peddlerProductEnt);
+		const updates = this.toPeddlerProductPersistence(peddlerProductEnt);
 
-		const doc = await PeddlerProduct.findByIdAndUpdate(id, update, {
-			new: true,
-		}).populate("productId");
-		// .populate("peddlerId");
+		const { peddlerId, ...rest } = updates;
+
+		const productUpdates = {};
+
+		if (rest.residentialAmt) {
+			productUpdates["products.residentialAmt"] =
+				peddlerProductEnt.residentialAmt;
+		}
+
+		if (rest.commercialAmt) {
+			productUpdates["products.commercialAmt"] =
+				peddlerProductEnt.commercialAmt;
+		}
+
+		if (rest.commercialOnCrAmt) {
+			productUpdates["products.commercialOnCrAmt"] =
+				peddlerProductEnt.commercialOnCrAmt;
+		}
+		if (rest.quantity) {
+			productUpdates["products.quantity"] = peddlerProductEnt.quantity;
+		}
+
+		const doc = await User.findOneAndUpdate(
+			{
+				$and: [
+					{
+						_id: peddlerId,
+					},
+					{ "products.productId": id },
+				],
+			},
+			productUpdates,
+			{
+				new: true,
+			}
+		).populate("products.productId");
 
 		if (doc) {
 			const docObj = doc.toObject();
-			const peddler = docObj.peddlerId;
-			const product = this.toProductEntity(docObj.productId);
+			const { products, ...peddler } = docObj;
+
+			const updatedProductDoc = products.find(
+				(each) => String(each._id) == String(id)
+			);
 
 			return this.toPeddlerProductEntity(
-				Object.assign(docObj, { peddler, product })
+				Object.assign(
+					{ ...updatedProductDoc },
+					{ _id: updatedProductDoc.productId._id },
+					{ peddler: peddler._id, product }
+				)
 			);
 		}
 	}

@@ -1,5 +1,6 @@
 const { utils } = require("../lib");
 const { PeddlerProductEnt } = require("../entities/domain");
+const { eventEmitter, eventTypes } = require("../events");
 
 const { Result } = utils;
 
@@ -14,23 +15,10 @@ module.exports = class PeddlerProduct {
 		let resultList;
 		const arrOfPromises = [];
 		for (const peddlerProductDto of productDtoList) {
-			const foundProduct = await peddlerProductMapper.findProduct({
-				peddler: peddlerProductDto.peddler,
-				product: peddlerProductDto.product,
-			});
-
-			if (foundProduct) {
-				const updatedProductPromise = peddlerProductMapper.updateProductById(
-					foundProduct.id,
-					new PeddlerProductEnt(peddlerProductDto)
-				);
-				arrOfPromises.push(updatedProductPromise);
-			} else {
-				const newProductPromise = peddlerProductMapper.createProduct(
-					new PeddlerProductEnt(peddlerProductDto)
-				);
-				arrOfPromises.push(newProductPromise);
-			}
+			const newProductPromise = peddlerProductMapper.createProduct(
+				new PeddlerProductEnt(peddlerProductDto)
+			);
+			arrOfPromises.push(newProductPromise);
 		}
 		resultList = await Promise.all(arrOfPromises);
 
@@ -45,9 +33,7 @@ module.exports = class PeddlerProduct {
 		);
 
 		if (foundProducts) {
-			return Result.ok(
-				foundProducts.map((eachProduct) => eachProduct.toDto())
-			);
+			return Result.ok(foundProducts.map((eachProduct) => eachProduct.toDto()));
 		} else {
 			return Result.ok([]);
 		}
@@ -61,6 +47,24 @@ module.exports = class PeddlerProduct {
 			peddlerProductEnt.id,
 			peddlerProductEnt
 		);
+
+		const {
+			residentialAmt,
+			commercialAmt,
+			commercialOnCrAmt,
+		} = peddlerProductDto;
+
+		if (
+			updatedProduct &&
+			(residentialAmt || commercialAmt || commercialOnCrAmt)
+		) {
+			eventEmitter.emit(
+				eventTypes.priceOfProductUpdated,
+				{ residentialAmt, commercialAmt, commercialOnCrAmt },
+				peddlerProductEnt,
+				peddlerProductEnt.peddler
+			);
+		}
 
 		return Result.ok(updatedProduct.toDto());
 	}
