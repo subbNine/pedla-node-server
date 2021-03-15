@@ -171,6 +171,7 @@ router.post(
  */
 router.post(
 	"/driver",
+	shield(permissions.PERM002),
 	fileUpload.single("avatarImg"),
 	validateBody(validationSchemas.postDriver),
 	catchAsync(userController.createDriver)
@@ -186,7 +187,11 @@ router.post(
  * @apiDescription This endpoint will enable peddlers to fetch all their Drivers
  *
  */
-router.get("/drivers", catchAsync(userController.getDrivers));
+router.get(
+	"/drivers",
+	shield(permissions.PERM002),
+	catchAsync(userController.getDrivers)
+);
 
 /**
  * @api {post} /api/user/peddler/driver/:driverId Update truck Driver
@@ -206,6 +211,7 @@ router.get("/drivers", catchAsync(userController.getDrivers));
  */
 router.post(
 	"/driver/:driverId",
+	shield(permissions.PERM002),
 	fileUpload.single("avatarImg"),
 	catchAsync(userController.updateDriver)
 );
@@ -224,6 +230,7 @@ router.post(
  */
 router.put(
 	"/driver/:driverId/disable",
+	shield(permissions.PERM002),
 	catchAsync(userController.disableDriver)
 );
 
@@ -239,7 +246,11 @@ router.put(
  * @apiDescription This endpoint will delete a driver
  *
  */
-router.put("/driver/:driverId/delete", catchAsync(userController.deleteDriver));
+router.put(
+	"/driver/:driverId/delete",
+	shield(permissions.PERM002),
+	catchAsync(userController.deleteDriver)
+);
 
 /**
  * @api {post} /api/user/peddler/truck Create truck
@@ -252,7 +263,7 @@ router.put("/driver/:driverId/delete", catchAsync(userController.deleteDriver));
  *
  * @apiParam {String} model truck model number
  * @apiParam {String} brand truck Brand
- * @apiParam {ID} product type of product loaded on the truck
+ * @apiParam {ID} productId type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
  * @apiParam {Number} quantity the quantity of petroleum product that the truck carries
  * @apiParam {File} license truck liscence
@@ -348,6 +359,7 @@ router.put(
  */
 router.post(
 	"/truck-driver",
+	shield(permissions.PERM002),
 	validateBody(validationSchemas.postTruckAndDriver),
 	catchAsync(truckAndDriverController.assignTruckToDriver)
 );
@@ -368,7 +380,8 @@ router.post(
  */
 router.post(
 	"/truck-driver/:truckDriverId",
-	catchAsync(truckAndDriverController.updateTruckAndDriver)
+	shield(permissions.PERM002),
+	catchAsync(truckAndDriverController.updateTruckDriver)
 );
 
 /**
@@ -383,7 +396,7 @@ router.post(
  */
 router.get(
 	"/trucks-drivers",
-	catchAsync(truckAndDriverController.getTruckAndDrivers)
+	catchAsync(truckAndDriverController.getPeddlerTruckDrivers)
 );
 
 router.get(

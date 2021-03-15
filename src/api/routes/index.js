@@ -16,7 +16,7 @@ const router = Router();
 
 router.use(catchAsync(logLastActive));
 
-router.get("/user", catchAsync(userController.checkUserExistence));
+router.get("/user", catchAsync(userController.userExists));
 
 router.use(initExpressVars);
 
