@@ -27,7 +27,7 @@ module.exports = class GeoLoc extends BaseController {
 		return this.response(result, res);
 	}
 
-	async getNearestOnlinePeddlers(req, res, next) {
+	async getNearestOnlineDrivers(req, res, next) {
 		const { lat, lon, radius } = req.query;
 
 		const { user } = req._App;
@@ -52,7 +52,7 @@ module.exports = class GeoLoc extends BaseController {
 		geoDto.latlon = latlon;
 		geoDto.radius = radius;
 
-		const result = await geoService.findNearestOnlinePeddler(geoDto);
+		const result = await geoService.findNearestOnlineDrivers(geoDto);
 		return this.response(result, res);
 	}
 };

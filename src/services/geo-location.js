@@ -10,7 +10,7 @@ module.exports = class GeoLoc {
 		this.mappers = mappers;
 	}
 
-	async findNearestOnlinePeddler(geoDto) {
+	async findNearestOnlineDrivers(geoDto) {
 		const { geoMapper } = this.mappers;
 		const userService = new UserService({ mappers: this.mappers });
 
@@ -79,7 +79,7 @@ module.exports = class GeoLoc {
 					(peddlers[0] && peddlers[0].length && peddlers[0]) ||
 					(peddlers[1] && peddlers[1].length && peddlers[1]);
 
-				const usersRepr = [];
+				const users = [];
 
 				if (nearestPeddlers) {
 					for (const nearestPeddler of nearestPeddlers) {
@@ -92,11 +92,11 @@ module.exports = class GeoLoc {
 						nearestPeddler.peddler = null;
 
 						if (nearestPeddler.truck) {
-							usersRepr.push(nearestPeddler.toDto());
+							users.push(nearestPeddler.toDto());
 						}
 					}
 
-					return Result.ok(usersRepr);
+					return Result.ok(users);
 				}
 			}
 		}

@@ -402,7 +402,7 @@ router.get(
 router.get(
 	"/nearest-drivers",
 	validateQuery(validationSchemas.latlon),
-	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+	catchAsync(geoLocationController.getNearestOnlineDrivers)
 );
 
 router.post(
