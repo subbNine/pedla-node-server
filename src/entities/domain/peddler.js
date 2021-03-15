@@ -9,6 +9,7 @@ module.exports = class Peddler extends User {
 	passwordResetToken;
 	passwordResetExpires;
 	passwordResetCode;
+	products;
 
 	constructor(fields = {}) {
 		super(fields);
@@ -26,6 +27,7 @@ module.exports = class Peddler extends User {
 			null;
 		dto.userName = this.userName || null;
 		dto.isActivePeddler = this.isActivePeddler || null;
+		dto.products = this.products || null;
 
 		return dto;
 	}

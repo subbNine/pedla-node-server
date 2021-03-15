@@ -4,7 +4,9 @@ module.exports = class Driver extends User {
 	userName;
 	peddler;
 	truck;
-	driverStats;
+	orderStats;
+	rating;
+	peddlerCode;
 
 	constructor(fields = {}) {
 		super(fields);
@@ -17,10 +19,12 @@ module.exports = class Driver extends User {
 			(this.peddler && this.peddler.toDto
 				? this.peddler.toDto()
 				: this.peddler) || null;
-		dto.driverStats = this.driverStats || null;
-
+		dto.driverStats = this.orderStats || null;
+		dto.peddlerCode = this.peddlerCode || null;
 		dto.userName = this.userName || null;
 		dto.truck = this.truck || null;
+		dto.rating =
+			this.rating && +this.rating.totalRating / this.rating.ratingCount;
 
 		return dto;
 	}
