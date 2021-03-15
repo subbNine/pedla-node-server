@@ -108,7 +108,7 @@ module.exports = class User extends BaseController {
 		return this.response(result, res);
 	}
 
-	async checkUserExistence(req, res, next) {
+	async userExists(req, res, next) {
 		const userDto = new UserDto();
 
 		const { email, userName } = req.query;
@@ -116,7 +116,7 @@ module.exports = class User extends BaseController {
 		userDto.email = email;
 		userDto.userName = userName;
 
-		const result = await userService.checkUserExistence(userDto);
+		const result = await userService.userExists(userDto);
 
 		return this.response(result, res);
 	}
@@ -284,7 +284,7 @@ module.exports = class User extends BaseController {
 
 		userDto.peddler = peddlerId || user.id;
 
-		const result = await userService.findDrivers(userDto);
+		const result = await userService.getDrivers(userDto);
 
 		this.response(result, res);
 	}
