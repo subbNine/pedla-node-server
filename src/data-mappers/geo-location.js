@@ -38,10 +38,29 @@ module.exports = class GeoMapper extends BaseMapper {
 				if (doc.avatarImg && doc.avatarImg.uri) {
 					entObj.avatarImg = doc.avatarImg.uri;
 				}
-				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
+				results.push(this.createUserEntity(entObj));
 			}
 
 			return results;
 		}
+	}
+
+	createUserEntity(obj) {
+		let entity;
+		if (obj.type === types.DRIVER) {
+			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
+		} else {
+			if (obj.type === types.PEDDLER) {
+				entity = this._toEntity(obj, PeddlerEnt, this._toEntityTransform);
+			} else {
+				if (obj.type === types.BUYER) {
+					entity = this._toEntity(obj, BuyerEnt, this._toEntityTransform);
+				} else {
+					entity = this._toEntity(obj, UserEnt, this._toEntityTransform);
+				}
+			}
+		}
+
+		return entity;
 	}
 };

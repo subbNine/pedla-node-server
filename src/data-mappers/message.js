@@ -69,7 +69,7 @@ module.exports = class Message extends BaseMapper {
 		return await Message.countDocuments(filter);
 	}
 
-	async getAllMessages(user, options) {
+	async findAllMessages(user, options) {
 		let filter = {};
 		if (user.isAdmin()) {
 			filter = {
@@ -85,7 +85,7 @@ module.exports = class Message extends BaseMapper {
 		return res;
 	}
 
-	async getUserMessages(userId, options) {
+	async findUserMessages(userId, options) {
 		let filter = {
 			$or: [
 				{ to: userId, from: { $exists: true } },
@@ -98,7 +98,7 @@ module.exports = class Message extends BaseMapper {
 		return res;
 	}
 
-	async getLastMessages(_user, options) {
+	async findLastMessages(_user, options) {
 		const { Message } = this.models;
 
 		const { pagination } = options || {};
@@ -107,7 +107,7 @@ module.exports = class Message extends BaseMapper {
 
 		const messages = await Message.aggregate([
 			{
-				$sort: { sentAt: -1 },
+				$sort: { sentAt: -1, readAt: -1 },
 			},
 			{
 				$group: {
@@ -162,12 +162,10 @@ module.exports = class Message extends BaseMapper {
 			},
 		]);
 
-		console.log(messages);
-
 		return messages;
 	}
 
-	async getReadMessages(user, options) {
+	async findReadMessages(user, options) {
 		let filter = {};
 		if (user.isAdmin()) {
 			filter = {
@@ -214,8 +212,8 @@ module.exports = class Message extends BaseMapper {
 			for (const doc of docs) {
 				const msgObj = doc.toObject();
 
-				msgObj.from = this._toEntity(msgObj.from, UserEnt, { _id: "id" });
-				msgObj.to = this._toEntity(msgObj.to, UserEnt, { _id: "id" });
+				msgObj.from = this.createUserEntity(msgObj.from);
+				msgObj.to = this.createUserEntity(msgObj.to);
 
 				results.push(
 					this._toEntity(msgObj, MessageEnt, {
@@ -241,8 +239,8 @@ module.exports = class Message extends BaseMapper {
 		if (doc) {
 			const msgObj = doc.toObject();
 
-			msgObj.from = this._toEntity(msgObj.from, UserEnt, { _id: "id" });
-			msgObj.to = this._toEntity(msgObj.to, UserEnt, { _id: "id" });
+			msgObj.from = this.createUserEntity(msgObj.from);
+			msgObj.to = this.createUserEntity(msgObj.to);
 
 			return this._toEntity(msgObj, MessageEnt, {
 				_id: "id",
@@ -261,7 +259,7 @@ module.exports = class Message extends BaseMapper {
 		const newMessageObj = newMessage.toObject();
 
 		if (to) {
-			newMessageObj.to = this._toEntity(to.toObject(), UserEnt, { _id: "id" });
+			newMessageObj.to = this.createUserEntity(to.toObject());
 		}
 
 		if (newMessage) {
@@ -308,5 +306,24 @@ module.exports = class Message extends BaseMapper {
 				_id: "id",
 			});
 		}
+	}
+
+	createUserEntity(obj) {
+		let entity;
+		if (obj.type === types.DRIVER) {
+			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
+		} else {
+			if (obj.type === types.PEDDLER) {
+				entity = this._toEntity(obj, PeddlerEnt, this._toEntityTransform);
+			} else {
+				if (obj.type === types.BUYER) {
+					entity = this._toEntity(obj, BuyerEnt, this._toEntityTransform);
+				} else {
+					entity = this._toEntity(obj, UserEnt, this._toEntityTransform);
+				}
+			}
+		}
+
+		return entity;
 	}
 };

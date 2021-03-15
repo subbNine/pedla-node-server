@@ -2,11 +2,13 @@ const BaseMapper = require("./base");
 const {
 	PaymentEnt,
 	OrderEnt,
-	UserEnt,
 	PeddlerProductEnt,
 	ProductEnt,
+	DriverEnt,
+	BuyerEnt,
 } = require("../entities/domain");
 const { Types } = require("mongoose");
+const { isType, isObjectId } = require("../lib/utils");
 
 module.exports = class PaymentMapper extends BaseMapper {
 	constructor(models) {
@@ -30,17 +32,13 @@ module.exports = class PaymentMapper extends BaseMapper {
 			const docObj = doc.toObject();
 
 			let order;
-			if (
-				docObj.orderId &&
-				!Types.ObjectId.isValid(docObj.orderId) &&
-				docObj.orderId._id
-			) {
-				order = this.toOrderEntity(docObj.orderId);
+			if (isType("object", docObj.orderId) && !isObjectId(docObj.orderId)) {
+				order = this.createOrderEntity(docObj.orderId);
 			} else {
 				order = docObj.orderId;
 			}
 
-			const result = this.toPaymentEntity(Object.assign(docObj, { order }));
+			const result = this.createPaymentEntity(Object.assign(docObj, { order }));
 
 			return result;
 		}
@@ -80,12 +78,14 @@ module.exports = class PaymentMapper extends BaseMapper {
 					!Types.ObjectId.isValid(docObj.orderId) &&
 					docObj.orderId._id
 				) {
-					order = this.toOrderEntity(docObj.orderId);
+					order = this.createOrderEntity(docObj.orderId);
 				} else {
 					order = docObj.orderId;
 				}
 
-				results.push(this.toPaymentEntity(Object.assign(docObj, { order })));
+				results.push(
+					this.createPaymentEntity(Object.assign(docObj, { order }))
+				);
 			}
 
 			return results;
@@ -100,7 +100,7 @@ module.exports = class PaymentMapper extends BaseMapper {
 		const doc = await Payment.create(newPayment);
 
 		if (doc) {
-			return this.toPaymentEntity(doc.toObject(), PaymentEnt);
+			return this.createPaymentEntity(doc.toObject(), PaymentEnt);
 		}
 	}
 
@@ -115,20 +115,13 @@ module.exports = class PaymentMapper extends BaseMapper {
 
 		if (doc) {
 			const docObj = doc.toObject();
-			const order = this.toOrderEntity(docObj.orderId);
+			const order = this.createOrderEntity(docObj.orderId);
 
-			return this.toPaymentEntity(Object.assign(docObj, { order }));
+			return this.createPaymentEntity(Object.assign(docObj, { order }));
 		}
 	}
 
-	toUserEntity(doc) {
-		return this._toEntity(doc, UserEnt, {
-			streetAddress: "address",
-			_id: "id",
-		});
-	}
-
-	toPaymentEntity(doc) {
+	createPaymentEntity(doc) {
 		return this._toEntity(doc, PaymentEnt, {
 			_id: "id",
 			orderId: "order",
@@ -137,48 +130,36 @@ module.exports = class PaymentMapper extends BaseMapper {
 		});
 	}
 
-	toOrderEntity(doc) {
+	createOrderEntity(doc) {
 		if (doc) {
 			let driverEnt;
 			let buyerEnt;
 			let peddlerProductEnt;
-			if (
-				doc.driverId &&
-				!Types.ObjectId.isValid(doc.driverId) &&
-				doc.driverId._id
-			) {
-				driverEnt = this._toEntity(doc.driverId, UserEnt, {
+			if (isType("object", doc.driverId) && !isObjectId(doc.driverId)) {
+				driverEnt = this._toEntity(doc.driverId, DriverEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			} else {
-				driverEnt = this._toEntity({ id: doc.driverId }, UserEnt, {
+				driverEnt = this._toEntity({ id: doc.driverId }, DriverEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			}
 
-			if (
-				doc.buyerId &&
-				!Types.ObjectId.isValid(doc.buyerId) &&
-				doc.buyerId._id
-			) {
-				buyerEnt = this._toEntity(doc.buyerId, UserEnt, {
+			if (isType("object", doc.buyerId) && !isObjectId(doc.buyerId)) {
+				buyerEnt = this._toEntity(doc.buyerId, BuyerEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			} else {
-				buyerEnt = this._toEntity({ id: doc.buyerId }, UserEnt, {
+				buyerEnt = this._toEntity({ id: doc.buyerId }, BuyerEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			}
 
-			if (
-				doc.productId &&
-				!Types.ObjectId.isValid(doc.productId) &&
-				doc.productId._id
-			) {
+			if (isType("object", doc.productId) && !isObjectId(doc.productId)) {
 				const entObj = doc.productId;
 
 				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {
