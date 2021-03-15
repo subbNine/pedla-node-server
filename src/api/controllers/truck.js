@@ -149,7 +149,7 @@ module.exports = class Truck extends BaseController {
 
 		truckDto.owner.id = peddlerId || user.id;
 
-		const result = await truckService.findTrucks(truckDto);
+		const result = await truckService.getTrucks(truckDto);
 
 		this.response(result, res);
 	}

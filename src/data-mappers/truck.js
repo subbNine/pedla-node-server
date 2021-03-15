@@ -3,11 +3,11 @@ const { Types } = require("mongoose");
 const BaseMapper = require("./base");
 const {
 	TruckEnt,
-	UserEnt,
-	PeddlerProductEnt,
 	ProductEnt,
+	PeddlerEnt,
+	DriverEnt,
 } = require("../entities/domain");
-const isType = require("../lib/utils/is-type");
+const { isObjectId, isType } = require("../lib/utils");
 
 module.exports = class TruckMapper extends BaseMapper {
 	constructor(models) {
@@ -17,9 +17,10 @@ module.exports = class TruckMapper extends BaseMapper {
 
 	async findTrucks(filter) {
 		const { Truck } = this.models;
-		const q = Truck.find(this.toTruckPersistence(filter))
+
+		const q = Truck.find(filter)
 			.populate("ownerId")
-			.populate({ path: "productId", populate: { path: "productId" } });
+			.populate({ path: "productId" });
 
 		q.where({ $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] });
 
@@ -27,7 +28,7 @@ module.exports = class TruckMapper extends BaseMapper {
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(this.toTruckEnt(doc.toObject()));
+				results.push(this.createTruckEntity(doc.toObject()));
 			}
 
 			return results;
@@ -38,7 +39,7 @@ module.exports = class TruckMapper extends BaseMapper {
 		const { Truck } = this.models;
 		const q = Truck.findOne(this.toTruckPersistence(filter))
 			.populate("ownerId")
-			.populate({ path: "productId", populate: { path: "productId" } });
+			.populate({ path: "productId" });
 
 		q.where({ $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] });
 
@@ -46,21 +47,33 @@ module.exports = class TruckMapper extends BaseMapper {
 
 		if (doc) {
 			const docObj = doc.toObject();
-			return this.toTruckEnt(docObj);
+			return this.createTruckEntity(docObj);
 		}
 	}
 
 	async createTruck(truckEnt) {
 		const { Truck } = this.models;
 
-		const newTruck = this.toTruckPersistence(truckEnt);
+		const truck = this.toTruckPersistence(truckEnt);
 
-		const doc = await Truck.create(newTruck);
+		const doc = await Truck.create(truck);
 
 		if (doc) {
-			return this.toTruckEnt(doc.toObject());
+			return this.createTruckEntity(doc.toObject());
 		} else {
-			return this.toTruckEnt({});
+			return this.createTruckEntity({});
+		}
+	}
+
+	async updateTruckBy(filter, truckEnt) {
+		const { Truck } = this.models;
+
+		const updates = this.toTruckPersistence(truckEnt);
+
+		const doc = await Truck.findOneAndUpdate(filter, updates, { new: true });
+
+		if (doc) {
+			return this.createTruckEntity(doc.toObject());
 		}
 	}
 
@@ -72,87 +85,125 @@ module.exports = class TruckMapper extends BaseMapper {
 		const doc = await Truck.findByIdAndUpdate(id, updates, { new: true });
 
 		if (doc) {
-			return this.toTruckEnt(doc.toObject());
-		} else {
-			return this.toTruckEnt({});
+			return this.createTruckEntity(doc.toObject());
 		}
+	}
+
+	async updateOrderedQuantityInTruck(order) {
+		const truck = order.truck;
+
+		const updates = { $inc: { quantity: order.quantity } };
+
+		return await this.updateTruckById(truck.id, updates);
+	}
+
+	async detachDriver(driver) {
+		const { Truck } = this.models;
+
+		await Truck.updateMany(
+			{ driverId: driver.id },
+			{ $unset: { driverId: "" } }
+		);
+
+		return true;
+	}
+
+	async detachDriverFromOtherTrucksButOne(truckEnt) {
+		const { Truck } = this.models;
+
+		await Truck.updateMany(
+			{
+				$and: [{ _id: { $ne: truckEnt.id } }, { driverId: truckEnt.driver.id }],
+			},
+			{ $unset: { driverId: "" } }
+		);
+
+		return true;
 	}
 
 	async deleteTruck(id) {
 		const { Truck } = this.models;
 
-		const doc = await Truck.findByIdAndUpdate(id, { isDeleted: true });
+		const doc = await Truck.findByIdAndUpdate(id, {
+			isDeleted: true,
+			$unset: { driverId: "" },
+		});
 
 		if (doc) {
 			const docObj = doc.toObject();
-			return this.toTruckEnt(docObj);
-		} else {
-			return this.toTruckEnt({});
+			return this.createTruckEntity(docObj);
 		}
 	}
 
-	toTruckEnt(doc) {
+	async updateProductPriceOnTruck(newPrice, product, peddlerId) {
+		const { Truck } = this.models;
+
+		const updates = {};
+
+		if (newPrice) {
+			for (key in newPrice) {
+				updates["productPrice." + key] = newPrice[key];
+			}
+		}
+
+		return await Truck.updateMany(
+			{
+				$and: [{ ownerId: peddlerId }, { productId: product.id }],
+			},
+			updates
+		);
+	}
+
+	createTruckEntity(doc) {
 		if (doc) {
-			let userEnt;
-			let peddlerProductEnt;
-			if (
-				doc.ownerId &&
-				!Types.ObjectId.isValid(doc.ownerId) &&
-				doc.ownerId._id
-			) {
-				userEnt = this._toEntity(doc.ownerId, UserEnt, {
+			let truckOwnerEnt;
+			let driverEnt;
+			let productEnt;
+			if (isType("object", doc.ownerId) && !isObjectId(doc.ownerId)) {
+				truckOwnerEnt = this._toEntity(doc.ownerId, PeddlerEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			} else {
-				userEnt = this._toEntity({ id: doc.ownerId }, UserEnt, {
+				truckOwnerEnt = this._toEntity({ id: doc.ownerId }, PeddlerEnt, {
 					_id: "id",
 					streetAddress: "address",
 				});
 			}
 
-			if (
-				doc.productId &&
-				!Types.ObjectId.isValid(doc.productId) &&
-				doc.productId._id
-			) {
+			if (isType("object", doc.driverId) && !isObjectId(doc.driverId)) {
+				driverEnt = this._toEntity(doc.driverId, DriverEnt, {
+					_id: "id",
+					streetAddress: "address",
+				});
+			} else {
+				driverEnt = this._toEntity({ id: doc.driverId }, DriverEnt, {
+					_id: "id",
+					streetAddress: "address",
+				});
+			}
+
+			if (isType("object", doc.productId) && !isObjectId(doc.productId)) {
 				const entObj = doc.productId;
 
-				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {
+				productEnt = this._toEntity(entObj, ProductEnt, {
 					_id: "id",
 				});
-
-				if (
-					entObj.productId &&
-					!Types.ObjectId.isValid(entObj.productId) &&
-					entObj.productId._id
-				) {
-					const productEnt = this._toEntity(entObj.productId, ProductEnt, {
-						_id: "id",
-					});
-
-					peddlerProductEnt.product = productEnt;
-				}
 			} else {
-				peddlerProductEnt = this._toEntity(
-					{ id: doc.productId },
-					PeddlerProductEnt,
-					{
-						_id: "id",
-					}
-				);
+				productEnt = this._toEntity({ id: doc.productId }, ProductEnt, {
+					_id: "id",
+				});
 			}
 
 			const entObj = {
 				...doc,
-				owner: userEnt,
-				product: peddlerProductEnt,
+				owner: truckOwnerEnt,
+				driver: driverEnt,
+				product: productEnt,
 			};
 
 			const truckEnt = this._toEntity(entObj, TruckEnt, {
 				_id: "id",
-				ownerId: "owner",
-				productId: "product",
 			});
 
 			return truckEnt;
@@ -179,6 +230,7 @@ module.exports = class TruckMapper extends BaseMapper {
 		return this._toPersistence(ent, {
 			product: "productId",
 			owner: "ownerId",
+			driver: "driverId",
 		});
 	}
 };

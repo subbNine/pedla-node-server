@@ -1,6 +1,9 @@
 const BaseController = require("./base");
 const { TruckAndDriverDto, UserDto } = require("../../entities/dtos");
-const { truckAndDriver: truckAndDriverService } = require("../../services");
+const {
+	truckAndDriver: truckAndDriverService,
+	truck: truckServices,
+} = require("../../services");
 
 module.exports = class Truck extends BaseController {
 	constructor() {
@@ -12,43 +15,32 @@ module.exports = class Truck extends BaseController {
 		const { truckId, driverId } = req.body;
 		const { user } = req._App;
 
-		const truckAndDriverDto = new TruckAndDriverDto();
-
-		truckAndDriverDto.truck.id = truckId;
-		truckAndDriverDto.driver.id = driverId;
-
-		const result = await truckAndDriverService.assignTruckToDriver(
-			truckAndDriverDto,
+		const result = await truckServices.assignTruckToDriver(
+			{ truckId, driverId },
 			user
 		);
 
 		this.response(result, res);
 	}
 
-	async getTruckAndDrivers(req, res, next) {
+	async getPeddlerTruckDrivers(req, res, next) {
 		const { user } = req._App;
 
 		const truckOwnerDto = new UserDto();
 		truckOwnerDto.id = user.id;
 
-		const result = await truckAndDriverService.findTruckAndDrivers(
-			truckOwnerDto
-		);
+		const result = await truckServices.getTruckDrivers(truckOwnerDto);
 
 		this.response(result, res);
 	}
 
-	async updateTruckAndDriver(req, res, next) {
+	async updateTruckDriver(req, res, next) {
 		const { truckId, driverId } = req.body;
-		const { truckDriverId } = req.params;
+		const { user } = req._App;
 
-		const truckAndDriverDto = new TruckAndDriverDto();
-		truckAndDriverDto.id = truckDriverId;
-		truckAndDriverDto.truck.id = truckId;
-		truckAndDriverDto.driver.id = driverId;
-
-		const result = await truckAndDriverService.updateTruckAndDriver(
-			truckAndDriverDto
+		const result = await truckServices.assignTruckToDriver(
+			{ truckId, driverId },
+			user
 		);
 
 		this.response(result, res);

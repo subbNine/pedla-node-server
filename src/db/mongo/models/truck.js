@@ -8,7 +8,12 @@ let schema = new Schema({
 	ownerId: { type: Schema.Types.ObjectId, ref: "User" },
 	model: String,
 	brand: String,
-	productId: { type: Schema.Types.ObjectId, ref: "PeddlersProduct" },
+	productId: { type: Schema.Types.ObjectId, ref: "Product" },
+	productPrice: {
+		residentialAmt: Number,
+		commercialAmt: Number,
+		commercialOnCrAmt: Number,
+	},
 	size: Number,
 	license: { imgId: String, uri: String },
 	insurance: { imgId: String, uri: String },

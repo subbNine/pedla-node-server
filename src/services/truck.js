@@ -1,6 +1,6 @@
 const { utils } = require("../lib");
 const { TruckEnt } = require("../entities/domain");
-const asyncExec = require("../lib/utils/async-exec");
+const { eventEmitter, eventTypes } = require("../events");
 
 const { Result } = utils;
 
@@ -28,38 +28,56 @@ module.exports = class Truck {
 		return Result.ok({ success: true });
 	}
 
-	async findTrucks(truckDto) {
-		const { truckMapper, truckAndDriverMapper } = this.mappers;
+	async getTrucks(truckDto) {
+		const { truckMapper } = this.mappers;
 
-		const foundTrucks = await truckMapper.findTrucks(new TruckEnt(truckDto));
+		const trucks = await truckMapper.findTrucks({ ownerId: truckDto.owner.id });
 
-		if (foundTrucks) {
-			const trucksWithDrivers = await asyncExec(
-				foundTrucks,
-				async (truckEnt) => {
-					const truckWithDriver = await truckAndDriverMapper.findTruckAndDriver(
-						{
-							truckId: truckEnt.id,
-						}
-					);
+		return Result.ok(
+			trucks ? trucks.map((eachTruck) => eachTruck.toDto()) : []
+		);
+	}
 
-					if (truckWithDriver) {
-						truckEnt.driver = truckWithDriver.driver.toDto();
-						return truckEnt;
-					} else {
-						return truckEnt;
-					}
-				}
-			);
+	async getTruckDrivers(owner) {
+		const { truckMapper } = this.mappers;
 
-			if (trucksWithDrivers) {
-				return Result.ok(
-					trucksWithDrivers.map((eachTruck) => eachTruck.toDto())
-				);
-			}
+		const trucks = await truckMapper.findTrucks({
+			$and: [{ ownerId: owner.id }, { driverId: { $exists: true } }],
+		});
+
+		return Result.ok(
+			trucks
+				? trucks.map((eachTruck) => {
+						const { driver, ...truckFields } = eachTruck.toDto();
+						return { driver, truck: truckFields };
+				  })
+				: []
+		);
+	}
+
+	async assignTruckToDriver(truckAndDriver, truckOwner) {
+		const { truckMapper } = this.mappers;
+		const { truckId, driverId } = truckAndDriver;
+
+		const truckEnt = new TruckEnt({
+			driver: driverId,
+		});
+
+		const updatedTruck = await truckMapper.updateTruckBy(
+			{
+				_id: truckId,
+				ownerId: truckOwner.id,
+			},
+			truckEnt
+		);
+
+		if (updatedTruck) {
+			eventEmitter.emit(eventTypes.truckAssignedToDriver, updatedTruck);
 		}
 
-		return Result.ok([]);
+		const { driver, ...truck } = updatedTruck.toDto();
+
+		return Result.ok({ driver, truck });
 	}
 
 	async updateTruck(truckDto) {
@@ -71,7 +89,11 @@ module.exports = class Truck {
 			truckEnt
 		);
 
-		return Result.ok(updatedTruck.toDto());
+		if (updatedTruck && truckDto.quantity) {
+			eventEmitter.emit(eventTypes.quantityOfTruckUpdated, updatedTruck);
+		}
+
+		return Result.ok(updatedTruck ? updatedTruck.toDto() : null);
 	}
 
 	async deleteTruck(truckId) {
@@ -79,6 +101,36 @@ module.exports = class Truck {
 
 		const deletedTruck = await truckMapper.deleteTruck(truckId);
 
-		return Result.ok(deletedTruck);
+		if (deletedTruck) {
+			eventEmitter.emit(eventTypes.truckDeleted, deletedTruck);
+		}
+
+		return Result.ok(deletedTruck ? deletedTruck.toDto() : null);
+	}
+
+	async detachDriverFromTruck(driver) {
+		const { truckMapper } = this.mappers;
+
+		await truckMapper.detachDriver(driver);
+
+		return Result.ok(true);
+	}
+
+	async detachDriverFromOtherTrucksButOne(truckEnt) {
+		const { truckMapper } = this.mappers;
+
+		await truckMapper.detachDriverFromOtherTrucksButOne(truckEnt);
+
+		return true;
+	}
+
+	async updateProductPriceOnTruck(newPrice, product, peddlerId) {
+		const { truckMapper } = this.mappers;
+
+		return await truckMapper.updateProductPriceOnTruck(
+			newPrice,
+			product,
+			peddlerId
+		);
 	}
 };
