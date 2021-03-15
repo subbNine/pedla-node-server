@@ -1,6 +1,6 @@
 const { totp } = require("otplib");
 
-const { UserEnt } = require("../entities/domain");
+const { BuyerEnt, PeddlerEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const {
@@ -203,8 +203,11 @@ module.exports = class Auth {
 					})
 				);
 			} else {
-				const userEnt = new UserEnt(userDto);
-				const updatedUser = await userMapper.signup(foundUser.id, userEnt);
+				const userEnt = new PeddlerEnt(userDto);
+				const updatedUser = await userMapper.setPasswordAndUserName(
+					foundUser.id,
+					userEnt
+				);
 
 				const objRepr = updatedUser.toDto();
 				const token = generateJwtToken({ ...objRepr });
@@ -267,7 +270,7 @@ module.exports = class Auth {
 				})
 			);
 		} else {
-			const userEnt = new UserEnt(userDto);
+			const userEnt = new PeddlerEnt(userDto);
 			const newUser = await userMapper.createUser(userEnt);
 
 			eventEmitter.emit(eventTypes.peddlerProfileCreated, newUser);
@@ -326,7 +329,7 @@ module.exports = class Auth {
 				})
 			);
 		} else {
-			const userEnt = new UserEnt(userDto);
+			const userEnt = new BuyerEnt(userDto);
 
 			if (userEnt.isCorporateBuyer()) {
 				userEnt.isActive = false;

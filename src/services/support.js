@@ -66,7 +66,7 @@ module.exports = class Message {
 
 		const totalPages = limit ? Math.ceil(totalReadMessages / +limit) : 1;
 
-		const readMessages = await messageMapper.getReadMessages(user, {
+		const readMessages = await messageMapper.findReadMessages(user, {
 			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
@@ -100,7 +100,7 @@ module.exports = class Message {
 
 		const totalPages = limit ? Math.ceil(totalMessages / +limit) : 1;
 
-		const messages = await messageMapper.getAllMessages(user, {
+		const messages = await messageMapper.findAllMessages(user, {
 			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
 		});
 
@@ -130,7 +130,7 @@ module.exports = class Message {
 		const { pagination } = options || {};
 		const { limit = 30, page } = pagination || {};
 
-		const messages = await messageMapper.getUserMessages(userId, {
+		const messages = await messageMapper.findUserMessages(userId, {
 			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
 		});
 
@@ -152,7 +152,7 @@ module.exports = class Message {
 		const { pagination } = options || {};
 		const { limit = 30, page } = pagination || {};
 
-		const messages = await messageMapper.getLastMessages(user, {
+		const messages = await messageMapper.findLastMessages(user, {
 			pagination: { limit: +limit, page: page ? +page - 1 : 0 },
 		});
 
