@@ -1,5 +1,3 @@
-const { Types } = require("mongoose");
-
 const BaseMapper = require("./base");
 const {
 	TruckEnt,

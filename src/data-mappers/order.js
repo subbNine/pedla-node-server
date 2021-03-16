@@ -1,7 +1,6 @@
 const BaseMapper = require("./base");
 const {
 	OrderEnt,
-	UserEnt,
 	PeddlerProductEnt,
 	ProductEnt,
 	DriverEnt,
@@ -11,7 +10,6 @@ const isType = require("../lib/utils/is-type");
 const {
 	order: { deliveryStatus, orderStatus },
 } = require("../db/mongo/enums");
-const { Types } = require("mongoose");
 const isObjectId = require("../lib/utils/is-object-id");
 
 module.exports = class OrderMapper extends BaseMapper {
