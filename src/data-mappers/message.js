@@ -1,7 +1,23 @@
 const BaseMapper = require("./base");
-const { Message: MessageEnt, UserEnt } = require("../entities/domain");
+const {
+	Message: MessageEnt,
+	UserEnt,
+	DriverEnt,
+	PeddlerEnt,
+	BuyerEnt,
+} = require("../entities/domain");
+const { types } = require("../db/mongo/enums/user");
 
 module.exports = class Message extends BaseMapper {
+	_toEntityTransform = {
+		_id: "id",
+		streetAddress: "address",
+	};
+
+	_toPersistenceTransform = {
+		address: "streetAddress",
+	};
+
 	constructor(models) {
 		super();
 		this.models = models;
