@@ -235,6 +235,24 @@ router.put(
 );
 
 /**
+ * @api {put} /api/user/peddler/driver/:driverId/enable Enable Driver
+ * @apiName postPeddlerDriverEnable
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {ID} driverId id of driver you want to enable
+ *
+ * @apiDescription This endpoint will enable a driver
+ *
+ */
+router.put(
+	"/driver/:driverId/enable",
+	shield(permissions.PERM002),
+	catchAsync(userController.enableDriver)
+);
+
+/**
  * @api {put} /api/user/peddler/driver/:driverId/delete Delete Driver
  * @apiName postPeddlerDriverDelete
  * @apiGroup Driver Management

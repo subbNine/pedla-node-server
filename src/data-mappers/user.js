@@ -12,7 +12,7 @@ const { presence } = require("../db/mongo/enums/user");
 const {
 	user: { types },
 } = require("../db/mongo/enums");
-const { isObjectId } = require("../lib/utils");
+const { isObjectId, isType } = require("../lib/utils");
 
 module.exports = class UserMapper extends BaseMapper {
 	_toEntityTransform = {
@@ -46,6 +46,11 @@ module.exports = class UserMapper extends BaseMapper {
 		const doc = await query;
 		if (doc) {
 			const entObj = doc.toObject();
+
+			if (isType("object", entObj.peddler) && !isObjectId(entObj.peddler)) {
+				entObj.peddler = this.createUserEntity(entObj.peddler);
+			}
+
 			let userEnt = this.createUserEntity(entObj);
 
 			return userEnt;
@@ -384,12 +389,31 @@ module.exports = class UserMapper extends BaseMapper {
 	async disableDriver(driverId) {
 		const { User } = this.models;
 
-		let doc = await User.findOne({ _id: driverId, type: types.DRIVER });
+		const doc = await User.findOneAndUpdate(
+			{
+				_id: driverId,
+				type: types.DRIVER,
+			},
+			{
+				isActive: false,
+				$unset: { truck: "" },
+			},
+			{ new: true }
+		);
 
-		doc.isActive = false;
-		doc.truck = undefined;
+		if (doc) {
+			return this.createUserEntity(doc.toObject());
+		}
+	}
 
-		doc = await doc.save();
+	async enableDriver(driverId) {
+		const { User } = this.models;
+
+		const doc = await User.findOneAndUpdate(
+			{ _id: driverId, type: types.DRIVER },
+			{ isActive: true },
+			{ new: true }
+		);
 
 		if (doc) {
 			return this.createUserEntity(doc.toObject());

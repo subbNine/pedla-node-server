@@ -356,6 +356,14 @@ module.exports = class User extends BaseController {
 		this.response(result, res);
 	}
 
+	async enableDriver(req, res, next) {
+		const { driverId } = req.params;
+
+		const result = await userService.enableDriver(driverId);
+
+		this.response(result, res);
+	}
+
 	async deleteDriver(req, res, next) {
 		const { driverId } = req.params;
 

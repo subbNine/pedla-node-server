@@ -396,10 +396,22 @@ module.exports = class User {
 		return Result.ok();
 	}
 
+	async enableDriver(driverId) {
+		const { userMapper } = this.mappers;
+
+		const disabledDriver = await userMapper.enableDriver(driverId);
+
+		if (disabledDriver) {
+			return Result.ok(disabledDriver.toDto());
+		}
+
+		return Result.ok();
+	}
+
 	async deleteDriver(driverId) {
 		const { userMapper } = this.mappers;
 
-		const deletedDriver = userMapper.deleteDriver(driverId);
+		const deletedDriver = await userMapper.deleteDriver(driverId);
 
 		if (deletedDriver) {
 			eventEmitter.emit(eventTypes.driverDeleted, deletedDriver);
