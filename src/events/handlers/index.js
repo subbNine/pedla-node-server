@@ -8,7 +8,7 @@ const sendPushNotification = require("./send-notification");
 const paymentInitialized = require("./payment-initialized");
 const sendPasswordResetCode = require("./send-password-reset-code");
 const handleTruckDeleted = require("./handle-truck-deleted");
-const handleDriverDeletd = require("./handle-driver-deleted");
+const detachDriverFromTruck = require("./detach-driver-from-truck");
 const handleOrderRated = require("./handle-order-rated");
 const returnOrderedQuantityToTruck = require("./return-ordered-quantity-to-truck");
 const subtractOrderedQuantityFromTruck = require("./subtract-ordered-quantity-from-truck");
@@ -29,7 +29,7 @@ module.exports = {
 	paymentInitialized,
 	sendPasswordResetCode,
 	handleTruckDeleted,
-	handleDriverDeletd,
+	detachDriverFromTruck,
 	handleOrderRated,
 	returnOrderedQuantityToTruck,
 	subtractOrderedQuantityFromTruck,

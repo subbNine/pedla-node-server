@@ -11,7 +11,6 @@ const {
 	sendPushNotification,
 	paymentInitialized,
 	sendPasswordResetCode,
-	handleDriverDeletd,
 	handleOrderRated,
 	handleTruckDeleted,
 	returnOrderedQuantityToTruck,
@@ -21,6 +20,7 @@ const {
 	updateProductPriceOnTruck,
 	updateProductQuantityOnTruckAttachedToDriver,
 	enforceOneDriverToOneTruck,
+	detachDriverFromTruck,
 } = require("./handlers");
 
 const eventEmitter = new EventEmitter();
@@ -37,7 +37,8 @@ eventEmitter.on(eventTypes.buyerCreated, createAndSendOtp);
 eventEmitter.on(eventTypes.driverCreated, sendDriverInfo);
 eventEmitter.on(eventTypes.paymentInitialized, paymentInitialized);
 eventEmitter.on(eventTypes.sendPasswordResetCode, sendPasswordResetCode);
-eventEmitter.on(eventTypes.driverDeleted, handleDriverDeletd);
+eventEmitter.on(eventTypes.driverDeleted, detachDriverFromTruck);
+eventEmitter.on(eventTypes.driverDisabled, detachDriverFromTruck);
 eventEmitter.on(eventTypes.orderRated, handleOrderRated);
 eventEmitter.on(eventTypes.truckDeleted, handleTruckDeleted);
 eventEmitter.on(eventTypes.orderAccepted, subtractOrderedQuantityFromTruck);

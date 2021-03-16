@@ -1,6 +1,6 @@
 const { error } = require("../../errors");
 
-module.exports = function handleDriverDeleted(driver) {
+module.exports = function detachDriverFromTruck(driver) {
 	const services = require("../../services");
 
 	const truckService = services.truck;
