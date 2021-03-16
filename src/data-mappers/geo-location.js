@@ -1,7 +1,23 @@
 const BaseMapper = require("./base");
-const { GeoEnt, UserEnt } = require("../entities/domain");
+const {
+	GeoEnt,
+	UserEnt,
+	DriverEnt,
+	BuyerEnt,
+	PeddlerEnt,
+} = require("../entities/domain");
+const { types } = require("../db/mongo/enums/user");
 
 module.exports = class GeoMapper extends BaseMapper {
+	_toEntityTransform = {
+		_id: "id",
+		streetAddress: "address",
+	};
+
+	_toPersistenceTransform = {
+		address: "streetAddress",
+	};
+
 	constructor(models) {
 		super();
 		this.models = models;
