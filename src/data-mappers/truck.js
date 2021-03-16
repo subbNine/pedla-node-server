@@ -17,6 +17,7 @@ module.exports = class TruckMapper extends BaseMapper {
 		const { Truck } = this.models;
 
 		const q = Truck.find(filter)
+			.populate("driverId")
 			.populate("ownerId")
 			.populate({ path: "productId" });
 
@@ -36,6 +37,7 @@ module.exports = class TruckMapper extends BaseMapper {
 	async findTruck(filter) {
 		const { Truck } = this.models;
 		const q = Truck.findOne(this.toTruckPersistence(filter))
+			.populate("driverId")
 			.populate("ownerId")
 			.populate({ path: "productId" });
 
