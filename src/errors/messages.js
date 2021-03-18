@@ -36,5 +36,5 @@ module.exports = {
 	invalidQuantity:
 		"The value passed in as quantity is not valid. Must be greater than 0",
 	quantityOrderedGreaterThanAvailable:
-		"The quantity your ordered is greater than the quantity the driver has available",
+		"The quantity you ordered is greater than the quantity the driver has available",
 };
