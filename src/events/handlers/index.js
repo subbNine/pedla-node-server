@@ -17,6 +17,7 @@ const attachTruckToDriver = require("./attach-truck-to-driver");
 const updateProductPriceOnTruck = require("./update-price-of-product-on-truck");
 const updateProductQuantityOnTruckAttachedToDriver = require("./update-quantity-on-truck-attached-to-driver");
 const enforceOneDriverToOneTruck = require("./enforce-one-driver-to-one-truck");
+const attachTruckToOrder = require("./attach-truck-to-order")
 
 module.exports = {
 	createAndSendOtp,
@@ -38,4 +39,5 @@ module.exports = {
 	updateProductPriceOnTruck,
 	enforceOneDriverToOneTruck,
 	updateProductQuantityOnTruckAttachedToDriver,
+	attachTruckToOrder
 };
