@@ -417,6 +417,20 @@ router.get(
 	catchAsync(truckAndDriverController.getPeddlerTruckDrivers)
 );
 
+/**
+ * @api {get} /api/user/peddler/online-drivers Retrieve Online drivers
+ * @apiName getPeddlerOnlineDrivers
+ * @apiGroup Peddler - Drivers
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Retreives all online drivers of a peddler
+ */
+router.get(
+	"/online-drivers",
+	catchAsync(userController.getPeddlerOnlineDrivers)
+);
+
 router.get(
 	"/nearest-drivers",
 	validateQuery(validationSchemas.latlon),

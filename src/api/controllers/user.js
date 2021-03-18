@@ -371,4 +371,12 @@ module.exports = class User extends BaseController {
 
 		this.response(result, res);
 	}
+
+	async getPeddlerOnlineDrivers(req, res, next) {
+		const { user: peddler } = req._App;
+
+		const result = await userService.getPeddlerOnlineDrivers(peddler);
+
+		return this.response(result, res);
+	}
 };

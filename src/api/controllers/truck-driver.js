@@ -1,9 +1,6 @@
 const BaseController = require("./base");
-const { TruckAndDriverDto, UserDto } = require("../../entities/dtos");
-const {
-	truckAndDriver: truckAndDriverService,
-	truck: truckServices,
-} = require("../../services");
+const { UserDto } = require("../../entities/dtos");
+const { truck: truckServices } = require("../../services");
 
 module.exports = class Truck extends BaseController {
 	constructor() {

@@ -94,11 +94,45 @@ module.exports = class UserMapper extends BaseMapper {
 		return supportAgents;
 	}
 
+	async findPeddlerOnlineDrivers(peddler) {
+		const { User } = this.models;
+		const query = User.find({
+			$and: [
+				{ peddler: peddler.id },
+				{
+					presence: presence.ONLINE,
+				},
+				{
+					truck: { $exists: true },
+				},
+				{ "truck.truckId": { $exists: true } },
+			],
+		});
+
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
+
+		const docs = await query;
+
+		const results = [];
+		if (docs) {
+			for (const doc of docs) {
+				const obj = doc.toObject();
+				const userEnt = this.createUserEntity(obj);
+
+				results.push(userEnt);
+			}
+
+			return results;
+		}
+	}
+
 	async findUsers(filter, options) {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));
 
-		const { pagination, populate, all } = options || {};
+		const { pagination, populate } = options || {};
 
 		const { limit = 0, page = 0 } = pagination || {};
 

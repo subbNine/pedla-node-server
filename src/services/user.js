@@ -511,4 +511,16 @@ module.exports = class User {
 			peddlerId
 		);
 	}
+
+	async getPeddlerOnlineDrivers(peddler) {
+		const { userMapper } = this.mappers;
+
+		const drivers = await userMapper.findPeddlerOnlineDrivers(peddler);
+
+		if (drivers) {
+			return Result.ok(drivers.map((eachUser) => eachUser.toDto()));
+		} else {
+			return Result.ok([]);
+		}
+	}
 };
