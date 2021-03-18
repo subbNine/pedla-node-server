@@ -1,10 +1,10 @@
 const BaseMapper = require("./base");
 const {
 	OrderEnt,
-	PeddlerProductEnt,
 	ProductEnt,
 	DriverEnt,
 	BuyerEnt,
+	TruckEnt,
 } = require("../entities/domain");
 const isType = require("../lib/utils/is-type");
 const {
@@ -22,9 +22,10 @@ module.exports = class OrderMapper extends BaseMapper {
 		const { Order } = this.models;
 		const query = Order.find(filter)
 			.sort({ createdAt: -1, status: -1 })
-			.populate({ path: "productId", populate: { path: "productId" } })
+			.populate({ path: "productId" })
 			.populate("driverId")
-			.populate("buyerId");
+			.populate("buyerId")
+			.populate("truckId");
 
 		const { pagination } = options || {};
 
@@ -42,9 +43,6 @@ module.exports = class OrderMapper extends BaseMapper {
 		if (docs) {
 			for (const doc of docs) {
 				const orderEnt = this.createOrderEntity(doc.toObject());
-				orderEnt.driver.driverStats = await this.driverOrderStats(
-					orderEnt.driver.id
-				);
 				results.push(orderEnt);
 			}
 
@@ -114,15 +112,13 @@ module.exports = class OrderMapper extends BaseMapper {
 		}
 
 		const doc = await Order.findOne(this.toOrderPersistence(search))
-			.populate({ path: "productId", populate: { path: "productId" } })
+			.populate({ path: "productId" })
 			.populate("driverId")
-			.populate("buyerId");
+			.populate("buyerId")
+			.populate("truckId");
 
 		if (doc) {
 			const orderEnt = this.createOrderEntity(doc.toObject());
-			orderEnt.driver.driverStats = await this.driverOrderStats(
-				orderEnt.driver.id
-			);
 
 			return orderEnt;
 		}
@@ -178,7 +174,8 @@ module.exports = class OrderMapper extends BaseMapper {
 		if (doc) {
 			let driverEnt;
 			let buyerEnt;
-			let peddlerProductEnt;
+			let productEnt;
+			let truckEnt;
 			if (isType("object", doc.driverId) && !isObjectId(doc.driverId)) {
 				driverEnt = this._toEntity(doc.driverId, DriverEnt, {
 					_id: "id",
@@ -206,32 +203,33 @@ module.exports = class OrderMapper extends BaseMapper {
 			if (isType("object", doc.productId) && !isObjectId(doc.productId)) {
 				const entObj = doc.productId;
 
-				peddlerProductEnt = this._toEntity(entObj, PeddlerProductEnt, {
+				productEnt = this._toEntity(entObj, ProductEnt, {
 					_id: "id",
 				});
-
-				if (isType("object", entObj.productId)) {
-					const productEnt = this._toEntity(entObj.productId, ProductEnt, {
-						_id: "id",
-					});
-
-					peddlerProductEnt.product = productEnt;
-				}
 			} else {
-				peddlerProductEnt = this._toEntity(
-					{ id: doc.productId },
-					PeddlerProductEnt,
-					{
-						_id: "id",
-					}
-				);
+				productEnt = this._toEntity({ id: doc.productId }, ProductEnt, {
+					_id: "id",
+				});
+			}
+
+			if (isType("object", doc.truckId) && !isObjectId(doc.truckId)) {
+				const entObj = doc.truckId;
+
+				truckEnt = this._toEntity(entObj, TruckEnt, {
+					_id: "id",
+				});
+			} else {
+				truckEnt = this._toEntity({ id: doc.truckId }, TruckEnt, {
+					_id: "id",
+				});
 			}
 
 			const entObj = {
 				...doc,
 				driver: driverEnt,
 				buyer: buyerEnt,
-				product: peddlerProductEnt,
+				product: productEnt,
+				truck: truckEnt,
 			};
 
 			const orderEnt = this._toEntity(entObj, OrderEnt, {
