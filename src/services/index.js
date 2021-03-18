@@ -6,7 +6,6 @@ const User = require("./user");
 const Product = require("./product");
 const PeddlerProduct = require("./peddler-product");
 const Notification = require("./notification");
-const Order = require("./order");
 const GeoLocation = require("./geo-location");
 const Truck = require("./truck");
 const OrderService = require("./order");
@@ -23,7 +22,6 @@ module.exports = {
 	product: new Product({ mappers }),
 	peddlerProduct: new PeddlerProduct({ mappers }),
 	notification: new Notification({ mappers }),
-	order: new Order({ mappers }),
 	geoLocation: new GeoLocation({ mappers }),
 	truck: new Truck({ mappers }),
 	orderService: new OrderService({ mappers }),
