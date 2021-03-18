@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 let schema = new Schema({
 	driverId: { type: Schema.Types.ObjectId, ref: "User" },
 	buyerId: { type: Schema.Types.ObjectId, ref: "User" },
-	productId: { type: Schema.Types.ObjectId, ref: "PeddlersProduct" },
+	productId: { type: Schema.Types.ObjectId, ref: "Product" },
 	quantity: Number,
 	unitAmount: Number,
 	rating: Number,
