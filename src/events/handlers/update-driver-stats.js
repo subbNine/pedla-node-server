@@ -5,5 +5,5 @@ module.exports = function updateDriverStats(order, stats) {
 
 	const userService = services.user;
 
-	userService.updateDriverOrderStats(order, stats).catch((err) => error(err));
+	userService.updateDriverOrderStats(order.driver, stats).catch((err) => error(err));
 };

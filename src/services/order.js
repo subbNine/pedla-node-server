@@ -351,7 +351,7 @@ module.exports = class Order {
 				if (order.quantity > truckQuantity) {
 					return Result.fail(
 						new AppError({
-							name: errorCodes.InvalidOrderError,
+							name: errorCodes.InvalidOrderError.name,
 							statusCode: errorCodes.InvalidOrderError.statusCode,
 							message: errMessages.quantityOrderedGreaterThanAvailable,
 						})
@@ -360,13 +360,14 @@ module.exports = class Order {
 			} else {
 				return Result.fail(
 					new AppError({
-						name: errorCodes.InvalidOrderError,
+						name: errorCodes.InvalidOrderError.name,
 						statusCode: errorCodes.InvalidOrderError.statusCode,
 						message: errMessages.invalidQuantity,
 					})
 				);
 			}
 		}
+		return Result.ok(true);
 	}
 
 	async createOrder(order) {
@@ -386,11 +387,18 @@ module.exports = class Order {
 	}
 
 	async placeOrder(order) {
-		await this.validateOrder(order);
+		const vaidatedOrder = await this.validateOrder(order);
 
-		const newOrder = await createOrder(order);
+		if (vaidatedOrder.isFailure) {
+			return vaidatedOrder;
+		}
 
-		return newOrder;
+		const newOrder = await this.createOrder(order);
+
+		if (newOrder) {
+			return Result.ok(newOrder);
+		}
+		return Result.ok(null);
 	}
 
 	async _isOrderInProgress(driverId) {
@@ -598,7 +606,7 @@ module.exports = class Order {
 
 			orderMapper
 				.updateOrderById(order.id, { truckId: truck.truckId })
-				.then((updatedOrder) => updatedOrder);
+				.catch((err) => error(err));
 		});
 	}
 };
