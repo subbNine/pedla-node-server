@@ -69,16 +69,35 @@ module.exports = class Order extends BaseController {
 			: Object.values(orderStatus);
 
 		if (!user.isAdmin()) {
-			const result = await orderService.findOrders(orderDto);
+			const result = await orderService.getOrders(orderDto);
 
 			this.response(result, res);
 		} else {
-			const result = await orderService.findOrdersPaginated(orderDto, {
+			const result = await orderService.getOrdersPaginated(orderDto, {
 				pagination: { limit, page },
 			});
 
 			this.response(result, res);
 		}
+	}
+
+	async getDriverOrders(req, res, next) {
+		const { status, limit, page } = req.query;
+		const { driverId } = req.params;
+
+		const orderDto = new OrderDto();
+		orderDto.driver.id = driverId;
+		orderDto.status = status
+			? status
+					.split(/,|\s+|\+/)
+					.map((status) => ("" + status).toUpperCase().trim())
+			: Object.values(orderStatus);
+
+		const result = await orderService.getDriverOrders(orderDto, {
+			pagination: { limit, page },
+		});
+
+		this.response(result, res);
 	}
 
 	async getPeddlerOrders(req, res, next) {
@@ -94,7 +113,7 @@ module.exports = class Order extends BaseController {
 					.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
-		const result = await orderService.findPeddlerOrders(user, orderDto, {
+		const result = await orderService.getPeddlerOrders(user, orderDto, {
 			pagination: { limit, page },
 		});
 

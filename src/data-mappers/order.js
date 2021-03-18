@@ -40,7 +40,7 @@ module.exports = class OrderMapper extends BaseMapper {
 		const docs = await query;
 
 		const results = [];
-		if (docs) {
+		if (docs && docs.length) {
 			for (const doc of docs) {
 				const orderEnt = this.createOrderEntity(doc.toObject());
 				results.push(orderEnt);
@@ -93,6 +93,24 @@ module.exports = class OrderMapper extends BaseMapper {
 	async _countDocs(filter) {
 		const { Order } = this.models;
 		return await Order.countDocuments(filter);
+	}
+
+	async countDriverOrders(order) {
+		const $and = [
+			{ driverId: order.driver.id },
+			{ status: { $in: order.status } },
+		];
+
+		return await this._countDocs({ $and });
+	}
+
+	async findDriverOrders(order, options) {
+		const $and = [
+			{ driverId: order.driver.id },
+			{ status: { $in: order.status } },
+		];
+
+		return await this.findOrders({ $and }, options);
 	}
 
 	async findOrder(filter) {

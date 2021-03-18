@@ -70,7 +70,7 @@ module.exports = class Order {
 		}
 	}
 
-	async findOrders(orderFilterDto) {
+	async getOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
 		const $and = [];
@@ -122,7 +122,41 @@ module.exports = class Order {
 		}
 	}
 
-	async findOrdersPaginated(orderFilterDto, options) {
+	async getDriverOrders(order, options) {
+		const { orderMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const totalDocs = await orderMapper.countDriverOrders(order);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundOrders = await orderMapper.findDriverOrders(order, {
+			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
+		});
+
+		if (foundOrders && foundOrders.length) {
+			const results = [];
+
+			for (const eachOrder of foundOrders) {
+				await Promise.all([
+					this._loadPeddlerInfo(eachOrder),
+					this._loadPayment(eachOrder),
+				]);
+				results.push(eachOrder.toDto());
+			}
+
+			return Result.ok({
+				data: results,
+				pagination: { totalPages, currentPage: +page || 1, totalDocs },
+			});
+		} else {
+			return Result.ok([]);
+		}
+	}
+
+	async getOrdersPaginated(orderFilterDto, options) {
 		const { orderMapper } = this.mappers;
 
 		const { pagination } = options || {};
@@ -168,7 +202,7 @@ module.exports = class Order {
 			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
-		if (foundOrders) {
+		if (foundOrders && foundOrders.length) {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
@@ -184,20 +218,17 @@ module.exports = class Order {
 				pagination: { totalPages, currentPage: +page || 1, totalDocs },
 			});
 		} else {
-			return Result.ok(null);
+			return Result.ok([]);
 		}
 	}
 
-	async findPeddlerOrders(peddler, orderFilter, options) {
+	async getPeddlerOrders(peddler, orderFilter, options) {
 		const { orderMapper, userMapper } = this.mappers;
 
 		const { pagination } = options || {};
 		const { limit, page } = pagination || {};
 
-		const ownDrivers = await userMapper.findUsers(
-			{ peddler: peddler.id },
-			{ all: true }
-		);
+		const ownDrivers = await userMapper.findUsers({ peddler: peddler.id });
 
 		let ownDriversId;
 
@@ -226,7 +257,7 @@ module.exports = class Order {
 				pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 			});
 
-			if (foundOrders) {
+			if (foundOrders && foundOrders.length) {
 				const results = [];
 
 				for (const eachOrder of foundOrders) {
@@ -243,7 +274,7 @@ module.exports = class Order {
 				});
 			}
 		}
-		return Result.ok(null);
+		return Result.ok([]);
 	}
 
 	async recentOrdersPaginated(orderFilterDto, options) {
@@ -274,7 +305,7 @@ module.exports = class Order {
 			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
-		if (foundOrders) {
+		if (foundOrders && foundOrders.length) {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
@@ -290,7 +321,7 @@ module.exports = class Order {
 				pagination: { totalPages, currentPage: page || 1, totalDocs },
 			});
 		} else {
-			return Result.ok(null);
+			return Result.ok([]);
 		}
 	}
 
