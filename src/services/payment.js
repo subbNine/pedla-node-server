@@ -14,9 +14,9 @@ module.exports = class Payment {
 	}
 
 	async _initPaystackPayment(order) {
-		const { peddlerProductMapper, userMapper } = this.mappers;
+		const { productMapper, userMapper } = this.mappers;
 
-		const peddlerProductId = order.product.id;
+		const productId = order.product.id;
 		const buyerId = order.buyer.id;
 		const driverId = order.driver.id;
 
@@ -26,17 +26,17 @@ module.exports = class Payment {
 
 		const buyerPromise = userMapper.findUser({ _id: buyerId });
 
-		const peddlerProductPromise = peddlerProductMapper.findProduct({
-			_id: peddlerProductId,
+		const productPromise = productMapper.findProduct({
+			_id: productId,
 		});
 
-		const [driver, buyer, peddlerProduct] = await Promise.all([
+		const [driver, buyer, product] = await Promise.all([
 			driverPromise,
 			buyerPromise,
-			peddlerProductPromise,
+			productPromise,
 		]);
 
-		const productType = peddlerProduct.product.name;
+		const productType = product.name;
 		const driverPhone = driver.phoneNumber;
 		const buyerEmail = buyer.email;
 		const buyerPhone = buyer.phoneNumber;
