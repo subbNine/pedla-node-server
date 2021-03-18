@@ -21,6 +21,7 @@ const {
 	updateProductQuantityOnTruckAttachedToDriver,
 	enforceOneDriverToOneTruck,
 	detachDriverFromTruck,
+	attachTruckToOrder,
 } = require("./handlers");
 
 const eventEmitter = new EventEmitter();
@@ -44,6 +45,7 @@ eventEmitter.on(eventTypes.truckDeleted, handleTruckDeleted);
 eventEmitter.on(eventTypes.orderAccepted, subtractOrderedQuantityFromTruck);
 eventEmitter.on(eventTypes.orderRejected, returnOrderedQuantityToTruck);
 eventEmitter.on(eventTypes.orderCreated, updateDriverStats);
+eventEmitter.on(eventTypes.orderCreated, attachTruckToOrder);
 eventEmitter.on(eventTypes.orderRejected, updateDriverStats);
 eventEmitter.on(eventTypes.orderCompleted, updateDriverStats);
 eventEmitter.on(eventTypes.truckAssignedToDriver, attachTruckToDriver);
