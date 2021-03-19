@@ -2080,6 +2080,30 @@
     "groupTitle": "Driver_Management"
   },
   {
+    "type": "put",
+    "url": "/api/user/peddler/driver/:driverId/enable",
+    "title": "Enable Driver",
+    "name": "postPeddlerDriverEnable",
+    "group": "Driver_Management",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "driverId",
+            "description": "<p>id of driver you want to enable</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>This endpoint will enable a driver</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Driver_Management"
+  },
+  {
     "type": "post",
     "url": "/api/user/peddler/driver/:driverId",
     "title": "Update truck Driver",
@@ -2451,6 +2475,17 @@
   },
   {
     "type": "get",
+    "url": "/api/user/peddler/online-drivers",
+    "title": "Retrieve Online drivers",
+    "name": "getPeddlerOnlineDrivers",
+    "group": "Peddler_-_Drivers",
+    "version": "1.0.0",
+    "description": "<p>Retreives all online drivers of a peddler</p>",
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_-_Drivers"
+  },
+  {
+    "type": "get",
     "url": "/api/user/peddler/orders?status=pending+accepted&limit=30&page=1",
     "title": "Retrieve orders",
     "name": "getPeddlerOrders",
@@ -2486,6 +2521,44 @@
     },
     "filename": "src/api/routes/user/peddler.js",
     "groupTitle": "Peddler_-_Order"
+  },
+  {
+    "type": "get",
+    "url": "/api/user/peddler/orders/:driverId?status=pending+accepted&limit=30&page=1",
+    "title": "Retrieve orders of specific driver",
+    "name": "getPeddlerDriverOrders",
+    "group": "Peddler_-_Orders",
+    "version": "1.0.0",
+    "description": "<p>Return orders based on status (pending|accepted|completed|cancelled|inprogress) passed in the status query params. To return results with more than one status, seperate the status passed in the query with a plus (+) symbol</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>order status. multiple order status should be seperated with a &quot;+&quot; symbol</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>page number (query param)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>page limit (query Param)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/routes/user/peddler.js",
+    "groupTitle": "Peddler_-_Orders"
   },
   {
     "type": "get",
@@ -3067,7 +3140,7 @@
             "group": "Parameter",
             "type": "ID",
             "optional": false,
-            "field": "product",
+            "field": "productId",
             "description": "<p>type of product loaded on the truck</p>"
           },
           {
