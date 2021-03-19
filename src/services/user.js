@@ -263,7 +263,7 @@ module.exports = class User {
 		}
 	}
 
-	async findDrivers(driverDto) {
+	async getDrivers(driverDto) {
 		const { userMapper } = this.mappers;
 
 		const foundUsers = await userMapper.findUsers(new DriverEnt(driverDto));
