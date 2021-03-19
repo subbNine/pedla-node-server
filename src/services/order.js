@@ -375,32 +375,16 @@ module.exports = class Order {
 			driverId: order.driver.id,
 		});
 
-		const truckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
-			driverId: driver.id,
-		});
+		if (truck) {
+			const truckQuantity = +truck.quantity;
 
-		if (truckAndDriver) {
-			const truck = truckAndDriver.truck;
-
-			if (truck) {
-				const truckQuantity = +truck.quantity;
-
-				if (order.quantity) {
-					if (order.quantity > truckQuantity) {
-						return Result.fail(
-							new AppError({
-								name: errorCodes.InvalidOrderError,
-								statusCode: errorCodes.InvalidOrderError.statusCode,
-								message: errMessages.quantityOrderedGreaterThanAvailable,
-							})
-						);
-					}
-				} else {
+			if (order.quantity) {
+				if (order.quantity > truckQuantity) {
 					return Result.fail(
 						new AppError({
 							name: errorCodes.InvalidOrderError.name,
 							statusCode: errorCodes.InvalidOrderError.statusCode,
-							message: errMessages.invalidQuantity,
+							message: errMessages.quantityOrderedGreaterThanAvailable,
 						})
 					);
 				}
@@ -421,7 +405,7 @@ module.exports = class Order {
 		const { orderMapper } = this.mappers;
 		const payment = new Payment({ mappers: this.mappers });
 
-		const [newOrder, _] = await Promise.all([newOrderPromise, orderIncPromise]);
+		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 
 		eventEmitter.emit(eventTypes.orderCreated, newOrder, { nOrders: 1 });
 
