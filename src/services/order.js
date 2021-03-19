@@ -249,7 +249,7 @@ module.exports = class Order {
 				search.$and = $and;
 			}
 
-			const totalDocs = await orderMapper.countDocs(search);
+			const totalDocs = await orderMapper.countDocsBy(search);
 
 			const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
 
