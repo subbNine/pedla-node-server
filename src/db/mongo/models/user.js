@@ -65,20 +65,22 @@ let schema = new Schema({
 	products: [
 		{
 			productId: { type: Schema.Types.ObjectId, ref: "Product" },
-			productName: String,
 			residentialAmt: Number,
 			commercialAmt: Number,
 			commercialOnCrAmt: Number,
-			createdAt: { type: Date, default: Date.now },
 			quantity: Number,
 		},
 	],
 	truck: {
 		truckId: { type: Schema.Types.ObjectId, ref: "Truck" },
 		productId: { type: Schema.Types.ObjectId, ref: "Product" },
-		productName: String,
-		amount: Number,
+		productPrice: {
+			residentialAmt: Number,
+			commercialAmt: Number,
+			commercialOnCrAmt: Number,
+		},
 		quantity: Number,
+		isDeleted: Boolean
 	},
 });
 

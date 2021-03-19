@@ -37,7 +37,7 @@ module.exports = class User extends BaseController {
 		userDto.type = userTypes.BUYER;
 		userDto.id = user.id;
 
-		const result = await userService.updateUser(userDto);
+		const result = await userService.updateBuyer(userDto);
 
 		return this.response(result, res);
 	}
@@ -108,7 +108,7 @@ module.exports = class User extends BaseController {
 		return this.response(result, res);
 	}
 
-	async checkUserExistence(req, res, next) {
+	async userExists(req, res, next) {
 		const userDto = new UserDto();
 
 		const { email, userName } = req.query;
@@ -116,7 +116,7 @@ module.exports = class User extends BaseController {
 		userDto.email = email;
 		userDto.userName = userName;
 
-		const result = await userService.checkUserExistence(userDto);
+		const result = await userService.userExists(userDto);
 
 		return this.response(result, res);
 	}
@@ -284,7 +284,7 @@ module.exports = class User extends BaseController {
 
 		userDto.peddler = peddlerId || user.id;
 
-		const result = await userService.findDrivers(userDto);
+		const result = await userService.getDrivers(userDto);
 
 		this.response(result, res);
 	}
@@ -356,11 +356,27 @@ module.exports = class User extends BaseController {
 		this.response(result, res);
 	}
 
+	async enableDriver(req, res, next) {
+		const { driverId } = req.params;
+
+		const result = await userService.enableDriver(driverId);
+
+		this.response(result, res);
+	}
+
 	async deleteDriver(req, res, next) {
 		const { driverId } = req.params;
 
 		const result = await userService.deleteDriver(driverId);
 
 		this.response(result, res);
+	}
+
+	async getPeddlerOnlineDrivers(req, res, next) {
+		const { user: peddler } = req._App;
+
+		const result = await userService.getPeddlerOnlineDrivers(peddler);
+
+		return this.response(result, res);
 	}
 };

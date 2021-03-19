@@ -25,9 +25,6 @@ module.exports = {
 	invalidCode: "You have entered a wrong code",
 	invalidOrderState: "You cannot have more than one order in progress",
 	unverifiedProfile: "Profile not yet verified",
-	messageHelpers: {
-		replacement,
-	},
 	notAcceptableOrder:
 		"The order cannot be completed as the driver has a pending order",
 	wrongTokens: "incorrect or expired code",
@@ -39,16 +36,5 @@ module.exports = {
 	invalidQuantity:
 		"The value passed in as quantity is not valid. Must be greater than 0",
 	quantityOrderedGreaterThanAvailable:
-		"The quantity your ordered is greater than the quantity the driver has available",
+		"The quantity you ordered is greater than the quantity the driver has available",
 };
-
-function replacement(subjectArg, subjectNameArg) {
-	const subject = "%subject%";
-	const subjectName = "%subjectName%";
-	return (match) =>
-		match === subject
-			? subjectArg
-			: match === subjectName
-			? subjectNameArg
-			: "";
-}

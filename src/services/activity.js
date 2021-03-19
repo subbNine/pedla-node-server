@@ -15,7 +15,7 @@ module.exports = class Activity {
 	setInactiveUsersOffline() {
 		const { activityMapper } = this.mappers;
 
-		activityMapper.setInactiveUsersOffline(INACTIVE_TTL);
+		return activityMapper.setInactiveUsersOffline(INACTIVE_TTL);
 	}
 
 	async getUserPresence(user) {

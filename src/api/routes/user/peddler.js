@@ -171,6 +171,7 @@ router.post(
  */
 router.post(
 	"/driver",
+	shield(permissions.PERM002),
 	fileUpload.single("avatarImg"),
 	validateBody(validationSchemas.postDriver),
 	catchAsync(userController.createDriver)
@@ -186,7 +187,11 @@ router.post(
  * @apiDescription This endpoint will enable peddlers to fetch all their Drivers
  *
  */
-router.get("/drivers", catchAsync(userController.getDrivers));
+router.get(
+	"/drivers",
+	shield(permissions.PERM002),
+	catchAsync(userController.getDrivers)
+);
 
 /**
  * @api {post} /api/user/peddler/driver/:driverId Update truck Driver
@@ -206,6 +211,7 @@ router.get("/drivers", catchAsync(userController.getDrivers));
  */
 router.post(
 	"/driver/:driverId",
+	shield(permissions.PERM002),
 	fileUpload.single("avatarImg"),
 	catchAsync(userController.updateDriver)
 );
@@ -224,7 +230,26 @@ router.post(
  */
 router.put(
 	"/driver/:driverId/disable",
+	shield(permissions.PERM002),
 	catchAsync(userController.disableDriver)
+);
+
+/**
+ * @api {put} /api/user/peddler/driver/:driverId/enable Enable Driver
+ * @apiName postPeddlerDriverEnable
+ * @apiGroup Driver Management
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {ID} driverId id of driver you want to enable
+ *
+ * @apiDescription This endpoint will enable a driver
+ *
+ */
+router.put(
+	"/driver/:driverId/enable",
+	shield(permissions.PERM002),
+	catchAsync(userController.enableDriver)
 );
 
 /**
@@ -239,7 +264,11 @@ router.put(
  * @apiDescription This endpoint will delete a driver
  *
  */
-router.put("/driver/:driverId/delete", catchAsync(userController.deleteDriver));
+router.put(
+	"/driver/:driverId/delete",
+	shield(permissions.PERM002),
+	catchAsync(userController.deleteDriver)
+);
 
 /**
  * @api {post} /api/user/peddler/truck Create truck
@@ -252,7 +281,7 @@ router.put("/driver/:driverId/delete", catchAsync(userController.deleteDriver));
  *
  * @apiParam {String} model truck model number
  * @apiParam {String} brand truck Brand
- * @apiParam {ID} product type of product loaded on the truck
+ * @apiParam {ID} productId type of product loaded on the truck
  * @apiParam {Number} size size of truck in litres
  * @apiParam {Number} quantity the quantity of petroleum product that the truck carries
  * @apiParam {File} license truck liscence
@@ -348,6 +377,7 @@ router.put(
  */
 router.post(
 	"/truck-driver",
+	shield(permissions.PERM002),
 	validateBody(validationSchemas.postTruckAndDriver),
 	catchAsync(truckAndDriverController.assignTruckToDriver)
 );
@@ -368,7 +398,8 @@ router.post(
  */
 router.post(
 	"/truck-driver/:truckDriverId",
-	catchAsync(truckAndDriverController.updateTruckAndDriver)
+	shield(permissions.PERM002),
+	catchAsync(truckAndDriverController.updateTruckDriver)
 );
 
 /**
@@ -383,13 +414,27 @@ router.post(
  */
 router.get(
 	"/trucks-drivers",
-	catchAsync(truckAndDriverController.getTruckAndDrivers)
+	catchAsync(truckAndDriverController.getPeddlerTruckDrivers)
+);
+
+/**
+ * @api {get} /api/user/peddler/online-drivers Retrieve Online drivers
+ * @apiName getPeddlerOnlineDrivers
+ * @apiGroup Peddler - Drivers
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Retreives all online drivers of a peddler
+ */
+router.get(
+	"/online-drivers",
+	catchAsync(userController.getPeddlerOnlineDrivers)
 );
 
 router.get(
 	"/nearest-drivers",
 	validateQuery(validationSchemas.latlon),
-	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+	catchAsync(geoLocationController.getNearestOnlineDrivers)
 );
 
 router.post(
@@ -442,6 +487,26 @@ router.get(
 	shield(permissions.PERM002),
 	validateQuery(validationSchemas.getOrders),
 	catchAsync(orderController.getPeddlerOrders)
+);
+
+/**
+ * @api {get} /api/user/peddler/orders/:driverId?status=pending+accepted&limit=30&page=1 Retrieve orders of specific driver
+ * @apiName getPeddlerDriverOrders
+ * @apiGroup Peddler - Orders
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Return orders based on status (pending|accepted|completed|cancelled|inprogress) passed in the status query params.
+ * To return results with more than one status, seperate the status passed in the query with a plus (+) symbol
+ * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
+ * @apiParam {Number} [page] page number (query param)
+ * @apiParam {Number} [limit] page limit (query Param)
+ */
+router.get(
+	"/orders/:driverId",
+	shield(permissions.PERM002),
+	validateQuery(validationSchemas.getOrders),
+	catchAsync(orderController.getDriverOrders)
 );
 
 module.exports = router;

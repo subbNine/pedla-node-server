@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 let schema = new Schema({
 	driverId: { type: Schema.Types.ObjectId, ref: "User" },
 	buyerId: { type: Schema.Types.ObjectId, ref: "User" },
-	productId: { type: Schema.Types.ObjectId, ref: "PeddlersProduct" },
+	productId: { type: Schema.Types.ObjectId, ref: "Product" },
 	quantity: Number,
 	unitAmount: Number,
 	rating: Number,
@@ -36,6 +36,7 @@ let schema = new Schema({
 		enum: Object.values(orderEnums.deliveryStatus),
 		default: orderEnums.deliveryStatus.NOTDELIVERED,
 	},
+	truckId: { type: Schema.Types.ObjectId, ref: "Truck" },
 	paid: { type: Boolean, default: false },
 });
 

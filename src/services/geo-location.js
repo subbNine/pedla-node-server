@@ -1,7 +1,7 @@
 const { GeoEnt } = require("../entities/domain");
 const { utils } = require("../lib");
-const { types: userTypes, presence } = require("../db/mongo/enums").user;
-const UserService = require("./user");
+const { presence } = require("../db/mongo/enums/user");
+const { types: userTypes } = require("../db/mongo/enums").user;
 
 const { Result } = utils;
 
@@ -10,9 +10,8 @@ module.exports = class GeoLoc {
 		this.mappers = mappers;
 	}
 
-	async findNearestOnlinePeddler(geoDto) {
+	async findNearestOnlineDrivers(geoDto) {
 		const { geoMapper } = this.mappers;
-		const userService = new UserService({ mappers: this.mappers });
 
 		const geoEnt = new GeoEnt(geoDto);
 		const lat = geoEnt.getLat();
@@ -23,17 +22,16 @@ module.exports = class GeoLoc {
 		const lonIsNum = lon && typeof +lon === "number";
 		const radiusIsNum = radius && typeof +radius === "number";
 
-		let peddlers;
+		let drivers;
 		if (latIsNum && lonIsNum) {
-			// return all users within five miles in
-			// sorted order from nearest to farthest
 			const METERS_PER_MILE = geoEnt.METERS_PER_MILE;
 
-			const peddlersWithinMaxDistanceOfPosition = geoMapper.findUsersByGeoLocation(
+			const driversWithinMaxDistanceOfPosition = await geoMapper.findUsersByGeoLocation(
 				{
 					$and: [
 						{ type: userTypes.DRIVER },
 						{ presence: presence.ONLINE },
+						{ truck: { $exists: true } },
 						{
 							latlon: {
 								$nearSphere: {
@@ -49,55 +47,44 @@ module.exports = class GeoLoc {
 				}
 			);
 
-			const peddlersNearestToPosition = geoMapper.findUsersByGeoLocation(
-				{
-					$and: [
-						{ type: userTypes.DRIVER },
-						{ presence: presence.ONLINE },
-						{
-							latlon: {
-								$nearSphere: {
-									$geometry: {
-										type: "Point",
-										coordinates: [+lon, +lat],
+			if (!driversWithinMaxDistanceOfPosition) {
+				const driversNearestToPosition = await geoMapper.findUsersByGeoLocation(
+					{
+						$and: [
+							{ type: userTypes.DRIVER },
+							{ presence: presence.ONLINE },
+							{ truck: { $exists: true } },
+							{
+								latlon: {
+									$nearSphere: {
+										$geometry: {
+											type: "Point",
+											coordinates: [+lon, +lat],
+										},
 									},
 								},
 							},
-						},
-					],
-				},
-				10
-			);
+						],
+					},
+					10
+				);
 
-			peddlers = await Promise.all([
-				peddlersWithinMaxDistanceOfPosition,
-				peddlersNearestToPosition,
-			]);
+				drivers = driversNearestToPosition;
+			} else {
+				drivers = driversWithinMaxDistanceOfPosition;
+			}
 
-			if (peddlers && (peddlers[0] || peddlers[1])) {
-				const nearestPeddlers =
-					(peddlers[0] && peddlers[0].length && peddlers[0]) ||
-					(peddlers[1] && peddlers[1].length && peddlers[1]);
+			if (drivers) {
+				const nearestDrivers =
+					drivers &&
+					drivers.map((eachDriver) => {
+						eachDriver.peddlerCode = eachDriver.peddler.peddlerCode;
+						eachDriver.peddler = null;
 
-				const usersRepr = [];
+						return eachDriver.toDto();
+					});
 
-				if (nearestPeddlers) {
-					for (const nearestPeddler of nearestPeddlers) {
-						await Promise.all([
-							userService.getDriverOrderStats(nearestPeddler),
-							userService.findDriver(nearestPeddler),
-						]);
-
-						nearestPeddler.peddlerCode = nearestPeddler.peddler.peddlerCode;
-						nearestPeddler.peddler = null;
-
-						if (nearestPeddler.truck) {
-							usersRepr.push(nearestPeddler.toDto());
-						}
-					}
-
-					return Result.ok(usersRepr);
-				}
+				return Result.ok(nearestDrivers);
 			}
 		}
 		return Result.ok([]);

@@ -6,9 +6,7 @@ const User = require("./user");
 const Product = require("./product");
 const Order = require("./order");
 const Notification = require("./notification");
-const PeddlerProduct = require("./peddler-product");
 const Truck = require("./truck");
-const TruckAndDriver = require("./truck-driver");
 const PushDevice = require("./push-device");
 const BlogPost = require("./blog-post");
 const Payment = require("./payment");
@@ -23,9 +21,7 @@ module.exports = {
 	Product,
 	Order,
 	Notification,
-	PeddlerProduct,
 	Truck,
-	TruckAndDriver,
 	PushDevice,
 	BlogPost,
 	Payment,

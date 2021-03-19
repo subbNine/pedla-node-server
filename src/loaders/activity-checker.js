@@ -1,10 +1,11 @@
 const { activity } = require("../services");
-const { INACTIVE_TTL } = require("../config");
 
 function inactiveUsersChecker() {
-	activity.setInactiveUsersOffline();
+	activity
+		.setInactiveUsersOffline()
+		.then((_r) => process.nextTick(inactiveUsersChecker));
 }
 
 module.exports = function usersActivityChecker() {
-	setInterval(inactiveUsersChecker, INACTIVE_TTL);
+	process.nextTick(inactiveUsersChecker);
 };
