@@ -80,7 +80,7 @@ let schema = new Schema({
 			commercialOnCrAmt: Number,
 		},
 		quantity: Number,
-		isDeleted: Boolean,
+		isDeleted: Boolean
 	},
 });
 
