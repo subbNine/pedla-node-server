@@ -10,7 +10,7 @@ module.exports = class ActivityMapper extends BaseMapper {
 	logLastActive(user) {
 		const { User } = this.models;
 
-		User.findByIdAndUpdate(user.id, {
+		return User.findByIdAndUpdate(user.id, {
 			lastActive: new Date(),
 		}).then((doc, err) => {
 			if (err) {
@@ -28,16 +28,12 @@ module.exports = class ActivityMapper extends BaseMapper {
 
 		const lastActive = Date.now() - inactiveTTL;
 
-		User.updateMany(
+		return User.updateMany(
 			{ presence: ONLINE, lastActive: { $lt: new Date(lastActive) } },
 			{ presence: OFFLINE }
 		).then((doc, err) => {
 			if (err) {
 				throw err;
-			}
-
-			if (doc) {
-				console.log("update successful");
 			}
 		});
 	}

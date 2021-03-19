@@ -2,18 +2,17 @@ const BaseMapper = require("./base");
 
 const isObjectEmpty = require("../lib/utils/is-object-empty");
 const {
-	UserEnt,
-	PeddlerProductEnt,
 	GeoEnt,
-	ProductEnt,
-	TruckEnt,
+	PeddlerEnt,
+	DriverEnt,
+	BuyerEnt,
+	UserEnt,
 } = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
 const {
 	user: { types },
-	order: { deliveryStatus },
 } = require("../db/mongo/enums");
-const { Types } = require("mongoose");
+const { isObjectId, isType } = require("../lib/utils");
 
 module.exports = class UserMapper extends BaseMapper {
 	_toEntityTransform = {
@@ -40,17 +39,19 @@ module.exports = class UserMapper extends BaseMapper {
 			populateFn(query);
 		}
 
-		// query.where({
-		// 	$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
-		// });
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
 
 		const doc = await query;
 		if (doc) {
 			const entObj = doc.toObject();
-			if (doc.avatarImg && doc.avatarImg.uri) {
-				entObj.avatarImg = doc.avatarImg.uri;
+
+			if (isType("object", entObj.peddler) && !isObjectId(entObj.peddler)) {
+				entObj.peddler = this.createUserEntity(entObj.peddler);
 			}
-			const userEnt = this._toEntity(entObj, UserEnt, this._toEntityTransform);
+
+			let userEnt = this.createUserEntity(entObj);
 
 			return userEnt;
 		}
@@ -93,11 +94,45 @@ module.exports = class UserMapper extends BaseMapper {
 		return supportAgents;
 	}
 
+	async findPeddlerOnlineDrivers(peddler) {
+		const { User } = this.models;
+		const query = User.find({
+			$and: [
+				{ peddler: peddler.id },
+				{
+					presence: presence.ONLINE,
+				},
+				{
+					truck: { $exists: true },
+				},
+				{ "truck.truckId": { $exists: true } },
+			],
+		});
+
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
+
+		const docs = await query;
+
+		const results = [];
+		if (docs) {
+			for (const doc of docs) {
+				const obj = doc.toObject();
+				const userEnt = this.createUserEntity(obj);
+
+				results.push(userEnt);
+			}
+
+			return results;
+		}
+	}
+
 	async findUsers(filter, options) {
 		const { User } = this.models;
 		const query = User.find(this._toPersistence(filter));
 
-		const { pagination, populate, all } = options || {};
+		const { pagination, populate } = options || {};
 
 		const { limit = 0, page = 0 } = pagination || {};
 
@@ -111,28 +146,23 @@ module.exports = class UserMapper extends BaseMapper {
 			populate(query);
 		}
 
-		if (!all) {
-			query.where({
-				$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
-			});
-		}
+		query.where({
+			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
+		});
 
 		const docs = await query;
 
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				const entObj = doc.toObject();
-				if (doc.avatarImg && doc.avatarImg.uri) {
-					entObj.avatarImg = doc.avatarImg.uri;
+				const obj = doc.toObject();
+				const userEnt = this.createUserEntity(obj);
+
+				if (doc.peddler && isObjectId(doc.peddler._id)) {
+					userEnt.peddler = this.createUserEntity(obj.peddler);
 				}
-				if (doc.peddler && doc.peddler.id) {
-					entObj.peddler = this._toEntity(entObj.peddler, UserEnt, {
-						_id: "id",
-					});
-					entObj.driverStats = await this.driverOrderStats(entObj.id);
-				}
-				results.push(this._toEntity(entObj, UserEnt, { _id: "id" }));
+
+				results.push(userEnt);
 			}
 
 			return results;
@@ -175,9 +205,9 @@ module.exports = class UserMapper extends BaseMapper {
 		const results = [];
 		if (docs) {
 			for (const doc of docs) {
-				results.push(
-					this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform)
-				);
+				const obj = doc.toObject();
+				const user = this.createUserEntity(obj);
+				results.push(user);
 			}
 
 			return results;
@@ -191,7 +221,8 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await User.create(newUser);
 		if (doc) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			const obj = doc.toObject();
+			return this.createUserEntity(obj);
 		}
 	}
 
@@ -204,7 +235,7 @@ module.exports = class UserMapper extends BaseMapper {
 
 			const saved = await doc.save();
 
-			return this._toEntity(saved.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(saved.toObject());
 		}
 	}
 
@@ -230,7 +261,7 @@ module.exports = class UserMapper extends BaseMapper {
 
 			const saved = await doc.save();
 
-			return this._toEntity(saved.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(saved.toObject());
 		}
 	}
 
@@ -252,11 +283,11 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 
 		if (doc) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(doc.toObject());
 		}
 	}
 
-	async rejectPeddler(userId) {
+	async deactivatePeddler(userId) {
 		const { User } = this.models;
 
 		const doc = await User.findByIdAndUpdate(
@@ -268,16 +299,14 @@ module.exports = class UserMapper extends BaseMapper {
 		);
 
 		if (doc) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(doc.toObject());
 		}
 	}
 
-	async signup(userId, userEntUpdate) {
+	async setPasswordAndUserName(userId, userEntUpdate) {
 		const { User } = this.models;
 
 		const foundUser = await User.findById(userId);
-
-		console.log({ foundUser: foundUser.toObject() });
 
 		foundUser.password = userEntUpdate.password;
 		foundUser.userName = userEntUpdate.userName;
@@ -285,11 +314,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const savedDoc = await foundUser.save();
 
 		if (savedDoc) {
-			return this._toEntity(
-				savedDoc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			return this.createUserEntity(savedDoc.toObject());
 		}
 	}
 
@@ -317,91 +342,35 @@ module.exports = class UserMapper extends BaseMapper {
 		const doc = await User.findOne(matchEmailOrUserName);
 
 		if (doc && !isObjectEmpty(matchEmailOrUserName)) {
-			const userEnt = this._toEntity(
-				doc.toObject(),
-				UserEnt,
-				this._toEntityTransform
-			);
+			const entObj = doc.toObject();
+			let userEnt = this.createUserEntity(entObj);
 
-			if (userEnt.isDriver()) {
-				userEnt.driverStats = await this.driverOrderStats(userEnt.id);
-			}
 			return userEnt;
 		}
 	}
 
-	async driverOrderStats(driverId) {
-		const { Order } = this.models;
-		const nCancelledOrdersPromise = Order.countDocuments({
-			$and: [
-				{ driverId: driverId },
-				{ deliveryStatus: deliveryStatus.REJECTED },
-			],
-		});
+	async updateDriverOrderStats(driver, stats) {
+		const { User } = this.models;
 
-		const nCompleteOrdersPromise = Order.countDocuments({
-			$and: [
-				{ driverId: driverId },
-				{ deliveryStatus: deliveryStatus.DELIVERED },
-			],
-		});
+		const updates = { $inc: {} };
 
-		const nAllOrdersPromise = Order.countDocuments({
-			driverId: driverId,
-		});
+		if (stats.nCancelled) {
+			updates.$inc["orderStats.nCancelled"] = stats.nCancelled;
+		}
 
-		const totalDriverRatingPromise = Order.aggregate([
-			{
-				$match: {
-					driverId: Types.ObjectId(driverId),
-				},
-			},
-			{
-				$group: {
-					_id: null,
-					totalRating: {
-						$sum: "$rating",
-					},
-				},
-			},
-		]);
+		if (stats.nCompleted) {
+			updates.$inc["orderStats.nCompleted"] = stats.nCompleted;
+		}
 
-		// const
+		if (stats.nOrders) {
+			updates.$inc["orderStats.nOrders"] = stats.nOrders;
+		}
 
-		const [
-			nCompleteOrders,
-			nCancelledOrders,
-			nAllOrders,
-			totalDriverRatingArr,
-		] = await Promise.all([
-			nCompleteOrdersPromise,
-			nCancelledOrdersPromise,
-			nAllOrdersPromise,
-			totalDriverRatingPromise,
-		]);
-
-		const percAcceptance = ((+nCompleteOrders || 0) / (+nAllOrders || 1)) * 100;
-		const percCancelled = ((+nCancelledOrders || 0) / (+nAllOrders || 1)) * 100;
-		const totalOrdersRating = nAllOrders * 5;
-
-		const totalDriverRating =
-			totalDriverRatingArr && totalDriverRatingArr.length
-				? totalDriverRatingArr[0].totalRating
-				: 0;
-
-		const averageRating = (5 * +totalDriverRating) / totalOrdersRating;
-
-		return {
-			nCancelled: +nCancelledOrders || 0,
-			nComplete: +nCompleteOrders || 0,
-			percAcceptance: percAcceptance ? +percAcceptance.toFixed(2) : 0,
-			percCancelled: percCancelled ? +percCancelled.toFixed(2) : 0,
-			rating: averageRating ? +averageRating.toFixed(1) : 0,
-		};
+		return await User.findByIdAndUpdate(driver.id, updates);
 	}
 
 	async searchForProductDrivers({ productId, quantity, geo }, options) {
-		const { User, PeddlerProduct } = this.models;
+		const { User } = this.models;
 
 		const { pagination } = options || {};
 		const { page, limit } = pagination || {};
@@ -410,137 +379,41 @@ module.exports = class UserMapper extends BaseMapper {
 		const lat = geoEnt.getLat();
 		const lon = geoEnt.getLon();
 
-		const drivers = await User.aggregate([
-			{
-				$geoNear: {
-					near: { type: "Point", coordinates: [+lon, +lat] },
-					key: "latlon",
-					distanceField: "dist.calculated",
-					spherical: true,
-					query: {
-						$and: [
-							{ peddler: { $exists: true } },
-							{ presence: presence.ONLINE },
-							{ type: types.DRIVER },
-							{ isActive: true },
-							{ isDeleted: false },
-						],
+		const drivers = await User.find({
+			$and: [
+				{ type: types.DRIVER },
+				{ presence: presence.ONLINE },
+				{ "truck.productId": productId },
+				{ "truck.quantity": { $gte: quantity } },
+				{
+					latlon: {
+						$nearSphere: {
+							$geometry: {
+								type: "Point",
+								coordinates: [+lon, +lat],
+							},
+							$maxDistance: 1000,
+						},
 					},
 				},
-			},
-			{
-				$lookup: {
-					from: "truckdrivers",
-					let: { driverId: "$_id" },
-					pipeline: [
-						{
-							$match: {
-								$expr: {
-									$eq: ["$driverId", "$$driverId"],
-								},
-							},
-						},
-						{
-							$lookup: {
-								from: "trucks",
-								let: { truckId: "$truckId" },
-								pipeline: [
-									{
-										$match: {
-											$expr: {
-												$and: [
-													{ $eq: ["$_id", "$$truckId"] },
-													{ $gte: ["$quantity", +quantity] },
-												],
-											},
-										},
-									},
-								],
-								as: "trucks",
-							},
-						},
-					],
-					as: "truckDrivers",
-				},
-			},
-			{ $skip: +page },
-			{ $limit: +limit },
-		]);
+			],
+		})
+			.skip(page)
+			.limit(limit)
+			.populate("peddler");
 
 		const driversList = [];
 
 		if (drivers && drivers.length) {
-			for (const d of drivers) {
-				const { truckDrivers, ...driver } = d;
+			for (let driver of drivers) {
+				const peddlerEnt = this.createUserEntity(driver.peddler);
 
-				if (truckDrivers && truckDrivers.length) {
-					for (const td of truckDrivers) {
-						const { trucks } = td;
+				const driverEnt = this.createUserEntity(driver);
 
-						if (trucks && trucks.length) {
-							const truck = trucks[0];
+				driverEnt.peddler = peddlerEnt;
+				driverEnt.peddlerCode = peddlerEnt.peddlerCode;
 
-							const truckProductQuery = PeddlerProduct.findById(
-								truck.productId
-							).populate({
-								path: "productId", // system product
-							});
-
-							const peddlerQuery = User.findOne({ _id: driver.peddler });
-
-							const driverStatsQuery = this.driverOrderStats(driver._id);
-
-							const [truckProduct, peddler, driverStats] = await Promise.all([
-								truckProductQuery,
-								peddlerQuery,
-								driverStatsQuery,
-							]);
-
-							if (truckProduct.productId._id.toString() === productId) {
-								const driverEnt = this._toEntity(driver, UserEnt, {
-									streetAddress: "address",
-									_id: "id",
-								});
-
-								driverEnt.peddlerCode = peddler.peddlerCode;
-
-								truckProduct.productId = this._toEntity(
-									truckProduct.productId,
-									ProductEnt,
-									{ _id: "id" }
-								);
-
-								const truckProductEnt = this._toEntity(
-									truckProduct,
-									PeddlerProductEnt,
-									{
-										_id: "id",
-										peddlerId: "peddler",
-										productId: "product",
-									}
-								);
-
-								const truckEnt = this._toEntity(truck, TruckEnt, {
-									_id: "id",
-									ownerId: "owner",
-									productId: "product",
-								});
-
-								truckEnt.product = truckProductEnt;
-								driverEnt.driverStats = driverStats;
-								driverEnt.truck = truckEnt.toDto();
-
-								driversList.push(
-									Object.assign(
-										{},
-										{ driver: driverEnt.toDto() },
-										{ product: truckProductEnt.toDto() }
-									)
-								);
-							}
-						}
-					}
-				}
+				driversList.push(driverEnt.toDto());
 			}
 		}
 
@@ -550,15 +423,41 @@ module.exports = class UserMapper extends BaseMapper {
 	async disableDriver(driverId) {
 		const { User } = this.models;
 
-		let doc = await User.findOne({ _id: driverId, type: types.DRIVER });
-
-		doc.isActive = !doc.isActive;
-
-		doc = await doc.save();
+		const doc = await User.findOneAndUpdate(
+			{
+				_id: driverId,
+				type: types.DRIVER,
+			},
+			{
+				isActive: false,
+				$unset: { truck: "" },
+			},
+			{ new: true }
+		);
 
 		if (doc) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(doc.toObject());
 		}
+	}
+
+	async enableDriver(driverId) {
+		const { User } = this.models;
+
+		const doc = await User.findOneAndUpdate(
+			{ _id: driverId, type: types.DRIVER },
+			{ isActive: true },
+			{ new: true }
+		);
+
+		if (doc) {
+			return this.createUserEntity(doc.toObject());
+		}
+	}
+
+	async rateDriver(driver, points) {
+		return await this.updateUserById(driver.id, {
+			$inc: { "rating.totalRating": +points, "rating.ratingCount": 1 },
+		});
 	}
 
 	async deleteDriver(driverId) {
@@ -566,14 +465,86 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await User.findOneAndUpdate(
 			{ _id: driverId, type: types.DRIVER },
-			{ isDeleted: true },
+			{ isDeleted: true, $unset: { truck: "" } },
 			{
 				new: true,
 			}
 		);
 
 		if (doc) {
-			return this._toEntity(doc.toObject(), UserEnt, this._toEntityTransform);
+			return this.createUserEntity(doc.toObject());
 		}
+	}
+
+	async detachTruck(truck) {
+		const { User } = this.models;
+
+		await User.findByIdAndUpdate(truck.driver.id, { $unset: { truck: "" } });
+
+		return true;
+	}
+
+	async updateOrderedQuantityOnTruckAttachedToDriver(order) {
+		const driver = order.driver;
+
+		const updates = { $inc: { "truck.quantity": order.quantity } };
+
+		return await this.updateUserById(driver.id, updates);
+	}
+
+	async updateProductPriceOnTruckAttachedToDriver(
+		newPrice,
+		product,
+		peddlerId
+	) {
+		const { User } = this.models;
+
+		const updates = {};
+
+		if (newPrice) {
+			for (key in newPrice) {
+				updates["truck.productPrice." + key] = newPrice[key];
+			}
+		}
+
+		return await User.updateMany(
+			{ $and: [{ peddler: peddlerId }, { "truck.productId": product.id }] },
+			updates
+		);
+	}
+
+	async detachTruckFromOtherDriversButOne(truckEnt) {
+		const { User } = this.models;
+
+		await User.updateMany(
+			{
+				$and: [
+					{ _id: { $ne: truckEnt.driver.id } },
+					{ "truck.truckId": truckEnt.id },
+				],
+			},
+			{ $unset: { truck: "" } }
+		);
+
+		return true;
+	}
+
+	createUserEntity(obj) {
+		let entity;
+		if (obj.type === types.DRIVER) {
+			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
+		} else {
+			if (obj.type === types.PEDDLER) {
+				entity = this._toEntity(obj, PeddlerEnt, this._toEntityTransform);
+			} else {
+				if (obj.type === types.BUYER) {
+					entity = this._toEntity(obj, BuyerEnt, this._toEntityTransform);
+				} else {
+					entity = this._toEntity(obj, UserEnt, this._toEntityTransform);
+				}
+			}
+		}
+
+		return entity;
 	}
 };

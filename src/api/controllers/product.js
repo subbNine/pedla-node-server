@@ -103,8 +103,11 @@ module.exports = class Product extends BaseController {
 		} = req.body;
 		const { productId } = req.params;
 
+		const user = req._App.user;
+
 		const peddlerProductDto = new PeddlerProductDto();
 		peddlerProductDto.id = productId;
+		peddlerProductDto.peddler = user.id;
 
 		if (residentialAmt) {
 			peddlerProductDto.residentialAmt = residentialAmt;

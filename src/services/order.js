@@ -5,6 +5,7 @@ const { utils, error } = require("../lib");
 const {
 	order: { orderStatus, deliveryStatus },
 } = require("../db/mongo/enums");
+const { eventEmitter, eventTypes } = require("../events");
 const Payment = require("./payment");
 
 const AppError = error.AppError;
@@ -17,34 +18,18 @@ module.exports = class Order {
 		this.mappers = mappers;
 	}
 
-	async ordersStats() {
+	async allOrderStat() {
 		const { orderMapper } = this.mappers;
 
-		const pendingOrdersFilter = {
-			status: orderStatus.PENDING,
-		};
+		const pendingOrdersQuery = orderMapper.countAllPendingOrders();
 
-		const pendingOrdersQuery = orderMapper.countDocs(pendingOrdersFilter);
+		const ordersInProgressQuery = orderMapper.countAllOrdersInProgress();
 
-		const ordersInProgressFilter = {
-			status: orderStatus.INPROGRESS,
-		};
+		const cancelledOrdersQuery = orderMapper.countAllCancelledOrders();
 
-		const ordersInProgressQuery = orderMapper.countDocs(ordersInProgressFilter);
+		const completedOrdersQuery = orderMapper.countAllCompletedOrders();
 
-		const cancelledOrdersFilter = {
-			deliveryStatus: deliveryStatus.REJECTED,
-		};
-
-		const cancelledOrdersQuery = orderMapper.countDocs(cancelledOrdersFilter);
-
-		const completedOrdersFilter = {
-			deliveryStatus: deliveryStatus.DELIVERED,
-		};
-
-		const completedOrdersQuery = orderMapper.countDocs(completedOrdersFilter);
-
-		const allOrdersQuery = orderMapper.countDocs({});
+		const allOrdersQuery = orderMapper.countAllOrders();
 
 		const [
 			cancelledOrders,
@@ -76,7 +61,7 @@ module.exports = class Order {
 			status: { $in: orderFilterDto.status },
 		};
 
-		const numberOfOrders = await orderMapper.countDocs(search);
+		const numberOfOrders = await orderMapper.countDocsBy(search);
 
 		if (numberOfOrders) {
 			return Result.ok(numberOfOrders);
@@ -85,7 +70,7 @@ module.exports = class Order {
 		}
 	}
 
-	async findOrders(orderFilterDto) {
+	async getOrders(orderFilterDto) {
 		const { orderMapper } = this.mappers;
 
 		const $and = [];
@@ -137,7 +122,41 @@ module.exports = class Order {
 		}
 	}
 
-	async findOrdersPaginated(orderFilterDto, options) {
+	async getDriverOrders(order, options) {
+		const { orderMapper } = this.mappers;
+
+		const { pagination } = options || {};
+		const { limit, page } = pagination || {};
+
+		const totalDocs = await orderMapper.countDriverOrders(order);
+
+		const totalPages = limit ? Math.ceil(totalDocs / +limit) : 1;
+
+		const foundOrders = await orderMapper.findDriverOrders(order, {
+			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
+		});
+
+		if (foundOrders && foundOrders.length) {
+			const results = [];
+
+			for (const eachOrder of foundOrders) {
+				await Promise.all([
+					this._loadPeddlerInfo(eachOrder),
+					this._loadPayment(eachOrder),
+				]);
+				results.push(eachOrder.toDto());
+			}
+
+			return Result.ok({
+				data: results,
+				pagination: { totalPages, currentPage: +page || 1, totalDocs },
+			});
+		} else {
+			return Result.ok([]);
+		}
+	}
+
+	async getOrdersPaginated(orderFilterDto, options) {
 		const { orderMapper } = this.mappers;
 
 		const { pagination } = options || {};
@@ -183,7 +202,7 @@ module.exports = class Order {
 			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
-		if (foundOrders) {
+		if (foundOrders && foundOrders.length) {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
@@ -199,20 +218,17 @@ module.exports = class Order {
 				pagination: { totalPages, currentPage: +page || 1, totalDocs },
 			});
 		} else {
-			return Result.ok(null);
+			return Result.ok([]);
 		}
 	}
 
-	async findPeddlerOrders(peddler, orderFilter, options) {
+	async getPeddlerOrders(peddler, orderFilter, options) {
 		const { orderMapper, userMapper } = this.mappers;
 
 		const { pagination } = options || {};
 		const { limit, page } = pagination || {};
 
-		const ownDrivers = await userMapper.findUsers(
-			{ peddler: peddler.id },
-			{ all: true }
-		);
+		const ownDrivers = await userMapper.findUsers({ peddler: peddler.id });
 
 		let ownDriversId;
 
@@ -241,7 +257,7 @@ module.exports = class Order {
 				pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 			});
 
-			if (foundOrders) {
+			if (foundOrders && foundOrders.length) {
 				const results = [];
 
 				for (const eachOrder of foundOrders) {
@@ -258,7 +274,7 @@ module.exports = class Order {
 				});
 			}
 		}
-		return Result.ok(null);
+		return Result.ok([]);
 	}
 
 	async recentOrdersPaginated(orderFilterDto, options) {
@@ -289,7 +305,7 @@ module.exports = class Order {
 			pagination: { limit: +limit || 30, page: page ? +page - 1 : 0 },
 		});
 
-		if (foundOrders) {
+		if (foundOrders && foundOrders.length) {
 			const results = [];
 
 			for (const eachOrder of foundOrders) {
@@ -305,7 +321,7 @@ module.exports = class Order {
 				pagination: { totalPages, currentPage: page || 1, totalDocs },
 			});
 		} else {
-			return Result.ok(null);
+			return Result.ok([]);
 		}
 	}
 
@@ -352,11 +368,12 @@ module.exports = class Order {
 		}
 	}
 
-	async createOrder(order) {
-		const { orderMapper } = this.mappers;
-		const payment = new Payment({ mappers: this.mappers });
+	async validateOrder(order) {
+		const { truckMapper } = this.mappers;
 
-		const truck = await this._getTruck(order.driver);
+		const truck = await truckMapper.findTruck({
+			driverId: order.driver.id,
+		});
 
 		if (truck) {
 			const truckQuantity = +truck.quantity;
@@ -365,7 +382,7 @@ module.exports = class Order {
 				if (order.quantity > truckQuantity) {
 					return Result.fail(
 						new AppError({
-							name: errorCodes.InvalidOrderError,
+							name: errorCodes.InvalidOrderError.name,
 							statusCode: errorCodes.InvalidOrderError.statusCode,
 							message: errMessages.quantityOrderedGreaterThanAvailable,
 						})
@@ -374,15 +391,23 @@ module.exports = class Order {
 			} else {
 				return Result.fail(
 					new AppError({
-						name: errorCodes.InvalidOrderError,
+						name: errorCodes.InvalidOrderError.name,
 						statusCode: errorCodes.InvalidOrderError.statusCode,
 						message: errMessages.invalidQuantity,
 					})
 				);
 			}
 		}
+		return Result.ok(true);
+	}
+
+	async createOrder(order) {
+		const { orderMapper } = this.mappers;
+		const payment = new Payment({ mappers: this.mappers });
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
+
+		eventEmitter.emit(eventTypes.orderCreated, newOrder, { nOrders: 1 });
 
 		const paymentResp = await payment.initPayment(newOrder);
 
@@ -392,16 +417,19 @@ module.exports = class Order {
 		});
 	}
 
-	async _getTruck(driver) {
-		const { truckAndDriverMapper } = this.mappers;
+	async placeOrder(order) {
+		const vaidatedOrder = await this.validateOrder(order);
 
-		const truckAndDriver = await truckAndDriverMapper.findTruckAndDriver({
-			driverId: driver.id,
-		});
-
-		if (truckAndDriver) {
-			return truckAndDriver.truck;
+		if (vaidatedOrder.isFailure) {
+			return vaidatedOrder;
 		}
+
+		const newOrder = await this.createOrder(order);
+
+		if (newOrder) {
+			return Result.ok(newOrder);
+		}
+		return Result.ok(null);
 	}
 
 	async _isOrderInProgress(driverId) {
@@ -411,58 +439,42 @@ module.exports = class Order {
 		});
 	}
 
-	async _returnOrderedQuantity(order) {
-		const { peddlerProductMapper, truckMapper } = this.mappers;
+	async returnOrderedQuantityToTruck(order) {
+		const { userMapper, truckMapper } = this.mappers;
 
-		const orderedQuantity = order.quantity;
-		const productId = String(order.product.id);
-
-		const peddlerProductQtyUpdateQuery = peddlerProductMapper.updateProductById(
-			productId,
-			{
-				$inc: { quantity: orderedQuantity },
-			}
+		const updatedTruckAttchedToDriverPromise = userMapper.updateOrderedQuantityOnTruckAttachedToDriver(
+			order
 		);
 
-		const truckQuery = this._getTruck(order.driver);
+		const updatedTruckPromise = truckMapper.updateOrderedQuantityInTruck(order);
 
-		const [peddlerProductQtyUpdate, truck] = await Promise.all([
-			peddlerProductQtyUpdateQuery,
-			truckQuery,
+		await Promise.all([
+			updatedTruckAttchedToDriverPromise,
+			updatedTruckPromise,
 		]);
 
-		if (truck) {
-			truck.quantity = truck.quantity + order.quantity;
-
-			return await truckMapper.updateTruckById(truck.id, truck);
-		}
+		return true;
 	}
 
-	async _deductOrderedQuantity(order) {
-		const { peddlerProductMapper, truckMapper } = this.mappers;
+	async subtractOrderedQuantityFromTruck(order) {
+		const { userMapper, truckMapper } = this.mappers;
 
-		const orderedQuantity = order.quantity;
-		const productId = String(order.product.id);
+		const orderInput = { ...order, quantity: -order.quantity };
 
-		const peddlerProductQtyUpdateQuery = peddlerProductMapper.updateProductById(
-			productId,
-			{
-				$inc: { quantity: -1 * orderedQuantity },
-			}
+		const updatedTruckAttchedToDriverPromise = userMapper.updateOrderedQuantityOnTruckAttachedToDriver(
+			orderInput
 		);
 
-		const truckQuery = this._getTruck(order.driver);
+		const updatedTruckPromise = truckMapper.updateOrderedQuantityInTruck(
+			orderInput
+		);
 
-		const [_peddlerProductQtyUpdate, truck] = await Promise.all([
-			peddlerProductQtyUpdateQuery,
-			truckQuery,
+		await Promise.all([
+			updatedTruckAttchedToDriverPromise,
+			updatedTruckPromise,
 		]);
 
-		if (truck) {
-			truck.quantity = truck.quantity - order.quantity;
-
-			return await truckMapper.updateTruckById(truck.id, truck);
-		}
+		return true;
 	}
 
 	async completeOrder(order) {
@@ -499,6 +511,10 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
+			eventEmitter.emit(eventTypes.orderCompleted, updatedOrder, {
+				nCompleted: 1,
+			});
+
 			return Result.ok(updatedOrder.toDto());
 		}
 
@@ -517,9 +533,10 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			this._returnOrderedQuantity(updatedOrder).then((res) =>
-				console.log("success")
-			);
+			eventEmitter.emit(eventTypes.orderRejected, updatedOrder, {
+				nCancelled: 1,
+			});
+
 			return Result.ok(updatedOrder.toDto());
 		} else {
 			return Result.ok(null);
@@ -572,9 +589,7 @@ module.exports = class Order {
 		);
 
 		if (updatedOrder) {
-			this._deductOrderedQuantity(updatedOrder).then((res) =>
-				console.log("success")
-			);
+			eventEmitter.emit(eventTypes.orderAccepted, updatedOrder);
 
 			return Result.ok(updatedOrder.toDto());
 		} else {
@@ -600,15 +615,29 @@ module.exports = class Order {
 		}
 	}
 
-	async rateTransaction(order) {
+	async rateOrder(order) {
 		const { orderMapper } = this.mappers;
 
 		const orderEnt = new OrderEnt(order);
 
-		const updatedOrder = await orderMapper.updateOrderBy(
-			{ _id: order.id },
-			orderEnt
-		);
+		const ratedOrder = await orderMapper.updateOrderById(order.id, orderEnt);
+
+		if (ratedOrder) {
+			eventEmitter.emit(eventTypes.orderRated, ratedOrder);
+		}
+
 		return Result.ok(updatedOrder.toDto());
+	}
+
+	async attachTruckToOrder(order) {
+		const { orderMapper, userMapper } = this.mappers;
+
+		return userMapper.findUser({ _id: order.driver.id }).then((driver) => {
+			const truck = driver.truck;
+
+			orderMapper
+				.updateOrderById(order.id, { truckId: truck.truckId })
+				.catch((err) => error(err));
+		});
 	}
 };

@@ -55,7 +55,10 @@ module.exports = class Truck {
 				(isType("object", this.ownership) && this.ownership.uri) ||
 				this.ownership ||
 				null,
-			driver: this.driver || null,
+			driver:
+				(this.driver && this.driver.toDto && this.driver.toDto()) ||
+				this.driver ||
+				null,
 			quantity: this.quantity || 0,
 		};
 	}

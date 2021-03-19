@@ -4,6 +4,7 @@ const UserDto = require("./user");
 module.exports = class Order {
 	id;
 	driver = new UserDto();
+	peddler = new UserDto();
 	buyer = new UserDto();
 	product = new ProductDto();
 	quantity;
