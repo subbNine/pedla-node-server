@@ -109,7 +109,7 @@ router.get(
 
 router.get(
 	"/nearest-peddlers",
-	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+	catchAsync(geoLocationController.getNearestOnlineDrivers)
 );
 
 /**
