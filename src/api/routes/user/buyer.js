@@ -104,7 +104,7 @@ router.post(
  */
 router.get(
 	"/nearest-drivers",
-	catchAsync(geoLocationController.getNearestOnlinePeddlers)
+	catchAsync(geoLocationController.getNearestOnlineDrivers)
 );
 
 router.get(
