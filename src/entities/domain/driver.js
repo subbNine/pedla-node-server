@@ -1,6 +1,6 @@
 const User = require("./user");
 
-module.exports = class Driver extends User {
+class Driver extends User {
 	userName;
 	peddler;
 	truck;
@@ -8,8 +8,11 @@ module.exports = class Driver extends User {
 	rating;
 	peddlerCode;
 
-	constructor(fields = {}) {
-		super(fields);
+	constructor(fields) {
+		super();
+		for (let key in fields) {
+			this[key] = fields[key];
+		}
 	}
 
 	toDto() {
@@ -28,4 +31,6 @@ module.exports = class Driver extends User {
 
 		return dto;
 	}
-};
+}
+
+module.exports = Driver;

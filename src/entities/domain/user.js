@@ -23,10 +23,11 @@ module.exports = class User {
 	passwordResetCode;
 	userName;
 
-	constructor(fields = {}) {
-		for (let key in fields) {
-			this[key] = fields[key];
-		}
+	constructor(fields) {
+		if (fields)
+			for (let key in fields) {
+				this[key] = fields[key];
+			}
 	}
 
 	isOtpVerifiedUser() {

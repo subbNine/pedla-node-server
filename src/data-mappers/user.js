@@ -99,6 +99,7 @@ module.exports = class UserMapper extends BaseMapper {
 		const query = User.find({
 			$and: [
 				{ peddler: peddler.id },
+				{ type: types.DRIVER },
 				{
 					presence: presence.ONLINE,
 				},
@@ -158,7 +159,7 @@ module.exports = class UserMapper extends BaseMapper {
 				const obj = doc.toObject();
 				const userEnt = this.createUserEntity(obj);
 
-				if (doc.peddler && isObjectId(doc.peddler._id)) {
+				if (doc.peddler && !isObjectId(doc.peddler)) {
 					userEnt.peddler = this.createUserEntity(obj.peddler);
 				}
 

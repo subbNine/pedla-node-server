@@ -7,7 +7,10 @@ module.exports = class Buyer extends User {
 	buyerType = buyerTypes.REGULAR;
 
 	constructor(fields = {}) {
-		super(fields);
+		super();
+		for (let key in fields) {
+			this[key] = fields[key];
+		}
 	}
 
 	toDto() {

@@ -12,7 +12,10 @@ module.exports = class Peddler extends User {
 	products;
 
 	constructor(fields = {}) {
-		super(fields);
+		super();
+		for (let key in fields) {
+			this[key] = fields[key];
+		}
 	}
 
 	toDto() {
