@@ -49,4 +49,9 @@ module.exports = {
 			})
 			.catch((error) => errors.error(error));
 	},
+
+	async putUserOffline(userId) {
+		const userRef = db.doc(`users/${userId}`);
+		await userRef.set({ presence: "online" });
+	},
 };

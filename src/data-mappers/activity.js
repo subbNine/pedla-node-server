@@ -2,9 +2,10 @@ const BaseMapper = require("./base");
 const { OFFLINE, ONLINE } = require("../db/mongo/enums/user/presence");
 
 module.exports = class ActivityMapper extends BaseMapper {
-	constructor(models) {
+	constructor(models, gateways) {
 		super();
 		this.models = models;
+		this.gateways = gateways;
 	}
 
 	logLastActive(user) {
@@ -23,18 +24,28 @@ module.exports = class ActivityMapper extends BaseMapper {
 		});
 	}
 
-	setInactiveUsersOffline(inactiveTTL) {
+	async setInactiveUsersOffline(inactiveTTL) {
 		const { User } = this.models;
+		const { pubSub } = this.gateways;
 
 		const lastActive = Date.now() - inactiveTTL;
 
-		return User.updateMany(
-			{ presence: ONLINE, lastActive: { $lt: new Date(lastActive) } },
-			{ presence: OFFLINE }
-		).then((doc, err) => {
-			if (err) {
-				throw err;
-			}
+		const inactiveUsers = await User.find({
+			presence: ONLINE,
+			lastActive: { $lt: new Date(lastActive) },
 		});
+
+		if (inactiveUsers && inactiveUsers.length) {
+			for (let eachInactiveUser of inactiveUsers) {
+				const userId = eachInactiveUser._id.toString();
+
+				eachInactiveUser.presence = OFFLINE;
+
+				await Promise.all([
+					eachInactiveUser.save(),
+					pubSub.putUserOffline(userId),
+				]);
+			}
+		}
 	}
 };

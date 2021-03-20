@@ -1,4 +1,5 @@
 const dbModels = require("../db/mongo/models");
+const gateWays = require("../gateways");
 
 const UserMapper = require("./user");
 const SecretMapper = require("./secret");
@@ -14,16 +15,16 @@ const MessageMapper = require("./message");
 const ActivityMapper = require("./activity");
 
 module.exports = {
-	userMapper: new UserMapper(dbModels),
-	secretMapper: new SecretMapper(dbModels),
-	productMapper: new ProductMapper(dbModels),
-	peddlerProductMapper: new PeddlerProductMapper(dbModels),
-	geoMapper: new GeoMapper(dbModels),
-	truckMapper: new TruckMapper(dbModels),
-	orderMapper: new OrderMapper(dbModels),
-	pushDeviceMapper: new PushDeviceMapper(dbModels),
-	blogPostMapper: new BlogPostMapper(dbModels),
-	paymentMapper: new PaymentMapper(dbModels),
-	messageMapper: new MessageMapper(dbModels),
-	activityMapper: new ActivityMapper(dbModels),
+	userMapper: new UserMapper(dbModels, gateWays),
+	secretMapper: new SecretMapper(dbModels, gateWays),
+	productMapper: new ProductMapper(dbModels, gateWays),
+	peddlerProductMapper: new PeddlerProductMapper(dbModels, gateWays),
+	geoMapper: new GeoMapper(dbModels, gateWays),
+	truckMapper: new TruckMapper(dbModels, gateWays),
+	orderMapper: new OrderMapper(dbModels, gateWays),
+	pushDeviceMapper: new PushDeviceMapper(dbModels, gateWays),
+	blogPostMapper: new BlogPostMapper(dbModels, gateWays),
+	paymentMapper: new PaymentMapper(dbModels, gateWays),
+	messageMapper: new MessageMapper(dbModels, gateWays),
+	activityMapper: new ActivityMapper(dbModels, gateWays),
 };

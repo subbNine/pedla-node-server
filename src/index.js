@@ -1,14 +1,14 @@
 const express = require("express");
 
 const loadExpress = require("./loaders/express");
-// const loadUsersActivityChecker = require("./loaders/activity-checker");
+const loadCronJob = require("./loaders/cron");
 const logger = require("./loaders/logger");
 const { PORT } = require("./config");
 
 const app = express();
 
 loadExpress(app);
-// loadUsersActivityChecker();
+loadCronJob();
 
 app.listen(PORT, (err) => {
 	if (err) {
