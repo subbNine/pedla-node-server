@@ -52,6 +52,6 @@ module.exports = {
 
 	async putUserOffline(userId) {
 		const userRef = db.doc(`users/${userId}`);
-		await userRef.set({ presence: "online" });
+		await userRef.set({ presence: "offline" });
 	},
 };
