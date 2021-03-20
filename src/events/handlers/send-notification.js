@@ -1,10 +1,10 @@
 const errors = require("../../errors");
 
 module.exports = (messageObject) => {
-	const { pubSubBroker } = require("../../gateways");
+	const { pubSub } = require("../../gateways");
 
 	try {
-		pubSubBroker.send(messageObject);
+		pubSub.send(messageObject);
 	} catch (err) {
 		errors.error(err);
 	}
