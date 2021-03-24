@@ -47,5 +47,7 @@ module.exports = class ActivityMapper extends BaseMapper {
 				]);
 			}
 		}
+
+		return true
 	}
 };
