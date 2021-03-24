@@ -7,7 +7,7 @@ admin.initializeApp({
 	databaseURL: "https://pedla-app.firebaseio.com",
 });
 
-const db = admin.firestore;
+const db = admin.firestore();
 
 module.exports = {
 	send({ message: messageBody, title, deviceTokens }) {
