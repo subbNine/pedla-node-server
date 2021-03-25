@@ -228,8 +228,13 @@ module.exports = class Message extends BaseMapper {
 			for (const doc of docs) {
 				const msgObj = doc.toObject();
 
-				msgObj.from = this.createUserEntity(msgObj.from);
-				msgObj.to = this.createUserEntity(msgObj.to);
+				if (msgObj.from) {
+					msgObj.from = this.createUserEntity(msgObj.from);
+				}
+
+				if (msgObj.to) {
+					msgObj.to = this.createUserEntity(msgObj.to);
+				}
 
 				results.push(
 					this._toEntity(msgObj, MessageEnt, {
@@ -324,18 +329,18 @@ module.exports = class Message extends BaseMapper {
 		}
 	}
 
-	createUserEntity(obj) {
+	createUserEntity(userObj) {
 		let entity;
-		if (obj.type === types.DRIVER) {
-			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
+		if (userObj.type === types.DRIVER) {
+			entity = this._toEntity(userObj, DriverEnt, this._toEntityTransform);
 		} else {
-			if (obj.type === types.PEDDLER) {
-				entity = this._toEntity(obj, PeddlerEnt, this._toEntityTransform);
+			if (userObj.type === types.PEDDLER) {
+				entity = this._toEntity(userObj, PeddlerEnt, this._toEntityTransform);
 			} else {
-				if (obj.type === types.BUYER) {
-					entity = this._toEntity(obj, BuyerEnt, this._toEntityTransform);
+				if (userObj.type === types.BUYER) {
+					entity = this._toEntity(userObj, BuyerEnt, this._toEntityTransform);
 				} else {
-					entity = this._toEntity(obj, UserEnt, this._toEntityTransform);
+					entity = this._toEntity(userObj, UserEnt, this._toEntityTransform);
 				}
 			}
 		}
