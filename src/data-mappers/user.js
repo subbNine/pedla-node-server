@@ -250,7 +250,7 @@ module.exports = class UserMapper extends BaseMapper {
 			$and: [
 				{ passwordResetToken },
 				{ passwordResetCode },
-				{ passwordResetExpires: { $gt: new Date() } },
+				// { passwordResetExpires: { $gt: new Date() } },
 			],
 		});
 
