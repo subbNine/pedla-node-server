@@ -391,8 +391,8 @@ module.exports = class Auth {
 				);
 
 				if (isOldPasswordMatch) {
-					const updatedUser = await userMapper.updateUserById(
-						user.id ,
+					const updatedUser = await userMapper.updateUser(
+						{ _id: user.id },
 						{ password: newPassword }
 					);
 
