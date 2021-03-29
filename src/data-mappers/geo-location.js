@@ -5,8 +5,11 @@ const {
 	DriverEnt,
 	BuyerEnt,
 	PeddlerEnt,
+	TruckEnt,
+	ProductEnt
 } = require("../entities/domain");
 const { types } = require("../db/mongo/enums/user");
+const { isObjectId, isType } = require("../lib/utils");
 
 module.exports = class GeoMapper extends BaseMapper {
 	_toEntityTransform = {
@@ -64,6 +67,23 @@ module.exports = class GeoMapper extends BaseMapper {
 	createUserEntity(obj) {
 		let entity;
 		if (obj.type === types.DRIVER) {
+			if (obj.truck) {
+				const truckObj = obj.truck
+				if (
+					isType("object", truckObj.truckId)
+					&& !isObjectId(truckObj.truckId)
+				) {
+					const truckEnt = this.createTruckEntity(truckObj.truckId)
+					const productEnt = this.createProductEnt(truckObj.productId)
+					truckEnt.product = {
+						...truckObj.productPrice,
+						quantity: undefined,
+						product: productEnt,
+						id: productEnt.id
+					}
+					obj.truck = truckEnt
+				}
+			}
 			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
 		} else {
 			if (obj.type === types.PEDDLER) {
@@ -78,5 +98,13 @@ module.exports = class GeoMapper extends BaseMapper {
 		}
 
 		return entity;
+	}
+
+	createTruckEntity(obj) {
+		return this._toEntity(obj, TruckEnt, { productId: "product" })
+	}
+
+	createProductEnt(obj) {
+		return this._toEntity(obj, ProductEnt, { _id: "id" })
 	}
 };

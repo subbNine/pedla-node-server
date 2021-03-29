@@ -7,6 +7,8 @@ const {
 	DriverEnt,
 	BuyerEnt,
 	UserEnt,
+	TruckEnt,
+	ProductEnt
 } = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
 const {
@@ -102,13 +104,11 @@ module.exports = class UserMapper extends BaseMapper {
 				{ type: types.DRIVER },
 				{
 					presence: presence.ONLINE,
-				},
-				{
-					truck: { $exists: true },
-				},
-				{ "truck.truckId": { $exists: true } },
+				}
 			],
-		});
+		})
+			.populate("truck.truckId")
+			.populate("truck.productId");
 
 		query.where({
 			$or: [{ isDeleted: false }, { isDeleted: { $exists: false } }],
@@ -401,7 +401,9 @@ module.exports = class UserMapper extends BaseMapper {
 		})
 			.skip(page)
 			.limit(limit)
-			.populate("peddler");
+			.populate("peddler")
+			.populate("truck.truckId")
+			.populate("truck.productId")
 
 		const driversList = [];
 
@@ -533,6 +535,23 @@ module.exports = class UserMapper extends BaseMapper {
 	createUserEntity(obj) {
 		let entity;
 		if (obj.type === types.DRIVER) {
+			if (obj.truck) {
+				const truckObj = obj.truck
+				if (
+					isType("object", truckObj.truckId)
+					&& !isObjectId(truckObj.truckId)
+				) {
+					const truckEnt = this.createTruckEntity(truckObj.truckId)
+					const productEnt = this.createProductEnt(truckObj.productId)
+					truckEnt.product = {
+						...truckObj.productPrice,
+						quantity: undefined,
+						product: productEnt,
+						id: productEnt.id
+					}
+					obj.truck = truckEnt
+				}
+			}
 			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
 		} else {
 			if (obj.type === types.PEDDLER) {
@@ -547,5 +566,13 @@ module.exports = class UserMapper extends BaseMapper {
 		}
 
 		return entity;
+	}
+
+	createTruckEntity(obj) {
+		return new TruckEnt(obj)
+	}
+
+	createProductEnt(obj) {
+		return this._toEntity(obj, ProductEnt, { _id: "id" })
 	}
 };

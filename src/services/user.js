@@ -121,7 +121,9 @@ module.exports = class User {
 		const { userMapper } = this.mappers;
 
 		const user = await userMapper.findUser({ _id: userId }, (doc) => {
-			doc.populate("peddler");
+			doc.populate("peddler")
+				.populate("truck.truckId")
+				.populate("truck.productId");
 		});
 
 		if (user) {
@@ -266,7 +268,14 @@ module.exports = class User {
 	async getDrivers(driverDto) {
 		const { userMapper } = this.mappers;
 
-		const foundUsers = await userMapper.findUsers(new DriverEnt(driverDto));
+		const foundUsers = await userMapper.findUsers(new DriverEnt(driverDto),
+			{
+				populate: (query) =>
+					query
+						.populate("truck.truckId")
+						.populate("truck.productId")
+			}
+		);
 
 		if (foundUsers) {
 			return Result.ok(foundUsers.map((each) => each.toDto()));
@@ -323,7 +332,11 @@ module.exports = class User {
 
 		const foundUsers = await userMapper.findUsers(filter, {
 			pagination: { limit, page: page ? page - 1 : 0 },
-			populate: (query) => query.populate("peddler"),
+			populate: (query) => {
+				query.populate("truck.truckId")
+					.populate("truck.productId")
+					.populate("peddler")
+			},
 		});
 
 		if (foundUsers) {
