@@ -48,9 +48,9 @@ module.exports = class Truck {
 		return Result.ok(
 			trucks
 				? trucks.map((eachTruck) => {
-						const { driver, ...truckFields } = eachTruck.toDto();
-						return { driver, truck: truckFields };
-				  })
+					const { driver, ...truckFields } = eachTruck.toDto();
+					return { driver, truck: truckFields };
+				})
 				: []
 		);
 	}
@@ -75,9 +75,12 @@ module.exports = class Truck {
 			eventEmitter.emit(eventTypes.truckAssignedToDriver, updatedTruck);
 		}
 
-		const { driver, ...truck } = updatedTruck.toDto();
+		if (updatedTruck) {
+			const { driver, ...truck } = updatedTruck.toDto();
+			return Result.ok({ driver, truck });
+		}
 
-		return Result.ok({ driver, truck });
+		return Result.ok(null)
 	}
 
 	async updateTruck(truckDto) {
