@@ -8,7 +8,8 @@ const {
 	BuyerEnt,
 	UserEnt,
 	TruckEnt,
-	ProductEnt
+	ProductEnt,
+	PeddlerProductEnt
 } = require("../entities/domain");
 const { presence } = require("../db/mongo/enums/user");
 const {
@@ -543,15 +544,18 @@ module.exports = class UserMapper extends BaseMapper {
 				) {
 					const truckEnt = this.createTruckEntity(truckObj.truckId)
 					const productEnt = this.createProductEnt(truckObj.productId)
-					truckEnt.product = {
-						...truckObj.productPrice,
-						quantity: undefined,
-						product: productEnt,
-						id: productEnt.id
-					}
+					truckEnt.product = this.createPeddlerProductEnt(
+						Object.assign(truckObj.productPrice, {
+							id: productEnt.id
+						}, {
+							quantity: undefined,
+							product: productEnt
+						}))
+
 					obj.truck = truckEnt
 				}
 			}
+
 			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
 		} else {
 			if (obj.type === types.PEDDLER) {
@@ -574,5 +578,11 @@ module.exports = class UserMapper extends BaseMapper {
 
 	createProductEnt(obj) {
 		return this._toEntity(obj, ProductEnt, { _id: "id" })
+	}
+
+	createPeddlerProductEnt(obj) {
+		return this._toEntity(obj,
+			PeddlerProductEnt, { _id: "id", productId: "product" }
+		)
 	}
 };
