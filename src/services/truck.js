@@ -21,9 +21,24 @@ module.exports = class Truck {
 	}
 
 	async createTruck(truckDto) {
-		const { truckMapper } = this.mappers;
+		const { truckMapper, userMapper } = this.mappers;
 
-		await truckMapper.createTruck(new TruckEnt(truckDto));
+		const truckOwner = await userMapper.findUser({ _id: truckDto.owner.id });
+
+		const truckOwnerProductList = truckOwner.products;
+
+		const truckProduct = truckOwnerProductList
+			? truckOwnerProductList.find(p => p.productId == truckDto.product.id) : null
+
+		truckDto.productPrice = {
+			residentialAmt: truckProduct.residentialAmt,
+			commercialAmt: truckProduct.commercialAmt,
+			commercialOnCrAmt: truckProduct.commercialOnCrAmt,
+		}
+
+		const truck = await truckMapper.createTruck(new TruckEnt(truckDto));
+
+		eventEmitter.emit(eventTypes.truckCreated, truck)
 
 		return Result.ok({ success: true });
 	}
