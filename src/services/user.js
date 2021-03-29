@@ -454,10 +454,12 @@ module.exports = class User {
 		const truckOwner = await userMapper.findUser({ _id: truck.owner.id });
 
 		const product = truckOwner.products.find(
-			(p) => p.productId.toString() === truck.productId.toString()
+			(p) => p.productId.toString() == truck.productId.toString()
 		);
 
-		const { id: truckId, productId, quantity } = truck;
+		const truckId = truck.id
+		const productId = truck.productId
+		const quantity = truck.quantity
 
 		const driver = await userMapper.updateUserById(truck.driver.id, {
 			truck: {
@@ -465,11 +467,11 @@ module.exports = class User {
 				productId,
 				quantity,
 				productPrice: {
-					residentialAmt: product.residentialAmt,
-					commercialAmt: product.commercialAmt,
-					commercialOnCrAmt: product.commercialOnCrAmt,
+					residentialAmt: product ? product.residentialAmt : 0,
+					commercialAmt: product ? product.commercialAmt : 0,
+					commercialOnCrAmt: product ? product.commercialOnCrAmt : 0,
 				},
-			},
+			}
 		});
 
 		return driver;
