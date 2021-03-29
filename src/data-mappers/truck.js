@@ -151,7 +151,7 @@ module.exports = class TruckMapper extends BaseMapper {
 			{
 				$and: [{ ownerId: peddlerId }, { productId: product.id }],
 			},
-			updates
+			{ $set: { ...updates } }
 		);
 	}
 
