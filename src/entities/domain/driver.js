@@ -25,7 +25,9 @@ class Driver extends User {
 		dto.driverStats = this.orderStats || null;
 		dto.peddlerCode = this.peddlerCode || null;
 		dto.userName = this.userName || null;
-		dto.truck = this.truck || null;
+		dto.truck = (this.truck && this.truck.toDto
+			? this.truck.toDto()
+			: this.truck) || null;
 		dto.rating =
 			this.rating && +this.rating.totalRating / this.rating.ratingCount;
 

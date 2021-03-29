@@ -138,9 +138,6 @@ module.exports = class User {
 		dto.email = this.email || null;
 		dto.address = this.address || null;
 		dto.userName = this.userName || null;
-		dto.truck = this.truck && this.truck.toDto
-			? this.truck.toDto()
-			: this.truck
 		if (this.latlon) {
 			dto.latlon = {
 				lon: this.latlon.coordinates[0],
