@@ -1,4 +1,4 @@
-const { UserEnt, DriverEnt } = require("../entities/domain");
+const { UserEnt, DriverEnt, BuyerEnt } = require("../entities/domain");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { permissions, buyerTypes } = require("../db/mongo/enums/user");
@@ -15,9 +15,9 @@ module.exports = class User {
 
 	async updateBuyer(userDto) {
 		const { userMapper } = this.mappers;
-		const userEnt = new UserEnt(userDto);
+		const userEnt = new BuyerEnt(userDto);
 
-		let updatedBuyer = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedBuyer = await userMapper.updateUser(userEnt.id, userDto);
 
 		if (updatedBuyer) {
 			eventEmitter.emit(eventTypes.userProfileCreated, updatedBuyer);
@@ -137,7 +137,7 @@ module.exports = class User {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedUser = await userMapper.updateUserById(userEnt.id, userDto);
 
 		if (updatedUser) {
 			const objRepr = updatedUser.toDto();
@@ -218,7 +218,7 @@ module.exports = class User {
 
 	async updateDriver(userDto, peddler) {
 		const { userMapper } = this.mappers;
-		const userEnt = new UserEnt(userDto);
+		const userEnt = new DriverEnt(userDto);
 
 		if (userDto.userName) {
 			const isAlreadyExistingUser = await userMapper.findUser({
@@ -242,7 +242,7 @@ module.exports = class User {
 			}
 		}
 
-		let updatedUser = await userMapper.updateUser({ _id: userEnt.id }, userEnt);
+		let updatedUser = await userMapper.updateUser({ _id: userEnt.id }, userDto);
 
 		if (updatedUser) {
 			eventEmitter.emit(
