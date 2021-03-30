@@ -201,7 +201,7 @@ module.exports = class TruckMapper extends BaseMapper {
 				...doc,
 				owner: truckOwnerEnt,
 				driver: driverEnt,
-				product: doc.productPrice && this._toEntity(
+				product: doc.productPrice && productEnt && this._toEntity(
 					{
 						product: productEnt,
 						...doc.productPrice,

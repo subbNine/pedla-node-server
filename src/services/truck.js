@@ -40,6 +40,8 @@ module.exports = class Truck {
 			commercialOnCrAmt: truckProduct.commercialOnCrAmt,
 		}
 
+		truckDto.product.id = truckProduct.productId
+
 		const truck = await truckMapper.createTruck(new TruckEnt(truckDto));
 
 		eventEmitter.emit(eventTypes.truckCreated, truck)
