@@ -242,7 +242,7 @@ module.exports = class User {
 			}
 		}
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedUser = await userMapper.updateUser({ _id: userEnt.id }, userEnt);
 
 		if (updatedUser) {
 			eventEmitter.emit(
