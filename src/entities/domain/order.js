@@ -57,16 +57,16 @@ module.exports = class Order {
 			driverLatlon:
 				this.driverLatlon && this.driverLatlon.coordinates
 					? {
-							lon: this.driverLatlon.coordinates[0],
-							lat: this.driverLatlon.coordinates[1],
-					  }
+						lon: this.driverLatlon.coordinates[0],
+						lat: this.driverLatlon.coordinates[1],
+					}
 					: null,
 			buyerLatlon:
 				this.buyerLatlon && this.buyerLatlon.coordinates
 					? {
-							lon: this.buyerLatlon.coordinates[0],
-							lat: this.buyerLatlon.coordinates[1],
-					  }
+						lon: this.buyerLatlon.coordinates[0],
+						lat: this.buyerLatlon.coordinates[1],
+					}
 					: null,
 			deliveryAddress: this.deliveryAddress || null,
 			deliveryDate: this.deliveryDate || null,
@@ -79,6 +79,7 @@ module.exports = class Order {
 				(this.payment && this.payment.toDto
 					? this.payment.toDto()
 					: this.payment) || null,
+			truck: this.truck && this.truck.toDto ? this.truck.toDto() : null
 		};
 	}
 };

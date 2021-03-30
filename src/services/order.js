@@ -411,10 +411,10 @@ module.exports = class Order {
 
 		const paymentResp = await payment.initPayment(newOrder);
 
-		return Result.ok({
+		return {
 			id: newOrder.toDto().id,
 			payment: paymentResp.getValue(),
-		});
+		};
 	}
 
 	async placeOrder(order) {
