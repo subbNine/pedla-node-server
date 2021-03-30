@@ -394,7 +394,6 @@ module.exports = class UserMapper extends BaseMapper {
 								type: "Point",
 								coordinates: [+lon, +lat],
 							},
-							$maxDistance: 1000,
 						},
 					},
 				},
