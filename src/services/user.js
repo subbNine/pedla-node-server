@@ -17,7 +17,7 @@ module.exports = class User {
 		const { userMapper } = this.mappers;
 		const userEnt = new BuyerEnt(userDto);
 
-		let updatedBuyer = await userMapper.updateUserById(userEnt.id, userDto);
+		let updatedBuyer = await userMapper.updateUser({ _id: userEnt.id }, userDto);
 
 		if (updatedBuyer) {
 			eventEmitter.emit(eventTypes.userProfileCreated, updatedBuyer);
@@ -137,7 +137,7 @@ module.exports = class User {
 		const { userMapper } = this.mappers;
 		const userEnt = new UserEnt(userDto);
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userDto);
+		let updatedUser = await userMapper.updateUser({ _id: userEnt.id }, userDto);
 
 		if (updatedUser) {
 			const objRepr = updatedUser.toDto();
@@ -218,14 +218,13 @@ module.exports = class User {
 
 	async updateDriver(userDto, peddler) {
 		const { userMapper } = this.mappers;
-		const userEnt = new DriverEnt(userDto);
 
 		if (userDto.userName) {
 			const isAlreadyExistingUser = await userMapper.findUser({
 				$and: [
 					{ userName: { $exists: true } },
 					{
-						userName: userEnt.userName,
+						userName: userDto.userName,
 					},
 					{ _id: { $ne: userDto.id } },
 				],
@@ -242,7 +241,7 @@ module.exports = class User {
 			}
 		}
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userDto);
+		let updatedUser = await userMapper.updateUser({ _id: userDto.id }, userDto);
 
 		if (updatedUser) {
 			eventEmitter.emit(
