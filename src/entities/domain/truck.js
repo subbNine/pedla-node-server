@@ -4,10 +4,10 @@ const isType = require("../../lib/utils/is-type");
 
 module.exports = class Truck {
 	id;
-	owner = new UserEnt();
+	owner;
 	model;
 	brand;
-	product = new PeddlerProductEnt();
+	product;
 	size;
 	license;
 	insurance;
