@@ -275,11 +275,11 @@ module.exports = class UserMapper extends BaseMapper {
 			this._toPersistenceTransform
 		);
 
-		const doc = await User.findByIdAndUpdate(userId, updates, {
-			new: true,
-		});
+		const { password, ...rest } = updates
 
-		if (updates.password) {
+		const doc = await User.findByIdAndUpdate(userId, rest);
+
+		if (password) {
 			doc.password = updates.password;
 			await doc.save();
 		}
