@@ -22,7 +22,7 @@ module.exports = class OrderMapper extends BaseMapper {
 		const { Order } = this.models;
 		const query = Order.find(filter)
 			.sort({ createdAt: -1, status: -1 })
-			.populate({ path: "productId" })
+			.populate("productId")
 			.populate("driverId")
 			.populate("buyerId")
 			.populate("truckId");
@@ -110,7 +110,9 @@ module.exports = class OrderMapper extends BaseMapper {
 			{ status: { $in: order.status } },
 		];
 
-		return await this.findOrders({ $and }, options);
+		const orders = await this.findOrders({ $and }, options);
+
+		return orders
 	}
 
 	async findOrder(filter) {
@@ -235,19 +237,22 @@ module.exports = class OrderMapper extends BaseMapper {
 
 				truckEnt = this._toEntity(entObj, TruckEnt, {
 					_id: "id",
+					productId: "product"
 				});
 			} else {
 				truckEnt = this._toEntity({ id: doc.truckId }, TruckEnt, {
 					_id: "id",
+					productId: "product"
 				});
 			}
+
+			driverEnt.truck = truckEnt
 
 			const entObj = {
 				...doc,
 				driver: driverEnt,
 				buyer: buyerEnt,
 				product: productEnt,
-				truck: truckEnt,
 			};
 
 			const orderEnt = this._toEntity(entObj, OrderEnt, {
