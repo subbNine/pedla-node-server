@@ -28,7 +28,11 @@ module.exports = class Truck {
 		const truckOwnerProductList = truckOwner.products;
 
 		const truckProduct = truckOwnerProductList
-			? truckOwnerProductList.find(p => p.productId == truckDto.product.id) : null
+			? truckOwnerProductList.find(
+				p =>
+					p.productId == truckDto.product.id
+					|| p._id == truckDto.product.id
+			) : null
 
 		truckDto.productPrice = {
 			residentialAmt: truckProduct.residentialAmt,

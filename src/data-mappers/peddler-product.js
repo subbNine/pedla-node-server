@@ -52,7 +52,7 @@ module.exports = class PeddlerProductMapper extends BaseMapper {
 						Object.assign(product, {
 							peddler: peddler._id,
 							product: productEnt,
-						})
+						}, { _id: productEnt.id })
 					)
 				);
 			}
