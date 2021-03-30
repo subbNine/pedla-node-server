@@ -16,7 +16,7 @@ module.exports = class User {
 	async updateBuyer(userDto) {
 		const { userMapper } = this.mappers;
 
-		let updatedBuyer = await userMapper.updateUser({ _id: userDto.id }, userDto);
+		let updatedBuyer = await userMapper.updateUserById(userDto.id, userDto);
 
 		if (updatedBuyer) {
 			eventEmitter.emit(eventTypes.userProfileCreated, updatedBuyer);
@@ -135,7 +135,7 @@ module.exports = class User {
 	async updateProfile(userDto) {
 		const { userMapper } = this.mappers;
 
-		let updatedUser = await userMapper.updateUser({ _id: userDto.id }, userDto);
+		let updatedUser = await userMapper.updateUserById(userDto.id, userDto);
 
 		if (updatedUser) {
 			const objRepr = updatedUser.toDto();
@@ -237,7 +237,7 @@ module.exports = class User {
 			}
 		}
 
-		let updatedUser = await userMapper.updateUser({ _id: userDto.id }, userDto);
+		let updatedUser = await userMapper.updateUserById(userDto.id, userDto);
 
 		if (updatedUser) {
 			eventEmitter.emit(
