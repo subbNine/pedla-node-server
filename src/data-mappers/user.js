@@ -233,7 +233,8 @@ module.exports = class UserMapper extends BaseMapper {
 
 		const doc = await User.findOne(filter);
 		if (doc) {
-			Object.assign(doc, { ...updates });
+			const updatesObj = this._toPersistence(updates, this._toPersistenceTransform)
+			Object.assign(doc, updatesObj);
 
 			const saved = await doc.save();
 

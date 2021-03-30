@@ -15,9 +15,8 @@ module.exports = class User {
 
 	async updateBuyer(userDto) {
 		const { userMapper } = this.mappers;
-		const userEnt = new BuyerEnt(userDto);
 
-		let updatedBuyer = await userMapper.updateUser({ _id: userEnt.id }, userDto);
+		let updatedBuyer = await userMapper.updateUser({ _id: userDto.id }, userDto);
 
 		if (updatedBuyer) {
 			eventEmitter.emit(eventTypes.userProfileCreated, updatedBuyer);
@@ -135,9 +134,8 @@ module.exports = class User {
 
 	async updateProfile(userDto) {
 		const { userMapper } = this.mappers;
-		const userEnt = new UserEnt(userDto);
 
-		let updatedUser = await userMapper.updateUser({ _id: userEnt.id }, userDto);
+		let updatedUser = await userMapper.updateUser({ _id: userDto.id }, userDto);
 
 		if (updatedUser) {
 			const objRepr = updatedUser.toDto();
@@ -149,9 +147,8 @@ module.exports = class User {
 
 	async togglePresence(userDto) {
 		const { userMapper } = this.mappers;
-		const userEnt = new UserEnt(userDto);
 
-		let updatedUser = await userMapper.updateUserById(userEnt.id, userEnt);
+		let updatedUser = await userMapper.updateUserById(userDto.id, userDto);
 
 		if (updatedUser) {
 			const objRepr = updatedUser.toDto();
@@ -163,9 +160,8 @@ module.exports = class User {
 
 	async userExists(userDto) {
 		const { userMapper } = this.mappers;
-		const userEnt = new UserEnt(userDto);
 
-		let user = await userMapper.searchFor(userEnt);
+		let user = await userMapper.searchFor(userDto);
 
 		if (user) {
 			return Result.ok(true);
