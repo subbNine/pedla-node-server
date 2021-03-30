@@ -58,10 +58,10 @@ module.exports = class GeoMapper extends BaseMapper {
 		if (docs) {
 			for (const doc of docs) {
 				const entObj = doc.toObject();
-				if (doc.avatarImg && doc.avatarImg.uri) {
-					entObj.avatarImg = doc.avatarImg.uri;
-				}
-				results.push(this.createUserEntity(entObj));
+
+				results.push(
+					this.createUserEntity(entObj)
+				);
 			}
 
 			return results;

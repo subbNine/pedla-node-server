@@ -370,7 +370,7 @@ module.exports = class User {
 				quantity,
 				geo,
 			},
-			{ pagination: { page: page ? page - 1 : 0, limit: 4 * (limit || 10) } }
+			{ pagination: { page: page ? page - 1 : 0, limit: (limit || 30) } }
 		);
 
 		if (users) {

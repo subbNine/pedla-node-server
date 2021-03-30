@@ -15,13 +15,13 @@ module.exports = class User {
 
 	getLat() {
 		if (this.latlon) {
-			return this.latlon.coordinates[0];
+			return this.latlon.coordinates[1];
 		}
 	}
 
 	getLon() {
 		if (this.latlon) {
-			return this.latlon.coordinates[1];
+			return this.latlon.coordinates[0];
 		}
 	}
 
