@@ -6,7 +6,8 @@ const {
 	BuyerEnt,
 	PeddlerEnt,
 	TruckEnt,
-	ProductEnt
+	ProductEnt,
+	PeddlerProductEnt
 } = require("../entities/domain");
 const { types } = require("../db/mongo/enums/user");
 const { isObjectId, isType } = require("../lib/utils");
@@ -42,7 +43,10 @@ module.exports = class GeoMapper extends BaseMapper {
 
 	async findUsersByGeoLocation(filter, limit) {
 		const { User } = this.models;
-		const query = User.find(filter).populate("peddler");
+		const query = User.find(filter)
+			.populate("peddler")
+			.populate("truck.truckId")
+			.populate("truck.productId");;
 
 		if (limit && +limit) {
 			query.limit(+limit);
@@ -75,15 +79,18 @@ module.exports = class GeoMapper extends BaseMapper {
 				) {
 					const truckEnt = this.createTruckEntity(truckObj.truckId)
 					const productEnt = this.createProductEnt(truckObj.productId)
-					truckEnt.product = {
-						...truckObj.productPrice,
-						quantity: undefined,
-						product: productEnt,
-						id: productEnt.id
-					}
+					truckEnt.product = this.createPeddlerProductEnt(
+						Object.assign(truckObj.productPrice, {
+							id: productEnt.id
+						}, {
+							quantity: undefined,
+							product: productEnt
+						}))
+
 					obj.truck = truckEnt
 				}
 			}
+
 			entity = this._toEntity(obj, DriverEnt, this._toEntityTransform);
 		} else {
 			if (obj.type === types.PEDDLER) {
@@ -101,10 +108,16 @@ module.exports = class GeoMapper extends BaseMapper {
 	}
 
 	createTruckEntity(obj) {
-		return this._toEntity(obj, TruckEnt, { productId: "product" })
+		return this._toEntity(obj, TruckEnt, { productId: "product", _id: "id", ownerId: "owner" })
 	}
 
 	createProductEnt(obj) {
 		return this._toEntity(obj, ProductEnt, { _id: "id" })
+	}
+
+	createPeddlerProductEnt(obj) {
+		return this._toEntity(obj,
+			PeddlerProductEnt, { _id: "id", productId: "product" }
+		)
 	}
 };

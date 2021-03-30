@@ -39,7 +39,7 @@ module.exports = class GeoLoc {
 										type: "Point",
 										coordinates: [+lon, +lat],
 									},
-									$maxDistance: (radiusIsNum ? +radius : 10) * METERS_PER_MILE,
+									$maxDistance: (radiusIsNum ? +radius : 100) * METERS_PER_MILE,
 								},
 							},
 						},
@@ -47,7 +47,7 @@ module.exports = class GeoLoc {
 				}
 			);
 
-			if (!driversWithinMaxDistanceOfPosition) {
+			if (!driversWithinMaxDistanceOfPosition || !driversWithinMaxDistanceOfPosition.length) {
 				const driversNearestToPosition = await geoMapper.findUsersByGeoLocation(
 					{
 						$and: [
