@@ -573,7 +573,7 @@ module.exports = class UserMapper extends BaseMapper {
 	}
 
 	createTruckEntity(obj) {
-		return this._toEntity(obj, TruckEnt, { productId: "product", _id: "id" })
+		return this._toEntity(obj, TruckEnt, { productId: "product", _id: "id", ownerId: "owner" })
 	}
 
 	createProductEnt(obj) {
