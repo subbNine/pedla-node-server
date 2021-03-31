@@ -401,22 +401,21 @@ module.exports = class UserMapper extends BaseMapper {
 		})
 			.skip(page)
 			.limit(limit)
-			.populate("peddler")
 			.populate("truck.truckId")
 			.populate("truck.productId")
+			.populate("peddler")
 
 		const driversList = [];
 
 		if (drivers && drivers.length) {
-			for (let driver of drivers) {
-				const peddlerEnt = this.createUserEntity(driver.peddler);
+			for (let doc of drivers) {
+				const obj = doc.toObject();
+				const userEnt = this.createUserEntity(obj);
 
-				const driverEnt = this.createUserEntity(driver);
-
-				driverEnt.peddler = peddlerEnt;
-				driverEnt.peddlerCode = peddlerEnt.peddlerCode;
-
-				driversList.push(driverEnt.toDto());
+				if (doc.peddler && !isObjectId(doc.peddler)) {
+					userEnt.peddler = this.createUserEntity(obj.peddler);
+				}
+				driversList.push(userEnt.toDto());
 			}
 		}
 
