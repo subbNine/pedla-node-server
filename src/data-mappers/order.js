@@ -161,7 +161,11 @@ module.exports = class OrderMapper extends BaseMapper {
 
 		const updates = this.toOrderPersistence(orderEnt);
 
-		const doc = await Order.findByIdAndUpdate(id, updates, { new: true });
+		const doc = await Order.findByIdAndUpdate(id, updates, { new: true })
+			.populate("productId")
+			.populate("driverId")
+			.populate("buyerId")
+			.populate("truckId");
 
 		if (doc) {
 			return this.createOrderEntity(doc.toObject());
@@ -173,7 +177,11 @@ module.exports = class OrderMapper extends BaseMapper {
 
 		const updates = this.toOrderPersistence(orderEnt);
 
-		const doc = await Order.findOneAndUpdate(filter, updates, { new: true });
+		const doc = await Order.findOneAndUpdate(filter, updates, { new: true })
+			.populate("productId")
+			.populate("driverId")
+			.populate("buyerId")
+			.populate("truckId");
 
 		if (doc) {
 			return this.createOrderEntity(doc.toObject());
