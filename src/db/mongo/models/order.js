@@ -28,6 +28,7 @@ let schema = new Schema({
 	cancelledReason: String,
 	deliveryAddress: String,
 	deliveryDate: Date,
+	invoiceId: String,
 	creditPaymentDate: Date,
 	paymentMethod: { type: String, lowercase: true },
 	priceCategory: String,

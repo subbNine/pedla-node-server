@@ -17,8 +17,8 @@ module.exports = class Order extends BaseController {
 
 		orderDto.status = status
 			? status
-					.split(/,|\s+|\+/)
-					.map((status) => ("" + status).toUpperCase().trim())
+				.split(/,|\s+|\+/)
+				.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
 		const result = await orderService.nOrders(orderDto);
@@ -39,8 +39,8 @@ module.exports = class Order extends BaseController {
 
 		orderDto.status = status
 			? status
-					.split(/,|\s+|\+/)
-					.map((status) => ("" + status).toUpperCase().trim())
+				.split(/,|\s+|\+/)
+				.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
 		const result = await orderService.recentOrdersPaginated(orderDto, {
@@ -64,8 +64,8 @@ module.exports = class Order extends BaseController {
 		}
 		orderDto.status = status
 			? status
-					.split(/,|\s+|\+/)
-					.map((status) => ("" + status).toUpperCase().trim())
+				.split(/,|\s+|\+/)
+				.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
 		if (!user.isAdmin()) {
@@ -89,8 +89,8 @@ module.exports = class Order extends BaseController {
 		orderDto.driver.id = driverId;
 		orderDto.status = status
 			? status
-					.split(/,|\s+|\+/)
-					.map((status) => ("" + status).toUpperCase().trim())
+				.split(/,|\s+|\+/)
+				.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
 		const result = await orderService.getDriverOrders(orderDto, {
@@ -109,8 +109,8 @@ module.exports = class Order extends BaseController {
 
 		orderDto.status = status
 			? status
-					.split(/,|\s+|\+/)
-					.map((status) => ("" + status).toUpperCase().trim())
+				.split(/,|\s+|\+/)
+				.map((status) => ("" + status).toUpperCase().trim())
 			: Object.values(orderStatus);
 
 		const result = await orderService.getPeddlerOrders(user, orderDto, {
@@ -147,6 +147,7 @@ module.exports = class Order extends BaseController {
 			creditPaymentDate,
 			paymentMethod,
 			priceCategory,
+			invoiceId
 		} = req.body;
 
 		const { user } = req._App;
@@ -198,6 +199,9 @@ module.exports = class Order extends BaseController {
 		}
 		if (priceCategory) {
 			orderDto.priceCategory = priceCategory;
+		}
+		if (invoiceId) {
+			orderDto.invoiceId = invoiceId
 		}
 
 		const result = await orderService.placeOrder(orderDto);

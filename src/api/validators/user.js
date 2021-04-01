@@ -107,6 +107,7 @@ module.exports.postOrder = Joi.object().keys({
 	creditPaymentDate: Joi.string().allow(null).allow(""),
 	paymentMethod: Joi.string(),
 	priceCategory: Joi.string(),
+	invoiceId: Joi.string()
 });
 
 module.exports.orderReason = Joi.object().keys({

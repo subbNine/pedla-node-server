@@ -22,6 +22,7 @@ module.exports = class Order {
 	deliveryStatus;
 	createdAt;
 	payment;
+	invoiceId
 
 	constructor(fields = {}) {
 		for (let key in fields) {
@@ -79,7 +80,8 @@ module.exports = class Order {
 				(this.payment && this.payment.toDto
 					? this.payment.toDto()
 					: this.payment) || null,
-			truck: this.truck && this.truck.toDto ? this.truck.toDto() : null
+			truck: this.truck && this.truck.toDto ? this.truck.toDto() : null,
+			invoiceId: this.invoiceId || null
 		};
 	}
 };
