@@ -403,18 +403,10 @@ module.exports = class Order {
 
 	async createOrder(order) {
 		const { orderMapper } = this.mappers;
-		const payment = new Payment({ mappers: this.mappers });
 
 		const newOrder = await orderMapper.createOrder(new OrderEnt(order));
 
-		eventEmitter.emit(eventTypes.orderCreated, newOrder, { nOrders: 1 });
-
-		const paymentResp = await payment.initPayment(newOrder);
-
-		return {
-			id: newOrder.toDto().id,
-			payment: paymentResp.getValue(),
-		};
+		return newOrder
 	}
 
 	async placeOrder(order) {
@@ -424,11 +416,21 @@ module.exports = class Order {
 			return vaidatedOrder;
 		}
 
+		const payment = new Payment({ mappers: this.mappers });
+
 		const newOrder = await this.createOrder(order);
 
 		if (newOrder) {
-			return Result.ok(newOrder);
+			eventEmitter.emit(eventTypes.orderCreated, newOrder, { nOrders: 1 });
+
+			const paymentResp = await payment.initPayment(newOrder);
+
+			return Result.ok({
+				id: newOrder.toDto().id,
+				payment: paymentResp.getValue(),
+			});
 		}
+
 		return Result.ok(null);
 	}
 

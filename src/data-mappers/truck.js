@@ -91,11 +91,11 @@ module.exports = class TruckMapper extends BaseMapper {
 	}
 
 	async updateOrderedQuantityInTruck(order) {
-		const truck = order.truck;
+		const truckId = order.truckId;
 
 		const updates = { $inc: { quantity: order.quantity } };
 
-		return await this.updateTruckById(truck.id, updates);
+		return await this.updateTruckById(truckId, updates);
 	}
 
 	async detachDriver(driver) {
