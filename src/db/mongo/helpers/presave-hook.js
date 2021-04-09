@@ -5,7 +5,7 @@ const SALT_WORK_FACTOR = 10;
 module.exports = function (next) {
 	const user = this;
 
-	if (!user.isModified("password")) {
+	if (!user.password) {
 		return next();
 	}
 
