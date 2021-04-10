@@ -204,6 +204,8 @@ module.exports = class PaymentMapper extends BaseMapper {
 	toPaymentPersistence(ent) {
 		return this._toPersistence(ent, {
 			order: "orderId",
+			buyer: "buyerId",
+			driver: "driverId"
 		});
 	}
 };

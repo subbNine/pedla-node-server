@@ -1,7 +1,10 @@
+const { paymentMethod } = require("../../db/mongo/enums/order");
 const { isType } = require("../../lib/utils");
 
 module.exports = class Payment {
 	order;
+	buyer;
+	driver;
 	id;
 	paymentMethod;
 	gatewayAccessCode;
@@ -17,6 +20,14 @@ module.exports = class Payment {
 		}
 	}
 
+	isPaystackPayment() {
+		return this.paymentMethod === paymentMethod.paystack
+	}
+
+	isTransferPayment() {
+		return this.paymentMethod === paymentMethod.transfer
+	}
+
 	// object representation of the domain entity.
 	toDto() {
 		const dto = {
@@ -24,6 +35,7 @@ module.exports = class Payment {
 				(this.order && this.order.toDto ? this.order.toDto() : this.order) ||
 				null,
 			id: this.id,
+			transId: this.id,
 			paymentMethod: this.paymentMethod,
 			gatewayAccessCode: this.gatewayAccessCode,
 			gatewayReference: this.gatewayReference,

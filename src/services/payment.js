@@ -3,6 +3,7 @@ const NotificationService = require("./notification");
 const { utils, error } = require("../lib");
 const { eventEmitter, eventTypes } = require("../events");
 const { paymentStatus, paymentMethod } = require("../db/mongo/enums/order");
+const { PaymentEnt } = require("../entities/domain");
 
 const AppError = error.AppError;
 const errorCodes = error.errorCodes;
@@ -120,8 +121,15 @@ module.exports = class Payment {
 	}
 
 	async initPayment(order, options) {
+		const payment = new PaymentEnt({
+			order: order.id,
+			buyer: order.buyer.id,
+			driver: order.driver.id,
+			paymentMethod: order.paymentMethod
+		});
+
 		let paymentResp;
-		if (order.paymentMethod === paymentMethod.paystack) {
+		if (payment.isPaystackPayment()) {
 			paymentResp = await this._initPaystackPayment(order, options);
 		} else {
 			paymentResp = await this.createPayment(order, options);
