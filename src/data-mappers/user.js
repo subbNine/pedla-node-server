@@ -105,7 +105,8 @@ module.exports = class UserMapper extends BaseMapper {
 				{ type: types.DRIVER },
 				{
 					presence: presence.ONLINE,
-				}
+				},
+				{ truck: { $exists: true } }
 			],
 		})
 			.populate("truck.truckId")
