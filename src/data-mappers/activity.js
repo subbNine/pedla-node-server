@@ -17,10 +17,6 @@ module.exports = class ActivityMapper extends BaseMapper {
 			if (err) {
 				throw err;
 			}
-
-			if (doc) {
-				console.log("update successful");
-			}
 		});
 	}
 

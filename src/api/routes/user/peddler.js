@@ -490,6 +490,26 @@ router.get(
 );
 
 /**
+ * @api {get} /api/user/peddler/driver/:driverId/orders?status=pending+accepted&limit=30&page=1 Retrieve driver's orders
+ * @apiName getPeddlerDriverOrders
+ * @apiGroup Peddler - Order
+ *
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Return orders of a specific driver based on status (pending|accepted|completed|cancelled|inprogress) passed in the status query params.
+ * To return results with more than one status, seperate the status passed in the query with a plus symbol
+ * @apiParam {String} status order status. multiple order status should be seperated with a "+" symbol
+ * @apiParam {Number} [page] page number (query param)
+ * @apiParam {Number} [limit] page limit (query Param)
+ */
+ router.get(
+	"/driver/:driverId/orders",
+	shield(permissions.PERM002),
+	validateQuery(validationSchemas.getOrders),
+	catchAsync(orderController.getDriverOrders)
+);
+
+/**
  * @api {get} /api/user/peddler/orders/:driverId?status=pending+accepted&limit=30&page=1 Retrieve orders of specific driver
  * @apiName getPeddlerDriverOrders
  * @apiGroup Peddler - Orders
