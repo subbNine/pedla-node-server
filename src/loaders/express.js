@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const express = require("express");
@@ -28,11 +27,9 @@ module.exports = function (app) {
 		})
 	);
 	app.use(
-		bodyParser.urlencoded({
-			extended: true,
-		})
+		express.urlencoded({extended:true})
 	);
-	app.use(bodyParser.json());
+	app.use(express.json());
 	app.use(helmet());
 	app.use(httpAuth);
 	app.use("/api", api);
