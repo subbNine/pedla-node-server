@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("../config/pedla-app-firebase-adminsdk-40onl-5780471780.json");
+const serviceAccount = require("../config/firebase");
 const errors = require("../errors");
 
 admin.initializeApp({

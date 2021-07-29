@@ -5,6 +5,7 @@ const {
 	NODE_ENV,
 	MONGO_PW,
 	MONGO_USER,
+	MONGO_CONN_STRING_PROD,
 	DB_NAME,
 	PORT,
 	TOKEN_SECRET,
@@ -23,11 +24,8 @@ const {
 const dbConf = {
 	mongo: {
 		production: {
-			DB_USER: MONGO_USER,
-			DB_PW: MONGO_PW,
-			DB_NAME: DB_NAME,
 			generateConnStr() {
-				return `mongodb+srv://${this.DB_USER}:${this.DB_PW}@cluster0-u6dzg.mongodb.net/${this.DB_NAME}?retryWrites=true&w=majority`;
+				return MONGO_CONN_STRING_PROD;
 			},
 		},
 		staging: {
