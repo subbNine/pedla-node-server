@@ -11,11 +11,11 @@ const {
   FCM_CLIENT_CERT_URL
 } = process.env
 
-export default serviceAccount = {
+module.exports = {
   type: FCM_TYPE,
   project_id: FCM_PROJECT_ID,
   private_key_id: FCM_PRIVATE_KEY_ID,
-  private_key: FCM_PRIVATE_KEY,
+  private_key: FCM_PRIVATE_KEY.replace(/\\n/g, "\n"), // node is escaping new line in certificate string
   client_email: FCM_CLIENT_EMAIL,
   client_id: FCM_CLIENT_ID,
   auth_uri: FCM_AUTH_URL,
