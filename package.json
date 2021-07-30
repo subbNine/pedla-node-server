@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "yarn && NODE_ENV=production node src/index.js",
+    "start": "NODE_ENV=production node src/index.js",
     "serve-stage": "NODE_ENV=staging node src/index.js",
     "dev": "NODE_ENV=development nodemon src/index.js",
     "test": "jest --watch",
