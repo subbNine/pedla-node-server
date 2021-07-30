@@ -25,7 +25,8 @@ const dbConf = {
 	mongo: {
 		production: {
 			generateConnStr() {
-				return MONGO_CONN_STRING_PROD;
+				const pathToCAFile = require("path").resolve(__dirname,"../", "db/mongo/ca-certificate.crt")
+				return MONGO_CONN_STRING_PROD.replace("%3Creplace-with-path-to-CA-cert%3E", pathToCAFile);
 			},
 		},
 		staging: {
