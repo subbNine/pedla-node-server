@@ -25,7 +25,6 @@ function _sendProdError(err, res) {
 			.status(err.statusCode || errorCodes.InternalServerError.statusCode)
 			.json(rest);
 	} else {
-		console.error(err);
 		// CRITICAL: log error to sentry
 		Sentry.captureException(err);
 
@@ -33,7 +32,6 @@ function _sendProdError(err, res) {
 			return res.status(errorCodes.InternalServerError.statusCode).json({
 				name: errorCodes.InternalServerError.name,
 				message: "Sorry an unexpected error has occured",
-				stack: err.stack,
 			});
 		}
 	}
