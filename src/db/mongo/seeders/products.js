@@ -1,4 +1,3 @@
-const faker = require("faker");
 const Product = require("../models/product");
 const { Seeder } = require("mongoose-data-seed");
 
@@ -7,22 +6,22 @@ const products = { AGO: "AGO", PMS: "PMS", LPG: "LPG", DPK: "DPK" };
 const data = [
 	{
 		name: products.AGO,
-		description: faker.lorem.sentence(),
+		description: "Automotive Gas Oil (Diesel)",
 		createdAt: Date.now(),
 	},
 	{
 		name: products.PMS,
-		description: faker.lorem.sentence(),
+		description: "Premium Motor Spirit (Petrol)",
 		createdAt: Date.now(),
 	},
 	{
 		name: products.LPG,
-		description: faker.lorem.sentence(),
+		description: "Liquefied Petroleum Gas (Gas)",
 		createdAt: Date.now(),
 	},
 	{
 		name: products.DPK,
-		description: faker.lorem.sentence(),
+		description: "Dual Purpose Kerosine (Kerosine)",
 		createdAt: Date.now(),
 	},
 ];

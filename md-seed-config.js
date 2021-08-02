@@ -1,30 +1,26 @@
 const mongoose = require("mongoose");
 const seeders = require("./src/db/mongo/seeders");
-const dotenv = require("dotenv");
-dotenv.config();
+const { dbConnStr } = require("./src/config");
 
-const env = process.env.NODE_ENV;
-let mongoURL;
-if (env === "staging" || env === "production") {
-	// Atlas connection setup
-	const username = process.env.MONGO_USER;
-	const password = process.env.MONGO_PW;
-	const dbName = process.env.DB_NAME;
+const isProductionEnv = process.env.NODE_ENV === "production"
 
-	mongoURL = `mongodb+srv://${username}:${password}@cluster0-u6dzg.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-} else {
-	mongoURL = "mongodb://localhost:27017/peddler";
-}
+let mongoURL = dbConnStr;
 
 /**
  * Seeders List
  * order is important
  * @type {Object}
  */
+let seedersList = {}
 
-module.exports.seedersList = {
-	...seeders,
-};
+if (isProductionEnv) {
+	seedersList.Products = seeders.Products
+} else {
+	seedersList = seeders
+}
+
+module.exports.seedersList = seedersList
+
 /**
  * Connect to mongodb implementation
  * @return {Promise}
